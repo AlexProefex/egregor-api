@@ -36,6 +36,7 @@ jobs:
        cat .env
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
+    - run: ls
 
   deploy:
     runs-on: self-hosted
@@ -50,7 +51,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: ls dist
+      - run: ls 
       - run: npm install pm2@latest -g
       - run: pm2 start npm --name "adminApi" -- start
       - run: pm2 update
