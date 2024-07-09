@@ -10,10 +10,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  node:
     runs-on: self-hosted
-
     strategy:
       matrix:
         node-version: [22.x]
@@ -41,16 +39,15 @@ jobs:
   pm2-configuration:
     
     runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [22.x]
-    needs: build
+    needs: node
     steps:
+      - uses: actions/checkout@v3 
       - uses: actions/setup-node@v3 
+      - run: npm install pm2@latest -g
       - run: pm2 -V 
       - run: pm2 list 
       - run: pm2 start npm --name "egregor-api" -- start
       - run: pm2 update
       - run: pm2 save
-      - run: pm2 save
+     
     #- run: npm test
