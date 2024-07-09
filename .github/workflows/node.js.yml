@@ -34,7 +34,7 @@ jobs:
        echo DATABASE_PORT=5432 >> .env
        echo JWT_SECRET_KEY=clavesecretajson >> .env
        cat .env
-    - run: npm i
+    - run: npm ci --legacy-peer-dep
     - run: npm run build
     - run: npm install pm2@latest -g
     - run: pm2 start npm --name "adminApi" -- start
