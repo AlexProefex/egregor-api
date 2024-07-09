@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     strategy:
       matrix:
@@ -24,6 +24,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+    - run: |
+       touch .env
+       echo DATABASE_NAME=egregor >> .env
+       echo DATABASE_USER=proefex >> .env
+       echo DATABASE_PASSWROD=proefex123456 >> .env
+       echo DATABASE_HOST=localhost >> .env
+       echo DATABASE_TYPE=postgres >> .env
+       echo DATABASE_PORT=5432 >> .env
+       echo JWT_SECRET_KEY=clavesecretajson >> .env
+       cat .env
     - run: npm i
     - run: npm run build --if-present
     #- run: npm test
