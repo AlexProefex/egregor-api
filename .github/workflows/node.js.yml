@@ -46,7 +46,6 @@ jobs:
         node-version: [22.x]
     needs: build
     steps:
-      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3 
       - run: npm install pm2@latest -g 
       - run: pm2 -V 
