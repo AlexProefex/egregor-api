@@ -42,6 +42,9 @@ jobs:
   pm2-configuration:
     
     runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [22.x]
     needs: build
     steps:
       - uses: actions/checkout@v4
