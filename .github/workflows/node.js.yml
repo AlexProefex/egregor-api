@@ -47,7 +47,6 @@ jobs:
     needs: build
     steps:
       - uses: actions/setup-node@v3 
-      - run: npm install pm2@latest -g 
       - run: pm2 -V 
       - run: pm2 list 
       - run: pm2 start npm --name "egregor-api" -- start
