@@ -35,7 +35,7 @@ jobs:
        echo JWT_SECRET_KEY=clavesecretajson >> .env
        cat .env
     - run: npm i
-    - run: npm run build --if-present
+    - run: npm run build
     - run: npm install pm2@latest -g
     - run: pm2 start npm --name "adminApi" -- start
     - run: pm2 update
