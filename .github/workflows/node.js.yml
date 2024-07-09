@@ -37,13 +37,15 @@ jobs:
     - run: ls
     
   pm2-configuration:
-    
     runs-on: self-hosted
     needs: node
     steps:
-      - uses: actions/checkout@v3 
-      - uses: actions/setup-node@v3 
-      - run: npm install pm2@latest -g
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3 
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
       - run: pm2 -V 
       - run: pm2 list 
       - run: pm2 start npm --name "egregor-api" -- start
