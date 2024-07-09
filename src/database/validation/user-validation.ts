@@ -12,7 +12,7 @@ export class UserValidation {
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('Los apellidos')})
-    fullName:string;
+    lastName:string;
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})

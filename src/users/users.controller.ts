@@ -8,15 +8,22 @@ import { SkipThrottle } from '@nestjs/throttler';
 import { diskStorage } from 'multer';
 import path, { extname } from 'path';
 import { token } from './token.service';
+import { writeFileSync } from 'fs';
+import { ApiTags } from '@nestjs/swagger';
+  
 
 
 @SkipThrottle()
+@ApiTags('user')
 @Controller('user')
 export class UserController {
     constructor(private userService:UserService,
+    ){}
 
-    ){
-        
+    @Public()
+    @Get('profile')
+    getUserProfile(@Headers('Authorization') auth: string):any {
+        return this.userService.findUser(auth);
     }
     
     //Exponer punto para el listado de todas los usuarios 
@@ -52,14 +59,15 @@ export class UserController {
         //   fileFilter: imageFileFilter,
         }),
       )
-    EditarPerfil(@UploadedFiles()  file: Express.Multer.File,@Body() modelUser:UserValidation, @Headers('Authorization') auth: string):any  {
+    async EditarPerfil(@UploadedFiles()  file: Express.Multer.File,@Body() modelUser:UserValidation, @Headers('Authorization') auth: string):Promise<any>  {
         const response = [];
         console.log(modelUser)
         try{
-            const result = this.userService.updateUser(modelUser, file[0].path, auth)
+            const result = await this.userService.updateUser(modelUser, file[0].path, auth)
+            console.log(result)
             return {
                 statusCode: 200,
-                "data": result,
+                "data": {...result},
                 "error": ""}
 
             /*return {
@@ -78,6 +86,72 @@ export class UserController {
 
 
         }
+    }
+
+
+    @Public()
+    @Post('update-perfil2')
+    EditarPerfil2(@Body() modelUser:any):any  {
+       
+        /*var file = new File([modelUser.file], `my_image${new Date()}.jpeg`, {
+            type: "image/jpeg"
+          });
+     */
+
+        //const file = new File([modelUser.file],'image.jpg')
+
+        //const buffer = Buffer.alloc(modelUser.file.length, modelUser.file);
+        /*writeFile('public/sample.jpg', modelUser.file, (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+        });*/
+        modelUser.data.forEach(datos => {
+            const base64Data =  Buffer.from(datos.file.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+            const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+            let mimeType2 = datos.file.match(/[^:/]\w+(?=;|,)/)[0];
+            writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+            datos.path = `public/${name}.${mimeType2}`
+
+        });
+        
+        console.log(modelUser)
+
+
+
+        /*var file = new File([modelUser.file], "image.png", {lastModified: 1534584790000});
+
+        //const myFile = this.blobToFile(modelUser.file, "my-image.png");
+        //console.log(file)
+        writeFile('public/image.png',modelUser.file, err => {
+            if (err) {
+              console.error(err);
+            } else {
+              // file written successfully
+            }
+          })
+          */        
+    }
+
+
+    @UseInterceptors(
+        FilesInterceptor('file', 20, {
+          storage: diskStorage({
+            destination:  './public',
+            filename:  function (req, file, cb) {
+                return cb(null, `${Date.now()}${extname(file.originalname)}`);
+              }
+          }),
+        //   fileFilter: imageFileFilter,
+        }),
+      )
+    uploadFile(@UploadedFiles()  file: Express.Multer.File):any  {
+        try{
+            return file[0].path;
+        }
+        catch(err){         
+            return "error";
+        }
+    }
 
 
 
@@ -98,7 +172,7 @@ export class UserController {
             prueba: "fsfsd",
             datos2: file[0].path,
         };*/
-      }
+      
 
 
     /*

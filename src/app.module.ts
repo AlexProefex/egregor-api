@@ -8,6 +8,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { LevelModule } from './level/level.module';
+import { UnitModule } from './unit/unit.module';
+import { SectionModule } from './section/section.module';
+import { ElementModule } from './element/element.module';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -17,7 +22,7 @@ import { join } from 'path';
   }]),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public'),
-  }),AuthModule, UsersModule, DatabaseModule],
+  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule],
   controllers: [AppController],
   providers: [AppService, {
     provide:APP_GUARD,
