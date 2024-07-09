@@ -19,7 +19,7 @@ jobs:
         node-version: [22.x]
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -47,7 +47,7 @@ jobs:
     steps:
       # 👇 Get the dist folder
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
