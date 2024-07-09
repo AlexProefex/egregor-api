@@ -19,7 +19,7 @@ jobs:
         node-version: [22.x]
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
@@ -50,5 +50,6 @@ jobs:
       - run: pm2 -V 
       - run: pm2 list 
       - run: pm2 start npm --name "egregor-api" -- start
+      - run: pm2 update
       - run: pm2 save
     #- run: npm test
