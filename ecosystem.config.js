@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
       {
-        name: 'adminApi',
+        name: 'egregor-api',
         port: '3002',
         exec_mode: 'cluster',
         instances: 'max',
