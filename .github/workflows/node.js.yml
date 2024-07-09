@@ -36,8 +36,23 @@ jobs:
        cat .env
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
-    - run: npm install pm2@latest -g
-    - run: pm2 start npm --name "adminApi" -- start
-    - run: pm2 update
-    - run: pm2 save
+
+  deploy:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        node-version: [22.x]
+    needs: [build]
+    steps:
+      # 👇 Get the dist folder
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: ls dist
+      - run: npm install pm2@latest -g
+      - run: pm2 start npm --name "adminApi" -- start
+      - run: pm2 update
+      - run: pm2 save
     #- run: npm test
