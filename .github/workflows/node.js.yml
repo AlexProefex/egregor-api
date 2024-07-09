@@ -36,7 +36,6 @@ jobs:
        cat .env
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
-    - run: npm install pm2@latest -g 
     - run: ls
     
   pm2-configuration:
