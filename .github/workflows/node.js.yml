@@ -52,4 +52,5 @@ jobs:
       - run: pm2 start npm --name "egregor-api" -- start
       - run: pm2 update
       - run: pm2 save
+      - run: pm2 save
     #- run: npm test
