@@ -36,24 +36,17 @@ jobs:
        cat .env
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
-    - run: ls
 
-  deploy:
+  pm2-configuration:
+    
     runs-on: self-hosted
-    strategy:
-      matrix:
-        node-version: [22.x]
-    needs: [build]
+    needs: build
     steps:
-      # 👇 Get the dist folder
-      - name: Download build artifacts
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: ls 
-      - run: npm install pm2@latest -g
-      - run: pm2 start npm --name "adminApi" -- start
-      - run: pm2 update
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3 
+      - run: npm install pm2@latest -g 
+      - run: pm2 -V 
+      - run: pm2 list 
+      - run: pm2 start npm --name "webegregor" -- start
       - run: pm2 save
     #- run: npm test
