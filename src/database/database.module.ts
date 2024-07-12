@@ -10,7 +10,7 @@ import { LevelEntity } from './entity/level/level-entity';
 import { ElementEntity } from './entity/element/element-entity';
 import { QuizEntity } from './entity/quiz/quiz-entity';
 import { QsectionEntity } from './entity/qsection/qsection-entity';
-import { CodeEntity } from './entity/Code/Code-entity';
+import { CodeEntity } from './entity/code/code-entity';
 
 
 
