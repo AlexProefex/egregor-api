@@ -20,3 +20,4 @@ import { UserEntity } from 'src/database/entity/user-entity/user-entity';
   providers: [CodeService],
 })
 export class CodeModule {}
+
