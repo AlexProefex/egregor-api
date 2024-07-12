@@ -1,12 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CodeEntity } from 'src/database/entity/Code/Code-entity';
+
 import { UserEntity } from 'src/database/entity/user-entity/user-entity';
 import { randomText } from 'src/util/custom';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CodeEntity } from 'src/database/entity/code/code-entity';
 
 @Injectable()
 export class CodeService {
