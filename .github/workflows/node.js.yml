@@ -31,6 +31,9 @@ jobs:
        echo DATABASE_TYPE=postgres >> .env
        echo DATABASE_PORT=5432 >> .env
        echo JWT_SECRET_KEY=clavesecretajson >> .env
+       echo MAIL_HOST=smtp.gmail.com
+       echo MAIL_USER=kirudentadm@gmail.com
+       echo MAIL_PASS=pcysjdjrxfsluwtf
        cat .env
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
