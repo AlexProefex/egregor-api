@@ -31,7 +31,6 @@ export class CodeService {
           from: '"Welcome to the fold" <linux@over.windows>', // sender address
           subject: 'Quotes', // Subject line
           text: `Su codigo de verificacion es ${securityCode}`, // plaintext body
-          //html: '<p>How many programmers does it take to change a light bulb?'
         });
         code.userId = user.id
         code.securityCode = securityCode
