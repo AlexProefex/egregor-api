@@ -1,10 +1,8 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { STATUS_CODES } from 'http';
 import { CodeEntity } from 'src/database/entity/Code/Code-entity';
 import { UserEntity } from 'src/database/entity/user-entity/user-entity';
-import { CodeValidationSend } from 'src/database/validation/code-validation';
 import { randomText } from 'src/util/custom';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Repository } from 'typeorm';

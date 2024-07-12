@@ -25,7 +25,7 @@ import { CodeEntity } from './entity/code/code-entity';
         database: process.env.DATABASE_NAME,
         entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity ],
         synchronize: true,
-        dropSchema: false,
+        dropSchema: true,
         }),
     ],
     //providers:[IsUniqueConstraints,IsNumberConstraints]

@@ -5,7 +5,6 @@ import * as bcrypt from 'bcrypt';
 
 @Entity('code')
 export class CodeEntity {
-
     @PrimaryGeneratedColumn()
     id:number;
 
