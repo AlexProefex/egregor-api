@@ -45,33 +45,65 @@ export class UserService {
          }
      }*/
     //Actualizar Usuario
-    async updateUser(user: UserValidation, path, auth: any) {
+    async updateUser(user: any, path, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);
-            console.log(current)
-            console.log(user)
-            console.log(path)
             user.avatar = path;
-
-            //const salt = await bcrypt.genSalt();
-            //const hashedPassword = await bcrypt.hash(user.password, salt);
-            //user.password = hashedPassword;
             await this.userRp.update(current.id, user);
             const response = await this.userRp.findOne({
                 select: {
                     name: true, email: true, rol: true, lastName: true, phone: true, description: true, avatar: true,
                 }, where: { id: current.id }
             });
-
-            console.log(user)
             return response;
-
         } catch (error) {
-        
+            ExceptionErrorMessage(error);
+        }
+    }
+
+
+
+
+
+    async updatePassword(user: any, auth: any) {
+        try {
+            const salt = await bcrypt.genSalt();
+            console.log(salt)
+            const hashedPassword = await bcrypt.hash(user.newPassword, salt);
+            console.log(hashedPassword)
+
+            const current = await this.jwtUtil.decode(auth);
+            await this.userRp.update(current.id, {password:hashedPassword});
+            const response = await this.userRp.findOne({
+                select: {
+                    name: true, email: true, rol: true, lastName: true, phone: true, description: true, avatar: true,
+                }, where: { id: current.id }
+            });
+            return response;
+        } catch (error) {
             console.log(error)
             ExceptionErrorMessage(error);
         }
     }
+
+    async validatePassword(user: any, auth: any){
+        try{
+
+            const current = await this.jwtUtil.decode(auth);
+            const currentUser = await this.userRp.findOneBy({id:current.id})
+
+            return await bcrypt.compare(user.currentPassword,currentUser.password )
+    
+        } catch (error) {
+            console.log(error)
+            ExceptionErrorMessage(error);
+        }
+    }
+
+
+
+
+
     /*
     //Listar Usuarios
     async findAllUsers(){

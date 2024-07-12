@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put
 import { LevelService } from './level.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/auth/auth.controller';
-import { LevelValidation } from 'src/database/validation/level-validation';
+import { LevelValidation, LevelValidationUpdate } from 'src/database/validation/level-validation';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('level')
+@ApiTags('Level')
 @Controller('level')
 export class LevelController {
   constructor(private readonly levelService: LevelService) {}
@@ -51,15 +51,15 @@ export class LevelController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Put(':id')
-    updateLevel(@Body() modelevel:LevelValidation, @Param() params):any{
+    updateLevel(@Body() modelevel:LevelValidationUpdate, @Param() params):any{
         return this.levelService.updateLevel(params.id, modelevel);
     }
 
      //Exponer punto para remover una prensa mediante su id    
      //IsParameterWithIdOfTable
-    @Public()
+    /*@Public()
     @Delete(':id')
     deleteLevel(@Param() params:any){
          return this.levelService.deleteLevel(params.id);
-     }
+     }*/
 }

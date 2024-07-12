@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { UnitEntity } from 'src/database/entity/unit/unit-entity';
+import { removeNUllValues } from 'src/util/custom';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Repository } from 'typeorm';
 
@@ -69,6 +70,7 @@ export class LevelService {
         select:{
           id:true,
           name:true,
+          color:true,
           unit:{
             id:true,
             name:true,
@@ -77,17 +79,19 @@ export class LevelService {
               name:true,
               time:true,
               type:true,
+              idReference:true,
               element:{
                 content:true,
                 content_pdf:true,
                 description:true,
                 embed:true,
                 id:true,
-                imagen:true,
                 title:true,
                 type:true,
                 type_icon:true,
-                idReference:true
+                idReference:true,
+                name:true,
+                url:true
               }
             }
           }
@@ -96,7 +100,7 @@ export class LevelService {
       });
 
 
-      return this.removeNUllValues(result)
+      return removeNUllValues(result)
       
 
     } catch (error) {
@@ -106,17 +110,7 @@ export class LevelService {
 
 
 
-  removeNUllValues(obj) {
-    if (Array.isArray(obj)) { 
-      return obj
-          .map(v => (v && typeof v === 'object') ? this.removeNUllValues(v) : v)
-          .filter(v => !(v == null)); 
-    } else { 
-      return Object.entries(obj)
-          .map(([k, v]) => [k, v && typeof v === 'object' ? this.removeNUllValues(v) : v])
-          .reduce((a, [k, v]) => (v == null ? a : (a[k]=v, a)), {});
-    } 
-  }
+
 
 
   //Listar Level

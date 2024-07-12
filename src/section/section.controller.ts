@@ -3,10 +3,10 @@ import { SectionService } from './section.service';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SectionValidation } from 'src/database/validation/section-validation';
-import { ExamValidation } from 'src/database/validation/exam-validation';
+import { ExamValidation, updateExamValidation } from 'src/database/validation/exam-validation';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('section')
+@ApiTags('Unit Sections')
 @Controller('section')
 export class SectionController {
   constructor(private readonly sectionService: SectionService) {}
@@ -27,7 +27,7 @@ export class SectionController {
     //Exponer punto para almacenamiento de una nuevo registro de prensa
     @Public()
     @UseInterceptors(FileInterceptor(''))
-    @Post('/section')
+    @Post('section')
     saveLevel(@Body() modelSection:SectionValidation):any{
         modelSection.type = "section";
         return this.sectionService.saveSection(modelSection);
@@ -36,17 +36,26 @@ export class SectionController {
     //Exponer punto para almacenamiento de una nuevo registro de prensa
     @Public()
     @UseInterceptors(FileInterceptor(''))
-    @Post('/exam')
+    @Post('exam')
     saveExam(@Body() modelSection:ExamValidation):any{
         modelSection.type = "exam";
         return this.sectionService.saveExam(modelSection);
+    }
+
+    @Public()
+    @UseInterceptors(FileInterceptor(''))
+    @Put('exam/:id')
+    updateExam(@Body() modelSection:updateExamValidation, @Param() params):any{
+        modelSection.type = "exam";
+        return this.sectionService.updateExam(params.id, modelSection);
     }
 
     //Exponer punto para actualizar un registro de prensa mediante su id
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Put(':id')
-    updateLevel(@Body() modelSection:SectionValidation, @Param() params):any{
+    updateSection(@Body() modelSection:SectionValidation, @Param() params):any{
+        modelSection.type = "section";
         return this.sectionService.updateSection(params.id, modelSection);
     }
 
@@ -54,7 +63,7 @@ export class SectionController {
      //IsParameterWithIdOfTable
     @Public()
     @Delete(':id')
-    deleteLevel(@Param() params:any){
+    deleteSection(@Param() params:any){
          return this.sectionService.deleteSection(params.id);
      }
 }

@@ -1,5 +1,5 @@
 
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne, JoinTable} from 'typeorm';
 import { LevelEntity } from '../level/level-entity';
 import { SectionEntity } from '../section/section-entity';
 
@@ -15,7 +15,8 @@ export class UnitEntity {
     @ManyToOne(() => BlogEntity, (blog) => blog.blogDetail)
     blog: BlogEntity
 */
-    @ManyToOne(()=>LevelEntity, (level)=> level.unit)
+    @ManyToOne(()=>LevelEntity, (level)=> level.unit, {onDelete:"CASCADE"})
+    @JoinTable()
     level:LevelEntity
 
     @OneToMany(() => SectionEntity, (section) => section.unit)

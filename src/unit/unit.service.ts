@@ -55,6 +55,7 @@ async deleteUnit(id:any){
       return { message:"El registro seleccionado ha sido eliminado" };
   }
   catch(error){
+    console.log(error)
       ExceptionErrorMessage(error);            
   }
 }

@@ -1,25 +1,74 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { QuestionEntity } from 'src/database/entity/question/question-entity';
+import { ExceptionErrorMessage } from 'src/validation/exception-error';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class QuestionService {
-  create(createQuestionDto: any) {
-    return 'This action adds a new question';
-  }
+  constructor(@InjectRepository(QuestionEntity)
+  private readonly questionRp:Repository<QuestionEntity>){
+}
 
-  findAll() {
-    return `This action returns all question`;
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  //Obtener Level
+async findById(id: number) {
+  try {
+    return await this.questionRp.findOneBy({ id: id });
+  } catch (error) {
+    ExceptionErrorMessage(error);
   }
+}
 
-  update(id: number, updateQuestionDto: any) {
-    return `This action updates a #${id} question`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} question`;
+
+//Guardar Question
+async saveQuestion(question:any){
+  try {
+      return await this.questionRp.save(question);
+  } catch (error) {
+      ExceptionErrorMessage(error);            
   }
+}
+
+//Actualizar Question
+async updateQuestion(id:number, question:any){
+  try {
+      await this.questionRp.update(id,question);
+      return await this.questionRp.findOneBy({id:id});
+  } catch (error) {
+      ExceptionErrorMessage(error);            
+  }
+}
+
+//Obtener Question
+async findQuestionById(id:number){
+  try {
+      return await this.questionRp.findOneBy({id:id});
+  } catch (error) {
+      ExceptionErrorMessage(error);            
+  }
+}
+
+
+//Listar Question
+async findAllQuestion(){
+  try {
+      return await this.questionRp.find();
+  } catch (error) {
+      ExceptionErrorMessage(error);            
+  }
+}
+
+//Borrar Question
+async deleteQuestion(id:any){
+  try {
+      await this.questionRp.delete({id:id})
+      return { message:"El registro seleccionado ha sido eliminado" };
+  }
+  catch(error){
+      ExceptionErrorMessage(error);            
+  }
+}
 }

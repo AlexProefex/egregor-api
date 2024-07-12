@@ -5,9 +5,10 @@ import { ElementEntity } from 'src/database/entity/element/element-entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LevelService } from 'src/level/level.service';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
+import { QuizEntity } from 'src/database/entity/quiz/quiz-entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([ElementEntity, LevelEntity])],
+  imports:[TypeOrmModule.forFeature([ElementEntity, LevelEntity,QuizEntity])],
   controllers: [ElementController],
   providers: [ElementService,LevelService],
 })

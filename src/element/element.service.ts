@@ -1,24 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ElementEntity } from 'src/database/entity/element/element-entity';
+import { QuizEntity } from 'src/database/entity/quiz/quiz-entity';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class ElementService {
-  constructor(@InjectRepository(ElementEntity)
-  private readonly elementRp:Repository<ElementEntity>){
+  constructor(
+    @InjectRepository(ElementEntity) private readonly elementRp:Repository<ElementEntity>,
+    @InjectRepository(QuizEntity) private readonly quizRp:Repository<QuizEntity>,
+    private datasource:DataSource){
 }
 
 //Guardar Element
 async saveElement(element:any){
   try {
-      return await this.elementRp.save(element);
+    await this.elementRp.save(element);
   } catch (error) {
+    console.log(error)
       ExceptionErrorMessage(error);            
   }
 }
 
+
+async savePractice(element:any){
+  const queryRunner = this.datasource.createQueryRunner()
+  await queryRunner.startTransaction()
+  try {
+      const quiz = await queryRunner.manager.withRepository(this.quizRp).save(element)
+      element.idReference = quiz.id;
+      await queryRunner.manager.withRepository(this.elementRp).save(element)
+      console.log(element)
+      await queryRunner.commitTransaction()
+  
+  } catch (err) {
+      await queryRunner.rollbackTransaction()
+  } finally {
+      await queryRunner.release()
+  }
+}
 //Actualizar Element
 async updateElement(id:number, element:any){
   try {
@@ -26,6 +47,22 @@ async updateElement(id:number, element:any){
       return await this.elementRp.findOneBy({id:id});
   } catch (error) {
       ExceptionErrorMessage(error);            
+  }
+}
+
+async updatePractice(id:number, element:any){
+  const queryRunner = this.datasource.createQueryRunner()
+  await queryRunner.startTransaction()
+  try {
+      const currentElement = await queryRunner.manager.withRepository(this.elementRp).findOneBy({id:id})
+      await queryRunner.manager.withRepository(this.quizRp).update({id:currentElement.idReference},{name:element.name,time:element.time})
+      element.idReference = currentElement.idReference
+      await queryRunner.manager.withRepository(this.elementRp).update({id:id},element)
+      await queryRunner.commitTransaction()
+  } catch (err) {
+      await queryRunner.rollbackTransaction()
+  } finally {
+      await queryRunner.release()
   }
 }
 

@@ -15,7 +15,7 @@ export class ElementImageValidation {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La imagen')})
-    imagen:string;
+    image:string;
 
     @ApiProperty()
     url:string;
@@ -43,7 +43,7 @@ export class ElementImageUpdateValidation {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La imagen')})
-    imagen:string;
+    image:string;
 
 
     @ApiProperty()

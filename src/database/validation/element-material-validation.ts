@@ -32,6 +32,10 @@ export class ElementMaterialValidation {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
     section:number;
 
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El documento')})
+    document:string;
+
 }
 
 
@@ -65,6 +69,10 @@ export class ElementMaterialUpdateValidation {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
     section:number;
+
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El documento')})
+    document:string;
 
 }
 

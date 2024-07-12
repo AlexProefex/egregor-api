@@ -10,7 +10,9 @@ import { diskStorage } from 'multer';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 import { extname } from 'path';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(
@@ -31,7 +33,7 @@ export class AuthController {
     loginUser(@Request() req,@Body() modelUser:LoginValidation){
         return this.authService.loginPassport(req.user);
     }
-
+/*
     @Public()
     @Post('file')
     @UseInterceptors(
@@ -54,7 +56,7 @@ export class AuthController {
             filename: file.filename,
           };
           response.push(fileReponse);
-        });*/
+        });--
       
         return {
             statusCode: 200,
@@ -63,7 +65,7 @@ export class AuthController {
             prueba: "fsfsd",
             datos2: file[0].path,
         };
-      }
+      }*/
 }
 
 

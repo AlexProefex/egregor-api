@@ -20,6 +20,7 @@ async saveSection(section:any){
   try {
       return await this.sectionRp.save(section);
   } catch (error) {
+      console.log(error)
       ExceptionErrorMessage(error);            
   }
 }
@@ -43,6 +44,22 @@ async saveExam(section:any){
       await queryRunner.release()
   }
    
+}
+
+async updateExam(id:number, section:any){
+  const queryRunner = this.datasource.createQueryRunner()
+  await queryRunner.startTransaction()
+  try {
+      const currentElement = await queryRunner.manager.withRepository(this.sectionRp).findOneBy({id:id})
+      await queryRunner.manager.withRepository(this.quizRp).update({id:currentElement.idReference},{name:section.name,time:section.time})
+      section.idReference = currentElement.idReference
+      await queryRunner.manager.withRepository(this.sectionRp).update({id:id},section)
+      await queryRunner.commitTransaction()
+  } catch (err) {
+      await queryRunner.rollbackTransaction()
+  } finally {
+      await queryRunner.release()
+  }
 }
 
 //Actualizar Section

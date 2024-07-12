@@ -5,7 +5,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UnitValidation } from 'src/database/validation/unit-validation';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('unit')
+@ApiTags('Level Units')
 @Controller('unit')
 export class UnitController {
   constructor(private readonly unitService: UnitService) {}

@@ -2,21 +2,19 @@ import { IsBoolean, IsNotEmpty  } from 'class-validator';
 import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
-export class LevelValidation {
-    @ApiProperty()
-    id:number;
+export class QSectionValidation {
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
     name:string;
 
     @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El color')})
-    color:string;
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El cuestionario')})
+    quiz:number;
 }
 
 
-export class LevelValidationUpdate {
+export class QSectionValidationUpdate {
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
@@ -26,6 +24,7 @@ export class LevelValidationUpdate {
     name:string;
 
     @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El color')})
-    color:string;
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El custionario')})
+    quiz:string;
 }
+

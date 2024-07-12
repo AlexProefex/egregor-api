@@ -30,4 +30,24 @@ export class UserValidation {
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La imagen')})
     avatar:string;
 
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La imagen')})
+    image:string;   
+
+    lastestImage:string
+
+}
+
+
+export class ChangePasswordValidation {
+
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La contraseña actual')})
+    currentPassword:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La nueva contraseña')})
+    newPassword:string;
+
 }

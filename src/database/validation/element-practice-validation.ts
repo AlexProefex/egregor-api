@@ -4,14 +4,12 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ElementPracticeValidation {
-    @ApiProperty()
-    id:number;
     
     type:string;
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El titulo')})
-    title:string;
+    name:string;
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
@@ -27,6 +25,7 @@ export class ElementPracticeValidation {
 
 }
 
+
 export class ElementPracticeUpdateValidation {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
@@ -36,7 +35,7 @@ export class ElementPracticeUpdateValidation {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El titulo')})
-    title:string;
+    name:string;
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})

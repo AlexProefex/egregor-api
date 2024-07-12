@@ -13,6 +13,9 @@ import { UnitModule } from './unit/unit.module';
 import { SectionModule } from './section/section.module';
 import { ElementModule } from './element/element.module';
 import { QuestionModule } from './question/question.module';
+import { CodeModule } from './code/code.module';
+import { QsectionModule } from './qsection/qsection.module';
+import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
@@ -22,7 +25,7 @@ import { QuestionModule } from './question/question.module';
   }]),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public'),
-  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule],
+  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule],
   controllers: [AppController],
   providers: [AppService, {
     provide:APP_GUARD,

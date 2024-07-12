@@ -7,11 +7,13 @@ import { ElementImageValidation } from 'src/database/validation/element-imagen-v
 import { ElementTextValidation } from 'src/database/validation/element-text-validation';
 import { ElementMaterialValidation } from 'src/database/validation/element-material-validation';
 import { ElementVideoAudioValidation } from 'src/database/validation/element-video_audio-validation';
-import { ElementPracticeValidation } from 'src/database/validation/element-practice-validation';
+import { ElementPracticeUpdateValidation, ElementPracticeValidation } from 'src/database/validation/element-practice-validation';
 import { ApiTags } from '@nestjs/swagger';
 import { LevelService } from 'src/level/level.service';
+import { unlinkSync, writeFileSync } from 'fs';
+import { ExceptionErrorMessage } from 'src/validation/exception-error';
 
-@ApiTags('element')
+@ApiTags('Section Elements')
 @Controller('element')
 export class ElementController {
   constructor(private readonly elementService: ElementService,
@@ -45,11 +47,23 @@ export class ElementController {
   @UseInterceptors(FileInterceptor(''))
   @Post('material')
   async saveElementMaterial(@Body() modeElement:ElementMaterialValidation):Promise<any>{
-    modeElement.type = "material";
-    const {levelId, ...model} = modeElement;
-    await this.elementService.saveElement(model);
-    return this.levelService.findLevel(levelId)
-
+    try {
+      modeElement.type = "material";
+      const base64Data = Buffer.from(modeElement.document.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+      const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+      let mimeType2 = modeElement.document.match(/[^:/]\w+(?=;|,)/)[0];
+      writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+      const url = `public/${name}.${mimeType2}`            
+      if(url){
+        modeElement.url = url;
+        const {levelId,document, ...model} = modeElement;
+        await this.elementService.saveElement(model);
+        return this.levelService.findLevel(levelId)
+        }
+      }
+      catch (err) {
+        return err
+    }
   }
 
   @Public()
@@ -66,10 +80,26 @@ export class ElementController {
   @UseInterceptors(FileInterceptor(''))
   @Post('image')
   async saveElementImage(@Body() modeElement:ElementImageValidation):Promise<any>{
-    modeElement.type = "image";
-    const {levelId, ...model} = modeElement;
-    await this.elementService.saveElement(model);
-    return this.levelService.findLevel(levelId)
+    try {
+      let level = null
+      modeElement.type = "image";
+      const base64Data = Buffer.from(modeElement.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+      const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+      let mimeType2 = modeElement.image.match(/[^:/]\w+(?=;|,)/)[0];
+      writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+      const url = `public/${name}.${mimeType2}`            
+      if(url){
+        modeElement.url = url;
+        const {levelId,image, ...model} = modeElement;
+        level = levelId
+        await this.elementService.saveElement(model);
+      }
+      return this.levelService.findLevel(level)
+      }
+      catch (error) {
+        console.log(error)
+        ExceptionErrorMessage(error); 
+    }
 
   }
 
@@ -80,8 +110,8 @@ export class ElementController {
   async saveElementPractice(@Body() modeElement:ElementPracticeValidation):Promise<any>{
     modeElement.type = "practice";
     const {levelId, ...model} = modeElement;
-    await this.elementService.saveElement(model);
-    return this.levelService.findLevel(levelId)
+    await this.elementService.savePractice(model);
+    return await this.levelService.findLevel(levelId)
 
     
   }
@@ -105,11 +135,28 @@ export class ElementController {
   @UseInterceptors(FileInterceptor(''))
   @Put('material/:id')
   async updateElementMaterial(@Body() modeElement:ElementMaterialValidation, @Param() params):Promise<any>{
-    modeElement.type = "material";
-    const {levelId, ...model} = modeElement;
-    await this.elementService.updateElement(params.id,model);
-    return this.levelService.findLevel(levelId)
-
+    try {
+      modeElement.type = "material";
+      const material = await this.elementService.findByIdElement(params.id)
+      if(modeElement.document != "undefinied"){
+        const base64Data = Buffer.from(modeElement.document.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+        let mimeType2 = modeElement.document.match(/[^:/]\w+(?=;|,)/)[0];
+        writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+        const url = `public/${name}.${mimeType2}`            
+        if(url){
+          if(material.url){
+            unlinkSync(`${material.url}`);
+          }
+          modeElement.url = url;
+        }
+      }
+      const {levelId,document, ...model} = modeElement;
+      await this.elementService.updateElement(params.id,model);
+      return this.levelService.findLevel(levelId)
+    } catch (error) {
+      ExceptionErrorMessage(error); 
+    }
   }
 
   @Public()
@@ -127,21 +174,40 @@ export class ElementController {
   @UseInterceptors(FileInterceptor(''))
   @Put('image/:id')
   async updateElementImage(@Body() modeElement:ElementImageValidation, @Param() params):Promise<any>{
-    modeElement.type = "image";
-    const {levelId, ...model} = modeElement;
-    await this.elementService.updateElement(params.id,model);
-    return this.levelService.findLevel(levelId)
+    try {
+      modeElement.type = "image";
+      const material = await this.elementService.findByIdElement(params.id)
+      if(modeElement.image != "undefinied"){
+        const base64Data = Buffer.from(modeElement.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+        let mimeType2 = modeElement.image.match(/[^:/]\w+(?=;|,)/)[0];
+        writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+        const url = `public/${name}.${mimeType2}`            
+        if(url){
+          if(material.url){
+            unlinkSync(`${material.url}`);
+          }
+          modeElement.url = url;
+        }
+      }
+      const {levelId,image, ...model} = modeElement;
+      await this.elementService.updateElement(params.id,model);
+      return this.levelService.findLevel(levelId)
+    } catch (error) {
+      
+      ExceptionErrorMessage(error); 
+    }
 
   }
   
   @Public()
   @UseInterceptors(FileInterceptor(''))
   @Put('practice/:id')
-  async updateElementPractice(@Body() modeElement:ElementPracticeValidation,@Param() params):Promise<any>{
+  async updateElementPractice(@Body() modeElement:ElementPracticeUpdateValidation,@Param() params):Promise<any>{
     modeElement.type = "practice";
     const {levelId, ...model} = modeElement;
-    await this.elementService.updateElement(params.id,model);
-    return this.levelService.findLevel(levelId)
+    await this.elementService.updatePractice(params.id,model);
+    return await this.levelService.findLevel(levelId)
   }
 
 

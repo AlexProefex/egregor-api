@@ -1,5 +1,5 @@
 
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne, JoinTable} from 'typeorm';
 import { QuizEntity } from '../quiz/quiz-entity';
 import { QsectionEntity } from '../qsection/qsection-entity';
 
@@ -18,15 +18,17 @@ export class QuestionEntity {
     points:string;
     @Column({ nullable: true})
     description:string;
-    @Column({ nullable: true})
+    @Column({ nullable: true, type:"text"})
     option:string;
-    @Column({ nullable: true})
+    @Column({ nullable: true, type:"text"})
     answer:string;
+    @Column({ nullable: true, type:"text"})
+    embed:string;
     @Column({ nullable: true})
-    imagen:string;
-
-    @ManyToOne(()=>QsectionEntity, (quiz) => quiz.question)
-    qsection:QsectionEntity
+    url:string;
+    @ManyToOne(()=>QsectionEntity, (quiz) => quiz.question,{ onDelete:"CASCADE"})
+    @JoinTable()
+    question:QsectionEntity
 
 }
 

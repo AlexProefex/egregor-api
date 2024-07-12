@@ -10,6 +10,7 @@ import { LevelEntity } from './entity/level/level-entity';
 import { ElementEntity } from './entity/element/element-entity';
 import { QuizEntity } from './entity/quiz/quiz-entity';
 import { QsectionEntity } from './entity/qsection/qsection-entity';
+import { CodeEntity } from './entity/code/code-entity';
 
 
 @Module({
@@ -22,9 +23,9 @@ import { QsectionEntity } from './entity/qsection/qsection-entity';
         username: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWROD,
         database: process.env.DATABASE_NAME,
-        entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity],
+        entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity ],
         synchronize: true,
-        dropSchema: true,
+        dropSchema: false,
         }),
     ],
     //providers:[IsUniqueConstraints,IsNumberConstraints]

@@ -16,7 +16,7 @@ export class QuizEntity {
     time:string;
 
     @OneToMany(() => QsectionEntity, (qsection) => qsection.quiz)
-    question: QsectionEntity[]
+    qsection: QsectionEntity[]
 
 }
 

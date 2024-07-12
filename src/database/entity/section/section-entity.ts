@@ -1,5 +1,5 @@
 
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne, JoinTable} from 'typeorm';
 import { UnitEntity } from '../unit/unit-entity';
 import { ElementEntity } from '../element/element-entity';
 
@@ -21,7 +21,8 @@ export class SectionEntity {
     @Column({ nullable: true})
     idReference:number;
 
-    @ManyToOne(()=>UnitEntity, (unit)=> unit.section)
+    @ManyToOne(()=>UnitEntity, (unit)=> unit.section, { onDelete:"CASCADE"})
+    @JoinTable()
     unit:UnitEntity
 
     @OneToMany(() => ElementEntity, (element) => element.section)
