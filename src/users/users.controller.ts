@@ -1,33 +1,104 @@
-import { Body, Controller, Get, Param, Post, Put, UseInterceptors, Delete, UploadedFiles, Headers, Injectable, Res, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors, Headers, Res, HttpStatus, Param, Put, UseGuards, SetMetadata } from '@nestjs/common';
 import { UserService } from './users.service';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 //import { IsParameterWithIdOfTable } from 'src/database/validation/parameter-validation';
-import { ChangePasswordValidation, UserValidation } from 'src/database/validation/user-validation';
+import { ChangePasswordValidation, CompanyValidation, TeacherValidation, UserValidation } from 'src/database/validation/user-validation';
 import { Public } from 'src/auth/auth.controller';
 import { SkipThrottle } from '@nestjs/throttler';
-import { diskStorage } from 'multer';
 import path, { extname } from 'path';
-import { token } from './token.service';
 import { writeFileSync, unlinkSync } from 'fs';
-import { ApiTags } from '@nestjs/swagger';
-import * as bcrypt from 'bcrypt';
-
-import { use } from 'passport';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { Roles } from 'src/util/roles.decorator';
+import { Role } from 'src/util/rol.enum';
+import { PermissionsGuard } from 'src/middleware/permissions.guard';
+import { TypeCompany, TypeTeacher } from 'src/util/constants';
 
-
+/*Roles
+editor de contenido
+head teacher
+profesor
+alumno
+administrador
+recursos humanos
+qa
+*/
+//@ApiBearerAuth()
 @SkipThrottle()
-@ApiTags('user')
+@ApiTags('User')
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService,
     ) { }
 
     @Public()
+    @Get('profile-all')
+    @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
+    getUserProfileAll(@Headers('Authorization') auth: string): any {
+        return this.userService.newCamps(auth);
+    }
+
+
+    //@ApiResponse({type:UserValidation})
+    @Public()
     @Get('profile')
+    @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
     getUserProfile(@Headers('Authorization') auth: string): any {
         return this.userService.findUser(auth);
     }
+
+    //@ApiResponse({type:UserValidation})
+  
+    
+
+    //@ApiResponse({type:UserValidation})
+    @Public()
+    @Get('detail/:id')
+    @ApiOperation({ summary: 'Obtiene los datos del perfil de un profesor' })
+    getUserTeacher(@Param() param:ParameterValidation): any {
+        return this.userService.findUserById(param.id);
+    }
+
+
+
+    @Public()
+    @Post('register/teacher')
+    @ApiOperation({ summary: 'Permite el registro de un usuario con rol profesor' })
+    registerTeacher(@Body() modelUser:TeacherValidation):any{
+        modelUser.rol = TypeTeacher;
+        return this.userService.saveUserGeneral(modelUser);
+    }
+
+    @Public()
+    @Put('register/teacher/:id')
+    @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol profesor' })
+    updateTeacher(@Body() modelUser:TeacherValidation, @Param() params):any{
+        modelUser.rol = TypeTeacher;
+        return this.userService.updateUserGeneral(modelUser, params.id);
+    }
+
+    //@Roles(Role.Admin,Role.User)
+    @Public()
+    @Post('register/company')
+    @ApiOperation({ summary: 'Permite el registro de un usuario con rol empresa'})
+    //@UseGuards(PermissionsGuard)
+   // @SetMetadata('permissions',['read:cats'])
+    registerCompany(@Body() modelUser:CompanyValidation):any{
+        modelUser.rol = TypeCompany;
+        return this.userService.saveUserGeneral(modelUser);
+        
+    }
+
+    @Public()
+    @Put('register/company/:id')
+    @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol empresa'})
+    updateCompany(@Body() modelUser:CompanyValidation, @Param() params):any{
+        modelUser.rol = TypeCompany;
+        return this.userService.updateUserGeneral(modelUser, params.id);
+    }
+
+    
 
 
     //Exponer punto para el listado de todas los usuarios 
@@ -50,6 +121,7 @@ export class UserController {
         return this.userService.saveUser(modelUser);
     }*/
     @Public()
+    @ApiOperation({ summary: 'Permite la actualizacion de un perfil de un usuario'})
     @Post('update-perfil')
     async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string): Promise<any> {
         try {
@@ -193,6 +265,7 @@ export class UserController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Post('change-password')
+    @ApiOperation({ summary: 'Permite el cambio de contraseña de un usuario'})
     async updatePassword(@Body() model:ChangePasswordValidation, @Headers('Authorization') auth: string, @Res() res: Response):Promise<any>{
        const response = await this.userService.validatePassword(model,auth) 
         if(!response)

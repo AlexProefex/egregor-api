@@ -4,7 +4,7 @@ import { CodeController } from './code.controller';
 import { CodeEntity } from 'src/database/entity/code/code-entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { UserEntity } from 'src/database/entity/user-entity/user-entity';
+import { UserEntity } from 'src/database/entity/user/user-entity';
 
 @Module({
   imports:[TypeOrmModule.forFeature([CodeEntity,UserEntity]),MailerModule.forRoot({

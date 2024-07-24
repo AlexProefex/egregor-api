@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common/pipes';
 import { useContainer } from 'class-validator';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ExceptionTooManyRequest } from './validation/ExceptionTooManyRequest';
-import { urlencoded, json } from 'express';
+import { json } from 'express';
 
 async function bootstrap() {
   process.env.TZ = "America/Mexico_City";
@@ -16,6 +16,7 @@ async function bootstrap() {
   useContainer(app.select(AppModule),{fallbackOnErrors:true});
 //
   const config = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('API Egregor')
   .setDescription('Points of access Egregor')
   .setVersion('1.0')

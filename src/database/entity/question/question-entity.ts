@@ -26,6 +26,8 @@ export class QuestionEntity {
     embed:string;
     @Column({ nullable: true})
     url:string;
+    @Column({ nullable: true})
+    order:number;
     @ManyToOne(()=>QsectionEntity, (quiz) => quiz.question,{ onDelete:"CASCADE"})
     @JoinTable()
     question:QsectionEntity

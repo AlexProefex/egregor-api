@@ -2,7 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { UserEntity } from 'src/database/entity/user-entity/user-entity';
+import { UserEntity } from 'src/database/entity/user/user-entity';
 import { randomText } from 'src/util/custom';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Repository } from 'typeorm';

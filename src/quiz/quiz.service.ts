@@ -39,18 +39,24 @@ export class QuizService {
                 title:true,
                 embed:true,
                 url:true,
-                type:true
-              
-
+                type:true,
+                order:true
               },
             }
           }
-          , where:{
+          ,where:{
             id:id
           }
+          ,order:{
+            id:"ASC",
+            qsection:{
+              id:"ASC",
+              question:{
+                order:"ASC"
+              }
+            }
+          }
         });
-
-
       return removeNUllValues(result)
 
 

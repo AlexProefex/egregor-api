@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/database/entity/user-entity/user-entity';
+import { UserEntity } from 'src/database/entity/user/user-entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { error } from 'console';
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
 
 @Injectable()
@@ -23,7 +24,8 @@ export class AuthService {
             user = await this.userRp.save(user);
             const { password, ...result } = user;
             return result;
-        } catch (error) {
+        } catch (error){ 
+            console.log(error)
             return error
           //  ExceptionErrorMessage(error);            
         }
@@ -48,10 +50,10 @@ export class AuthService {
     async loginPassport(user:any){
         const payload = { 
             id: user.id,
-            name:user.name,
+            name:user.name||user.company_name,
             last_name:user.last_name,
             email:user.email, 
-            rol:user.rol};
+            rol:[user.rol]};
         return {
             access_token: this.jwtService.sign(payload)
         }

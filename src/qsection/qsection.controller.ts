@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put } from '@nestjs/common';
 import { QsectionService } from './qsection.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { QSectionValidation, QSectionValidationUpdate } from 'src/database/validation/qsection-validation';
+import { ParameterValidation } from 'src/database/validation/parameter-validation';
 
 @ApiTags('Quiz Section')
 @Controller('qsection')
@@ -13,6 +14,7 @@ export class QsectionController {
   @Public()
   @UseInterceptors(FileInterceptor(''))
   @Post('/section')
+  @ApiOperation({ summary: 'Crea una nueva seccion dentro de un examen o practica'})
   saveQSection(@Body() modelQSection:QSectionValidation):any{
       return this.qsectionService.saveQSection(modelQSection);
   }
@@ -20,13 +22,15 @@ export class QsectionController {
   @Public()
   @UseInterceptors(FileInterceptor(''))
   @Put('/section/:id')
-  updateQsection(@Body() modelQSection:QSectionValidationUpdate, @Param() params):any{
+  @ApiOperation({ summary: 'Actualiza una seccion dentro de un examen o practica'})
+  updateQsection(@Body() modelQSection:QSectionValidationUpdate, @Param() params:ParameterValidation):any{
       return this.qsectionService.updateQSection(params.id, modelQSection);
   }
 
   @Public()
   @Delete('/section/:id')
-  deleteQSection(@Param() params:any){
+  @ApiOperation({ summary: 'Borra una seccion dentro de un examen o practica'})
+  deleteQSection(@Param() params:ParameterValidation){
        return this.qsectionService.deleteQSection(params.id);
    }
 

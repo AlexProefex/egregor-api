@@ -4,7 +4,9 @@ import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { SectionValidation } from 'src/database/validation/section-validation';
 import { ExamValidation, updateExamValidation } from 'src/database/validation/exam-validation';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { TypeExam, TypeSection } from 'src/util/constants';
 
 @ApiTags('Unit Sections')
 @Controller('section')
@@ -13,6 +15,7 @@ export class SectionController {
     //Exponer punto para el listado de todas los registro de prensa 
     @Public()
     @Get()
+    @ApiOperation({ summary: 'Obtiene todas las secciones'})
     getLevel():any{
         return this.sectionService.findAllSection();
     }
@@ -20,7 +23,8 @@ export class SectionController {
     //Exponer punto para obtener 3 registros aleatorios
     @Public()
     @Get(':id')
-    getLevelById(@Param() params):any{
+    @ApiOperation({ summary: 'Obtiene los datos de una seccion por su identificador'})
+    getLevelById(@Param() params:ParameterValidation):any{
         return this.sectionService.findById(params.id);
     }
 
@@ -28,8 +32,9 @@ export class SectionController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Post('section')
+    @ApiOperation({ summary: 'Crea una nueva seccion'})
     saveLevel(@Body() modelSection:SectionValidation):any{
-        modelSection.type = "section";
+        modelSection.type = TypeSection;
         return this.sectionService.saveSection(modelSection);
     }
 
@@ -37,16 +42,18 @@ export class SectionController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Post('exam')
+    @ApiOperation({ summary: 'Crea una nuevo examen'})
     saveExam(@Body() modelSection:ExamValidation):any{
-        modelSection.type = "exam";
+        modelSection.type = TypeExam;
         return this.sectionService.saveExam(modelSection);
     }
 
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Put('exam/:id')
-    updateExam(@Body() modelSection:updateExamValidation, @Param() params):any{
-        modelSection.type = "exam";
+    @ApiOperation({ summary: 'Actualiza el examen por su identificador'})
+    updateExam(@Body() modelSection:updateExamValidation, @Param() params:ParameterValidation):any{
+        modelSection.type = TypeExam;
         return this.sectionService.updateExam(params.id, modelSection);
     }
 
@@ -54,8 +61,9 @@ export class SectionController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Put(':id')
-    updateSection(@Body() modelSection:SectionValidation, @Param() params):any{
-        modelSection.type = "section";
+    @ApiOperation({ summary: 'Actualiza la seccion por su identificador'})
+    updateSection(@Body() modelSection:SectionValidation, @Param() params:ParameterValidation):any{
+        modelSection.type = TypeSection;
         return this.sectionService.updateSection(params.id, modelSection);
     }
 
@@ -63,7 +71,8 @@ export class SectionController {
      //IsParameterWithIdOfTable
     @Public()
     @Delete(':id')
-    deleteSection(@Param() params:any){
+    @ApiOperation({ summary: 'Borra la seccion por su identificador'})
+    deleteSection(@Param() params:ParameterValidation){
          return this.sectionService.deleteSection(params.id);
      }
 }

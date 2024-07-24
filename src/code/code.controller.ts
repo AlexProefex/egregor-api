@@ -4,7 +4,7 @@ import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CodeValidationChangePassword, CodeValidationSend, CodeValidationVerify } from 'src/database/validation/code-validation';
 import { Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Security Code')
 @Controller('code')
@@ -14,6 +14,7 @@ export class CodeController {
   //Exponer punto para almacenamiento de una nuevo registro de prensa
   @Public()
   @UseInterceptors(FileInterceptor(''))
+  @ApiOperation({ summary: 'Genera un codigo de verificacion'})
   @Post('/generate-code')
   generateCode(@Body() modelCode:CodeValidationSend):any{
       return this.codeService.saveCode(modelCode);
@@ -23,6 +24,7 @@ export class CodeController {
   @Public()
   @UseInterceptors(FileInterceptor(''))
   @Post('/validate-code')
+  @ApiOperation({ summary: 'Valida el codigo de seguridad'})
   async validateCode(@Body() modelCode:CodeValidationVerify, @Res()  response: Response):Promise<any>{
      const res = await this.codeService.validateCode(modelCode);
      if(res){
@@ -35,6 +37,7 @@ export class CodeController {
   @Public()
   @UseInterceptors(FileInterceptor(''))
   @Post('/change-password')
+  @ApiOperation({ summary: 'Cambiar la contraseña'})
    changePassword(@Body() modelCode:CodeValidationChangePassword):any{
      return this.codeService.updatePassword(modelCode);
   }

@@ -1,6 +1,6 @@
 
-import { IsBoolean, IsNotEmpty  } from 'class-validator';
-import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
+import { IsNotEmpty  } from 'class-validator';
+import { MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 
@@ -31,6 +31,8 @@ export class QuestionPracticeValidationOMultiple {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
     points:string;
+
+    order:string;
 }
 
 export class QuestionPracticeValidationCheckBox {
@@ -61,7 +63,7 @@ export class QuestionPracticeValidationCheckBox {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
     points:string;
 
-    
+    order:string;
 }
 
 
@@ -93,6 +95,8 @@ export class QuestionPracticeValidationDropDown {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
     points:string;
+
+    order:string;
 }
 
 
@@ -119,6 +123,8 @@ export class QuestionPracticeValidationShortAnswer {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
     points:string;
+
+    order:string;
 }
 
 export class QuestionPracticeValidationText {
@@ -135,6 +141,8 @@ export class QuestionPracticeValidationText {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
     question:number;
+
+    order:string;
 
 }
 
@@ -160,6 +168,8 @@ export class QuestionPracticeValidationImage {
 
     url:string;
 
+    order:string;
+
 
 }
 
@@ -182,6 +192,8 @@ export class QuestionPracticeValidationMovie {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
     question:number;
+
+    order:string;
 
 }
 
@@ -218,6 +230,7 @@ export class QuestionPracticeValidationUpdateOMultiple {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
     points:string;
+    
 }
 
 export class QuestionPracticeValidationUpdateCheckBox {
@@ -401,6 +414,26 @@ export class QuestionPracticeValidationUpdateMovie {
     question:number;
 
 }
+
+
+export class QuestionValidateOrder {
+    
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
+    id:number;
+
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El orden actual')})
+    newOrder:number;
+
+    order:number;
+    
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    question:number;
+
+}
+
 
 
 

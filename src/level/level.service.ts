@@ -96,7 +96,8 @@ export class LevelService {
             }
           }
         },
-        where:{id:id}
+        where:{id:id},
+        order:{id:'ASC',unit:{id:'ASC',section:{type:'DESC', id:'ASC',element:{id:'ASC'}}}}
       });
 
 

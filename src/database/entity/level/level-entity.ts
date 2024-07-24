@@ -1,5 +1,5 @@
 
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne} from 'typeorm';
 import { UnitEntity } from '../unit/unit-entity';
 
 @Entity('level')
@@ -17,6 +17,9 @@ export class LevelEntity {
 */
     @OneToMany(() => UnitEntity, (unit) => unit.level)
     unit: UnitEntity[]
+
+    @OneToMany(() => UnitEntity, (group) => group.level, {nullable:true})
+    group: UnitEntity[]
 
 
 }

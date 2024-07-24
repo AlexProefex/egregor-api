@@ -15,3 +15,6 @@ export const removeNUllValues = (obj) => {
     } 
   }
 
+  export const removeNUllObject = (obj) => {
+    return Object.entries(obj).reduce((a,[k,v]) => (v === null ? a : (a[k]=v, a)), {})
+  }

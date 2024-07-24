@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "delta-transit-429919-t8",
+  "private_key_id": "e09a369ab29b95f0528c2c99a3a84440a595f5cf",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC07S6S1wAoumk8\nrBvWwQSgijXKwlEndd/ApY11SLMZmaNobdd0Y5VzlZLCdmYW9wX+Pv134bjKN9kJ\nKOXY3fviS+I/aw91zud5zwept6lPtUijy5swifyZlEd9D9kC3vROhEG+SmKOGD7F\nWIGla5Asg9IrhSMLImdHFyKbfE3sr6t0t5uTiqkVxpUPq792opL4drxdKE/pHaD/\n9NDtWcO1xLQtNAKKWU0/uOIVGicd5nlAu+uaR3cRTOUpEIzSm4BxsmX6sRi5xNsY\nctRRKwQIuGmBipScZ/J9/Tq8Fm84sq7K+Lrpr9M1xrjLSZ09zQ0tM9EVkOSS6+Ip\nJVJF9PZnAgMBAAECggEAIprm+JEE58VX0ZH9tSKv9uDYjxKBoTGLfXZsywz/rJrV\nRWkU958Ae94U9vrcZfIThGCZ7G8RACSUb4sSA1vaDJuFB6o7h8XuQj8V8SE+0g8T\neLi90xfhZ6KT1djNIh5wzf+/71yc4x7CCs715STgq5L/BPHvFPccl91V8jVhVi6l\nIOgYZeB1uzoM4FIovlJJ4+df8eY6LqdSkQ+HJoEH2soC5x4Ilk3bheLWqgxzXI+X\nJtoyep9hqXEx0oCaFwbT+SHr3lLPYXzZgUaV3GOQZyD+JR3a0JcI2/+tefFfP6eb\nFT6QAxq26d+zE4DOK0bL3QYV/P0TnbvXHa7nhDIe+QKBgQDZNOOSK8BqzyGDuy27\nSC9YUzpk0VvqOxugv+F5aN7IiSfJ4Sj4unP8cu5K30/zU1r8mSIkSdxnyEp3HSNH\njfHH59t89HVE0l/WMktJwVtMq3UCbWK6pKz5C5UXDuV+nw2BAeICkMQAvFb0Nf5s\nDLsGP3wS5iMnJ8wlBNIHhi6RiwKBgQDVPX7Y0fNiAHn5M/+zLLvjnrHrUeqpgZ5k\n98Glc0fbAxNftIcNPHmMRsT7y3dhIS3vldNicxQdLSKhmZdcMLDuG7jJXS4hTN7x\niSBua23/UfYd+7WmAMKk6osStoHPbteL/79Yl3DlmTjvBITPxe7bKom1qtzjkngs\nNf2dPB3SFQKBgAWVo4g9kbvtSWpOpLVc/MKjmSvAakGSdXpjlJN/i8LSK/C31krW\n2GaUOeY46aBS81LtSQBv2bfdYXTAjgin8KB4KJ+E1YMIeahTMLZbv1IwUljWoSQ1\nWbEpiBLIskPYKQu5FauFN1ThgsbSoJD8ns5hUXpW6m52SnxlLFU/MPFTAoGBAIgE\n7gDIC4Ob4jH/5T8ZbdBHzh3Y5uKw96RYFYHAAznEwHrv4KWkybOdANHMe53NWEvX\nOjs2RMJHpCuImXAI7xMzQ6/ObDp5mkxft/w3MrcGRQPjJ394RLCFm6iYGj2C6qM2\nw4tzLmSGVDbCnyUZkL7kZ2smTjgrmdQ5rEi7rBnxAoGAO0sDGeVUe3uD1BgcLwPK\nutRbgy2unpy3NtoiONj06fxLjIxkRpcZndUbnbzqp8E1spdjKz++2Vlp1Yxomxoc\nKRu7f3mGUq8wtPmeFPDhgpdLiRHqGki7PHsQyNgrcECSlBdF3PMYcDlyd9F/j2R0\nYthI3yA5o3yevdVGD3gJb3c=\n-----END PRIVATE KEY-----\n",
+  "client_email": "storage@delta-transit-429919-t8.iam.gserviceaccount.com",
+  "client_id": "109112711957543400066",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/storage%40delta-transit-429919-t8.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

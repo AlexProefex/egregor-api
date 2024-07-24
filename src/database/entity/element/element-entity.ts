@@ -28,7 +28,7 @@ export class ElementEntity {
     @Column({ nullable: true})
     url:string;
     @Column({ nullable: true})
-    time:string;
+    time:number;
     @Column({ nullable: true})
     name:string;
     @Column({ nullable: true})

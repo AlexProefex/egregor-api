@@ -10,7 +10,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
   
   async validate(email: string, password: string): Promise<any> {
+    /// Agregar la validacion el campo activate login
     const user = await this.authService.searchUser(email,password);
+    console.log(email, password)
     if (!user) {
       throw new UnauthorizedException();
     }

@@ -8,3 +8,13 @@ export const ExceptionErrorMessage = (err) => {
         cause: err
     });
 }
+
+
+export const ExceptionErrorAmountinsufficient = (err) => {
+    throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: err.message,
+    }, HttpStatus.BAD_REQUEST, {
+        cause: err.message
+    });
+}

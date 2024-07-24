@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from 'src/database/entity/user-entity/user-entity';
+import { UserEntity } from 'src/database/entity/user/user-entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserValidation } from 'src/database/validation/user-validation';
 import { token } from './token.service';
 import { error } from 'console';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
-import { emit } from 'process';
+import { removeNUllObject } from 'src/util/custom';
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
 export type User = any;
 
@@ -19,6 +19,14 @@ export class UserService {
     ) {
     }
 
+    async newCamps(id: any){
+        const response = await this.userRp.findOne({
+            select: {
+                name: true, lastName: true, email: true, rol: true,  phone: true, id:true, avatar:true, status_login:true, company_name:true;
+            }, where: { id: id }
+        });
+        return response
+    }
     //Listar Usuarios
     async findUser(auth: any){
         const current = await this.jwtUtil.decode(auth);
@@ -28,6 +36,39 @@ export class UserService {
             }, where: { id: current.id }
         });
         return response
+    }
+
+    async findUserById(id:number){
+        const response = await this.userRp.findOne({where: { id: id }});
+        const {password, ...res } = response;
+        return res
+    }
+
+   
+
+    async saveUserGeneral(user:any){
+        try {
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(user.password, salt);
+            user.password = hashedPassword;
+            user = await this.userRp.save(user);
+            const { password, ...result } = user;
+            return removeNUllObject(result);
+        } catch (error) {
+            console.log(error)
+            ExceptionErrorMessage(error);            
+        }
+    }
+
+    async updateUserGeneral(user: any, id) {
+        try {
+            await this.userRp.update(id, user);
+            const response = await this.userRp.findOne({ where: { id: id }});
+            const { password, ...result } = response;
+            return removeNUllObject(result);
+        } catch (error) {
+            ExceptionErrorMessage(error);
+        }
     }
 
 

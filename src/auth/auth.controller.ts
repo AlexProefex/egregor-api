@@ -10,7 +10,7 @@ import { diskStorage } from 'multer';
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 import { extname } from 'path';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -30,6 +30,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @UseGuards(AuthGuard('local'))
     @Post('login')
+    @ApiOperation({ summary: 'Permite logearse un usuario al sistema' })
     loginUser(@Request() req,@Body() modelUser:LoginValidation){
         return this.authService.loginPassport(req.user);
     }

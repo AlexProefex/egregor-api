@@ -16,6 +16,10 @@ import { QuestionModule } from './question/question.module';
 import { CodeModule } from './code/code.module';
 import { QsectionModule } from './qsection/qsection.module';
 import { QuizModule } from './quiz/quiz.module';
+import { EstadisticModule } from './estadistic/estadistic.module';
+import { RolesGuard } from './middleware/roles.guard';
+import { LicenseModule } from './license/license.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -25,11 +29,15 @@ import { QuizModule } from './quiz/quiz.module';
   }]),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public'),
-  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule],
+  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule, EstadisticModule, LicenseModule, StorageModule],
   controllers: [AppController],
   providers: [AppService, {
     provide:APP_GUARD,
     useClass:ThrottlerGuard
-  },UsersModule],
+  }/*,{
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },*/
+  ,UsersModule],
 })
 export class AppModule {}

@@ -16,7 +16,7 @@ export class SectionEntity {
     type:string;
     
     @Column({ nullable: true})
-    time:string;
+    time:number;
 
     @Column({ nullable: true})
     idReference:number;
