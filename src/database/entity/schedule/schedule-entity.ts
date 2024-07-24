@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinTable, ManyToMany, ManyToOne} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToOne} from 'typeorm';
 import { GroupEntity } from '../group/group-entity';
 
 @Entity('schedule')
@@ -19,5 +19,4 @@ export class ScheduleEntity {
     @ManyToOne(()=>GroupEntity, (group)=> group.schedule)
     @JoinTable()
     group:GroupEntity
-
 }

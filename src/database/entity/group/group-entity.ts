@@ -17,9 +17,18 @@ export class GroupEntity {
 
     @Column({ nullable: true})
     end_time:Date;
+    
+    @Column({ nullable: true})
+    group_number:string;
+
+    @Column({ nullable: true})
+    type:string;
 
     @Column({ nullable: true})
     status:string;
+
+    @Column({ nullable: true})
+    name:string;
 
     @ManyToOne(() => LevelEntity, (level) =>  level.group, {nullable:true})
     @JoinColumn()

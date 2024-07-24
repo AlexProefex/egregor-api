@@ -23,7 +23,7 @@ export class UserService {
         const current = await this.jwtUtil.decode(auth);
         const response = await this.userRp.findOne({
             select: {
-                name: true, lastName: true, email: true, rol: true,  phone: true, id:true, avatar:true, status_login:true, company_name:true
+                name: true, lastName: true, email: true, rol: true,  phone: true, id:true, avatar:true, status_login:true, company_name:true, description:true
             }, where: {id: current.id }
         });
         return response

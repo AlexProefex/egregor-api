@@ -35,7 +35,7 @@ export class UserController {
     @Public()
     @Get('profile-all')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario con mas campos' })
-    getUserProfileAll(@Headers('Authorization') auth: string): any {
+    getUserProfileAll(@Headers('Authorization') auth: any): any {
         return this.userService.newCamps(auth);
     }
 
@@ -47,7 +47,7 @@ export class UserController {
     @Public()
     @Get('profile')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
-    getUserProfile(@Headers('Authorization') auth: string): any {
+    getUserProfile(@Headers('Authorization') auth: any): any {
         return this.userService.findUser(auth);
     }
 

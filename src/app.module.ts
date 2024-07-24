@@ -20,6 +20,8 @@ import { EstadisticModule } from './estadistic/estadistic.module';
 import { RolesGuard } from './middleware/roles.guard';
 import { LicenseModule } from './license/license.module';
 import { StorageModule } from './storage/storage.module';
+import { GroupModule } from './group/group.module';
+import { ScheduleModule } from './schedule/schedule.module';
 
 @Module({
   imports: [
@@ -29,7 +31,7 @@ import { StorageModule } from './storage/storage.module';
   }]),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public'),
-  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule, EstadisticModule, LicenseModule, StorageModule],
+  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule, EstadisticModule, LicenseModule, StorageModule, GroupModule, ScheduleModule],
   controllers: [AppController],
   providers: [AppService, {
     provide:APP_GUARD,
