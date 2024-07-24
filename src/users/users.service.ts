@@ -91,7 +91,7 @@ export class UserService {
         try {
             const current = await this.jwtUtil.decode(auth);
             if(path){
-                user.avatar = path;
+                user.avatar = `http://apiegregor.proefexperu.com/${path}`;
             }
             await this.userRp.update(current.id, user);
             const response = await this.userRp.findOne({
