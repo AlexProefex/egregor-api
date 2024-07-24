@@ -17,9 +17,9 @@ export class UserValidation {
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('Los apellidos')})
     lastName:string;
 
-    @ApiProperty()
+    /*@ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
-    email:string;
+    email:string;*/
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El Telefono')})
@@ -29,9 +29,9 @@ export class UserValidation {
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La descripcion')})
     description:string;
 
-    @ApiProperty()
+    /*@ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La imagen')})
-    avatar:string;
+    avatar:string;*/
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La imagen')})
