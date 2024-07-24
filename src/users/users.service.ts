@@ -19,11 +19,12 @@ export class UserService {
     ) {
     }
 
-    async newCamps(id: any){
+    async newCamps(auth: any){
+        const current = await this.jwtUtil.decode(auth);
         const response = await this.userRp.findOne({
             select: {
                 name: true, lastName: true, email: true, rol: true,  phone: true, id:true, avatar:true, status_login:true, company_name:true
-            }, where: { id: id }
+            }, where: {id: current.id }
         });
         return response
     }
