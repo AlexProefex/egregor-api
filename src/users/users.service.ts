@@ -90,7 +90,9 @@ export class UserService {
     async updateUser(user: any, path, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);
-            user.avatar = path;
+            if(path){
+                user.avatar = path;
+            }
             await this.userRp.update(current.id, user);
             const response = await this.userRp.findOne({
                 select: {
