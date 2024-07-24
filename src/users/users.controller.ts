@@ -23,6 +23,7 @@ alumno
 administrador
 recursos humanos
 qa
+qqqqqqq
 */
 //@ApiBearerAuth()
 @SkipThrottle()
