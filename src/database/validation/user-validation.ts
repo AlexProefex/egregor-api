@@ -18,7 +18,9 @@ export class UserValidation {
     lastName:string;
 
     @ApiProperty()
-    @IsOptional({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    @IsUnique({tableName:'user',column:'email'})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    @IsEmail({},{message:"El correo debe tener formato email@email.com"})
     email:string;
 
     @ApiProperty()

@@ -1,34 +1,69 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { GroupService } from './group.service';
-import { CreateGroupDto } from './dto/create-group.dto';
-import { UpdateGroupDto } from './dto/update-group.dto';
+import { Public } from 'src/auth/auth.controller';
+import { ApiOperation } from '@nestjs/swagger';
+import { ParameterValidation } from 'src/database/validation/parameter-validation';
 
 @Controller('group')
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
-  @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupService.create(createGroupDto);
+  //Exponer punto para obtener 3 registros aleatorios
+  @Public()
+  @Get('content/:id')
+  @ApiOperation({ summary: 'Obtiene el esquema de un nivel'})
+  getLevelAll(@Param() params:ParameterValidation):any{
+      return this.groupService.findLevel(params.id);
   }
 
+  //Exponer punto para el listado de todas los registro de prensa 
+  @Public()
+  @Get('stadistic/count')
+  @ApiOperation({ summary: 'Obtiene las estadisticas del nivel'})
+  getCountLevel():any{
+      return this.groupService.getCountLevel();
+  }
+  //Exponer punto para el listado de todas los registro de prensa 
+  @Public()
   @Get()
-  findAll() {
-    return this.groupService.findAll();
+  @ApiOperation({ summary: 'Obtiene todos los niveles'})
+  getLevel():any{
+      return this.groupService.findAllLevel();
   }
+  
 
+  //Exponer punto para obtener 3 registros aleatorios
+  @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.groupService.findOne(+id);
+  @ApiOperation({ summary: 'Obtiene los datos del nivel por su identificador'})
+  getLevelById(@Param() params:ParameterValidation):any{
+      return this.groupService.findById(params.id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupService.update(+id, updateGroupDto);
+
+  //Exponer punto para almacenamiento de una nuevo registro de prensa
+  @Public()
+  @Post()
+  @ApiOperation({ summary: 'Almacena un nuevo nivel'})
+  saveLevel(@Body() modelevel:LevelValidation):any{
+      return this.groupService.saveLevel(modelevel);
   }
 
+  //Exponer punto para actualizar un registro de prensa mediante su id
+  @Public()
+  @Put(':id')
+  @ApiOperation({ summary: 'Actuliza el nivel mediante su identificador'})
+  updateLevel(@Body() modelevel:LevelValidationUpdate, @Param() params:ParameterValidation):any{
+      return this.groupService.updateLevel(params.id, modelevel);
+  }
+
+   //Exponer punto para remover una prensa mediante su id    
+   //IsParameterWithIdOfTable
+  /*@Public()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.groupService.remove(+id);
-  }
+  deleteLevel(@Param() params:any){
+       return this.levelService.deleteLevel(params.id);
+   }*/
 }
+
+

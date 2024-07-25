@@ -3,8 +3,6 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class LevelValidation {
-    @ApiProperty()
-    id:number;
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
@@ -17,9 +15,7 @@ export class LevelValidation {
 
 
 export class LevelValidationUpdate {
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El id')})
-    id:number;
+  
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})

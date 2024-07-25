@@ -10,7 +10,7 @@ export class GroupEntity {
     id:number;
 
     @Column({ nullable: true})
-    company:string;
+    company:number;
 
     @Column({ nullable: true})
     start_time:Date;
