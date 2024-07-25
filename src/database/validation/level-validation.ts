@@ -1,5 +1,5 @@
-import { IsBoolean, IsNotEmpty  } from 'class-validator';
-import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
+import {  IsNotEmpty  } from 'class-validator';
+import {  MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class LevelValidation {
@@ -15,7 +15,6 @@ export class LevelValidation {
 
 
 export class LevelValidationUpdate {
-  
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
