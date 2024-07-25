@@ -38,7 +38,7 @@ export class GroupEntity {
     @JoinColumn()
     teacher:UserEntity
 
-    @OneToMany(()=>ScheduleEntity, (schedule)=> schedule.group)
+ /*   @OneToMany(()=>ScheduleEntity, (schedule)=> schedule.group)
     schedule:ScheduleEntity
-
+*/
 }

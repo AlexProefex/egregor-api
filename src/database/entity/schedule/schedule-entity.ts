@@ -1,5 +1,5 @@
 import {Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToOne} from 'typeorm';
-import { GroupEntity } from '../group/group-entity';
+
 
 @Entity('schedule')
 export class ScheduleEntity {
@@ -16,7 +16,7 @@ export class ScheduleEntity {
     @Column({ nullable: true})
     end_time:string;
 
-    @ManyToOne(()=>GroupEntity, (group)=> group.schedule)
+    /*@ManyToOne(()=>GroupEntity, (group)=> group.schedule)
     @JoinTable()
-    group:GroupEntity
+    group:GroupEntity*/
 }

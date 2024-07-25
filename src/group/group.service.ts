@@ -6,9 +6,10 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class GroupService {
-  constructor(@InjectRepository(GroupEntity)
-  private readonly groupRp: Repository<GroupEntity>) {
-  }
+  //constructor()//@InjectRepository(GroupEntity)
+  //private readonly groupRp: Repository<GroupEntity>) 
+  //{
+  
 
 
 
