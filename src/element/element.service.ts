@@ -88,7 +88,9 @@ export class ElementService {
 
   //Borrar Element
   async deleteElement(id: any) {
-
+    const exist = await this.elementRp.findOneBy({id:id});
+    if(!exist)
+      return exist
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put, Res, HttpStatus } from '@nestjs/common';
 import { ElementService } from './element.service';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -14,6 +14,7 @@ import { unlinkSync, writeFileSync } from 'fs';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
 import { TypeImage, TypeMaterial, TypePractice, TypeText, TypeVideo } from 'src/util/constants';
+import { Response } from 'express';
 
 @ApiTags('Section Elements')
 @Controller('element')
@@ -60,7 +61,7 @@ export class ElementController {
       const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
       let mimeType2 = modeElement.document.match(/[^:/]\w+(?=;|,)/)[0];
       writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-      const url = `public/${name}.${mimeType2}`            
+      const url = `http://apiegregor.proefexperu.com/${name}.${mimeType2}`            
       if(url){
         modeElement.url = url;
         const {levelId,document, ...model} = modeElement;
@@ -155,10 +156,11 @@ export class ElementController {
         const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
         let mimeType2 = modeElement.document.match(/[^:/]\w+(?=;|,)/)[0];
         writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-        const url = `public/${name}.${mimeType2}`            
+        let url = `http://apiegregor.proefexperu.com/api/${name}.${mimeType2}` 
         if(url){
           if(material.url){
-            unlinkSync(`${material.url}`);
+            const document = material.url.replace("http://apiegregor.proefexperu.com/","public/")
+            unlinkSync(`${document}`);
           }
           modeElement.url = url;
         }
@@ -167,6 +169,7 @@ export class ElementController {
       await this.elementService.updateElement(params.id,model);
       return this.levelService.findLevel(levelId)
     } catch (error) {
+      console.log(error)
       ExceptionErrorMessage(error); 
     }
   }
@@ -241,7 +244,10 @@ export class ElementController {
   @Public()
   @Delete(':id')
   @ApiOperation({ summary: 'Elimina un elemento  por su identificador'})
-  deleteElement(@Param() params:ParameterValidation){
-       return this.elementService.deleteElement(params.id);
+  async deleteElement(@Param() params:ParameterValidation,@Res() res: Response){
+      const response =   await  this.elementService.deleteElement(params.id);
+      if(!response) return res.status(HttpStatus.NOT_FOUND).json({"message":"registro no encontrado"});
+      return res.status(HttpStatus.ACCEPTED).json({"message":"El registro seleccionado ha sido eliminado"})
+     
    }
 }

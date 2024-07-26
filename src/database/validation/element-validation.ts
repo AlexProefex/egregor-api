@@ -4,7 +4,6 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ElementValidation {
-    @ApiProperty()
     id:number;
     
     @ApiProperty()

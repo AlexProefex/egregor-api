@@ -94,6 +94,9 @@ export class SectionService {
 
   //Borrar Section
   async deleteSection(id: any) {
+    const exist = await this.sectionRp.findOneBy({id:id});
+    if(!exist)
+      return exist
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {

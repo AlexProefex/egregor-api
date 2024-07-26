@@ -2,6 +2,8 @@ import {Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinTable
 import { ScheduleEntity } from '../schedule/schedule-entity';
 import { UserEntity } from '../user/user-entity';
 import { LevelEntity } from '../level/level-entity';
+import { IsEnum } from 'class-validator';
+import { TypesGroup } from 'src/util/constants';
 
 @Entity('group')
 export class GroupEntity {
@@ -24,7 +26,7 @@ export class GroupEntity {
     @Column({ nullable: true})
     type:string;
 
-    @Column({ nullable: true})
+    @Column({ nullable: true,default:"inactive"})
     status:string;
 
     @Column({ nullable: true})
@@ -38,7 +40,7 @@ export class GroupEntity {
     @JoinColumn()
     teacher:UserEntity
 
- /*   @OneToMany(()=>ScheduleEntity, (schedule)=> schedule.group)
+    @OneToMany(()=>ScheduleEntity, (schedule)=> schedule.group)
     schedule:ScheduleEntity
-*/
+
 }

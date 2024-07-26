@@ -29,6 +29,9 @@ export class QsectionService {
   }
 
   async deleteQSection(id:any){
+    const exist = await this.qsectionRp.findOneBy({id:id});
+    if(!exist)
+      return exist
     try {
         await this.qsectionRp.delete({id:id})
         return { message:"El registro seleccionado ha sido eliminado" };

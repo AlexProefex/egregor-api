@@ -9,6 +9,15 @@ export const ExceptionErrorMessage = (err) => {
     });
 }
 
+export const NotFoundErrorMessage = (err) => {
+    throw new HttpException({
+        status: HttpStatus.NOT_FOUND,
+        error: 'Registro no encontrado',
+    }, HttpStatus.NOT_FOUND, {
+        cause: err
+    });
+}
+
 
 export const ExceptionErrorAmountinsufficient = (err) => {
     throw new HttpException({

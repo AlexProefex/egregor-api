@@ -128,10 +128,7 @@ export class CompanyValidation {
 }
 
 
-
-
 export class ChangePasswordValidation {
-
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La contraseña actual')})

@@ -4,14 +4,12 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ExamValidation {
-    @ApiProperty()
     id:number;
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
     name:string;
 
-    @ApiProperty()
     type:string;
 
     @ApiProperty()
@@ -28,14 +26,11 @@ export class ExamValidation {
 
 
 export class updateExamValidation {
-    @ApiProperty()
-    id:number;
     
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
     name:string;
 
-    @ApiProperty()
     type:string;
 
     @ApiProperty()

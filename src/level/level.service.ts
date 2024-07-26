@@ -123,14 +123,5 @@ export class LevelService {
     }
   }
 
-  //Borrar Level
-  async deleteLevel(id: any) {
-    try {
-      await this.lelvelRp.delete({ id: id })
-      return { message: "El registro seleccionado ha sido eliminado" };
-    }
-    catch (error) {
-      ExceptionErrorMessage(error);
-    }
-  }
+
 }

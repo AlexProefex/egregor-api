@@ -30,8 +30,7 @@ export class ElementPracticeValidation {
 
 
 export class ElementPracticeUpdateValidation {
-    @ApiProperty()
-    @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('El id') })
+  
     id: number;
 
     type: string;

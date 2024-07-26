@@ -62,11 +62,4 @@ export class LevelController {
         return this.levelService.updateLevel(params.id, modelevel);
     }
 
-     //Exponer punto para remover una prensa mediante su id    
-     //IsParameterWithIdOfTable
-    /*@Public()
-    @Delete(':id')
-    deleteLevel(@Param() params:any){
-         return this.levelService.deleteLevel(params.id);
-     }*/
 }

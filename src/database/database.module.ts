@@ -30,7 +30,7 @@ import { ScheduleEntity } from './entity/schedule/schedule-entity';
         database: process.env.DATABASE_NAME,
         entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity, LicenseEntity, GroupEntity, ScheduleEntity ],
         synchronize: true,
-        dropSchema: true,
+        dropSchema: false,
         }),
     ],
     providers:[IsUniqueConstraints]

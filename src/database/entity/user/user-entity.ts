@@ -83,6 +83,8 @@ export class UserEntity {
     @Column({ nullable: true})
     company_name:string;
 
+    @Column({ nullable: true, default:0})
+    id_group:number;
     
     @OneToMany(() => LicenseEntity, (license)=> license.company,{ nullable:true})
     license:LicenseEntity

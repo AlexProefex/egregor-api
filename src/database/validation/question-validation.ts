@@ -200,8 +200,6 @@ export class QuestionPracticeValidationMovie {
 
 export class QuestionPracticeValidationUpdateOMultiple {
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -235,8 +233,6 @@ export class QuestionPracticeValidationUpdateOMultiple {
 
 export class QuestionPracticeValidationUpdateCheckBox {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -273,8 +269,6 @@ export class QuestionPracticeValidationUpdateCheckBox {
 
 export class QuestionPracticeValidationUpdateDropDown {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -309,8 +303,6 @@ export class QuestionPracticeValidationUpdateDropDown {
 
 export class QuestionPracticeValidationUpdateShortAnswer {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -338,8 +330,6 @@ export class QuestionPracticeValidationUpdateShortAnswer {
 
 export class QuestionPracticeValidationUpdateText {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -360,8 +350,6 @@ export class QuestionPracticeValidationUpdateText {
 
 export class QuestionPracticeValidationUpdateImage {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -391,8 +379,6 @@ export class QuestionPracticeValidationUpdateImage {
 
 export class QuestionPracticeValidationUpdateMovie {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     type:string;
@@ -418,8 +404,6 @@ export class QuestionPracticeValidationUpdateMovie {
 
 export class QuestionValidateOrder {
     
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
 
     @ApiProperty()

@@ -21,6 +21,24 @@ export const TypeActive = 'activo'
 export const TypeB2B2C = 'b2b2c'
 export const TypeB2C = 'b2c'
 export const TypeB2B = 'b2b'
+export const TypesGroupOpen = 'Open School'
+export const TypesGroupClose = 'Grupo Cerrado'
+export const StatusGroupActive = 'active'
+export const StatusGroupInactive = 'inactive'
+
+
+export type StatesGroups = 'active' | 'inactive';
+export const StatesGroup: StatesGroups[] = [
+    'active',
+    'inactive',
+]
+export type TypesGroups = 'Open School' | 'Grupo Cerrado';
+export const TypesGroup: TypesGroups[] = [
+    'Open School',
+    'Grupo Cerrado',
+]
+
+export const Days = { 1: "L", 2: "M", 3: "X", 4: "J", 5: "V", 6: "S", 7: "D" }
 
 
 

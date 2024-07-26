@@ -4,7 +4,6 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ElementMaterialValidation {
-    @ApiProperty()
     id:number;
     
     type:string;
@@ -17,9 +16,6 @@ export class ElementMaterialValidation {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La descripcion')})
     description:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El contenido')})
-    content:string;
 
     @ApiProperty()
     url:string;
@@ -41,8 +37,7 @@ export class ElementMaterialValidation {
 
 
 export class ElementMaterialUpdateValidation {
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
+
     id:number;
     
     type:string;
@@ -54,10 +49,6 @@ export class ElementMaterialUpdateValidation {
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La descripcion')})
     description:string;
-
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El contenido')})
-    content:string;
 
     @ApiProperty()
     url:string;

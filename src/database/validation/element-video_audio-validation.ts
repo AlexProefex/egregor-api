@@ -4,7 +4,6 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ElementVideoAudioValidation {
-    @ApiProperty()
     id:number;
     
     type:string;
@@ -30,8 +29,7 @@ export class ElementVideoAudioValidation {
 
 
 export class ElementVideoAudioUpdateValidation {
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
+
     id:number;
     
     type:string;

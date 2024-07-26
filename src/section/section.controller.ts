@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put, Res, HttpStatus } from '@nestjs/common';
 import { SectionService } from './section.service';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,6 +7,7 @@ import { ExamValidation, updateExamValidation } from 'src/database/validation/ex
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
 import { TypeExam, TypeSection } from 'src/util/constants';
+import { Response } from 'express';
 
 @ApiTags('Unit Sections')
 @Controller('section')
@@ -72,7 +73,9 @@ export class SectionController {
     @Public()
     @Delete(':id')
     @ApiOperation({ summary: 'Borra la seccion por su identificador'})
-    deleteSection(@Param() params:ParameterValidation){
-         return this.sectionService.deleteSection(params.id);
+    async deleteSection(@Param() params:ParameterValidation,@Res() res: Response){
+        const response =   await   this.sectionService.deleteSection(params.id);
+        if(!response) return res.status(HttpStatus.NOT_FOUND).json({"message":"registro no encontrado"});
+        return res.status(HttpStatus.ACCEPTED).json({"message":"El registro seleccionado ha sido eliminado"})
      }
 }

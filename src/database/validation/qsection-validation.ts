@@ -15,8 +15,6 @@ export class QSectionValidation {
 
 
 export class QSectionValidationUpdate {
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El id')})
     id:number;
     
     @ApiProperty()

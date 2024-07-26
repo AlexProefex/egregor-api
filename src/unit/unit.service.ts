@@ -61,7 +61,10 @@ export class UnitService {
 
   //Borrar Unit
   async deleteUnit(id: any) {
-
+    const exist = await this.unitRp.findOneBy({id:id});
+    console.log(exist)
+    if(!exist)
+      return exist
     const exams = await this.getExams(id)
     const practics = await this.getPractice(id)
     const queryRunner = this.datasource.createQueryRunner()
@@ -76,7 +79,9 @@ export class UnitService {
      })
       await queryRunner.manager.withRepository(this.unitRp).delete({ id: id })
       await queryRunner.commitTransaction()
-      return { message: "El registro seleccionado ha sido eliminado" };
+      return { message: "El registro seleccionado ha sido eliminado"};
+
+      
     } catch (err) {
       // since we have errors let's rollback changes we made
       await queryRunner.rollbackTransaction()

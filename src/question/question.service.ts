@@ -103,6 +103,9 @@ export class QuestionService {
 
   //Borrar Question
   async deleteQuestion(id: any) {
+    const exist = await this.questionRp.findOneBy({id:id});
+    if(!exist)
+      return exist
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {

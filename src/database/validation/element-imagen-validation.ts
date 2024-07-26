@@ -4,7 +4,6 @@ import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/v
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 export class ElementImageValidation {
-    @ApiProperty()
     id:number;
     
     type:string;
@@ -31,8 +30,7 @@ export class ElementImageValidation {
 }
 
 export class ElementImageUpdateValidation {
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
+
     id:number;
     
     type:string;

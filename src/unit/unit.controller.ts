@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put, Res, HttpStatus } from '@nestjs/common';
 import { UnitService } from './unit.service';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UnitValidation } from 'src/database/validation/unit-validation';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { request } from 'https';
+import { Response } from 'express';
 
 @ApiTags('Level Units')
 @Controller('unit')
@@ -49,7 +51,9 @@ export class UnitController {
   @Public()
   @Delete(':id')
   @ApiOperation({ summary: 'Elimina la unidad por su identificador'})
-  deleteUnit(@Param() params:ParameterValidation){
-       return this.unitService.deleteUnit(params.id);
+  async deleteUnit(@Param() params:ParameterValidation, @Res() res: Response){
+    const response = await this.unitService.deleteUnit(params.id);
+       if(!response) return res.status(HttpStatus.NOT_FOUND).json({"message":"registro no encontrado"});
+       return res.status(HttpStatus.ACCEPTED).json({"message":"El registro seleccionado ha sido eliminado"})
    }
 }

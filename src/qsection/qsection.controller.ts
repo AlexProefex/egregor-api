@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put, Res, HttpStatus } from '@nestjs/common';
 import { QsectionService } from './qsection.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { QSectionValidation, QSectionValidationUpdate } from 'src/database/validation/qsection-validation';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { Response } from 'express';
 
 @ApiTags('Quiz Section')
 @Controller('qsection')
@@ -30,8 +31,10 @@ export class QsectionController {
   @Public()
   @Delete('/section/:id')
   @ApiOperation({ summary: 'Borra una seccion dentro de un examen o practica'})
-  deleteQSection(@Param() params:ParameterValidation){
-       return this.qsectionService.deleteQSection(params.id);
+  async deleteQSection(@Param() params:ParameterValidation, @Res() res: Response){
+    const response =   await  this.qsectionService.deleteQSection(params.id);
+    if(!response) return res.status(HttpStatus.NOT_FOUND).json({"message":"registro no encontrado"});
+    return res.status(HttpStatus.ACCEPTED).json({"message":"El registro seleccionado ha sido eliminado"})
    }
 
 }

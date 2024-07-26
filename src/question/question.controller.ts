@@ -214,8 +214,10 @@ export class QuestionController {
   @Public()
   @Delete(':id')
   @ApiOperation({ summary: 'Borra una pregunta'})
-  deleteLevel(@Param() params:ParameterValidation){
-       return this.questionService.deleteQuestion(params.id);
+  async deleteLevel(@Param() params:ParameterValidation, @Res() res: Response){
+       const response =   await  this.questionService.deleteQuestion(params.id);
+        if(!response) return res.status(HttpStatus.NOT_FOUND).json({"message":"registro no encontrado"});
+        return res.status(HttpStatus.ACCEPTED).json({"message":"El registro seleccionado ha sido eliminado"})
   }
 
 
