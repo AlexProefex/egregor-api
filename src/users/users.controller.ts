@@ -131,28 +131,27 @@ export class UserController {
     @Post('update-perfil')
     async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string): Promise<any> {
         let path = null 
+        let success = null
         try {
             if(modelUser.image != "undefined"){
-              //  const user =  await this.getUserProfile(auth);
+                const user =  await this.getUserProfile(auth);
                 const base64Data = Buffer.from(modelUser.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                 const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
                 let mimeType2 = modelUser.image.match(/[^:/]\w+(?=;|,)/)[0];
                 writeFileSync(`public/${name}.${mimeType2}`, base64Data)
                 path = `public/${name}.${mimeType2}`    
-                this.storageService.uploadFileGroup(path);
-                //unlinkSync(path)
+                success = await this.storageService.uploadFileGroup(path);
+                console.log(success)
+                if(success){
+                    unlinkSync(path)
+                }
 
-                /*if(path){
-                    if(user.avatar){
-                        unlinkSync(`${user.avatar}`);
-                    }
-                }*/
             }
             const {image, ... updateUser} = modelUser
-            //const result = await this.userService.updateUser(updateUser,path, auth)
+            const result = await this.userService.updateUser(updateUser,success, auth)
             return {
                 statusCode: 200,
-            //    "data":{...result},
+                "data":{...result},
                 "error": ""
             }
         }

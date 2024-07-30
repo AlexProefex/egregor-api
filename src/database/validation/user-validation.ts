@@ -10,6 +10,10 @@ import { Role } from 'src/util/rol.enum';
 export class UserValidation {
  
     @ApiProperty()
+    @IsOptional()
+    id:number;
+
+    @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
     name:string;
 
@@ -45,6 +49,10 @@ export class UserValidation {
 
 
 export class TeacherValidation {
+
+    @ApiProperty()
+    @IsOptional()
+    id:number;
 
     rol:string;
 
@@ -86,7 +94,11 @@ export class TeacherValidation {
 
 
 export class CompanyValidation {
-    
+   
+    @ApiProperty()
+    @IsOptional()
+    id:number;
+
     rol:string;
     
     @ApiProperty()

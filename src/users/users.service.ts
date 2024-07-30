@@ -87,12 +87,12 @@ export class UserService {
          }
      }*/
     //Actualizar Usuario
-    async updateUser(user: any, path, auth: any) {
+    async updateUser(user: any, name, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);
-            //if(path){
-            user.avatar = `test`;
-            //}
+            if(name){
+                user.avatar = name;
+            }
             await this.userRp.update(current.id, user);
             const response = await this.userRp.findOne({
                 select: {
@@ -105,10 +105,6 @@ export class UserService {
             ExceptionErrorMessage(error);
         }
     }
-
-
-
-
 
     async updatePassword(user: any, auth: any) {
         try {
