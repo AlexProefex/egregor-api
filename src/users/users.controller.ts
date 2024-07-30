@@ -50,8 +50,11 @@ export class UserController {
     @Public()
     @Get('profile')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
-    getUserProfile(@Headers('Authorization') auth: any): any {
-        return this.userService.findUser(auth);
+    async getUserProfile(@Headers('Authorization') auth: any): Promise<any> {
+         const user = await this.userService.findUser(auth);
+         const image = await this.storageService.getLinks(user.avatar)
+         user.avatar = image;
+         return user;
     }
 
     //@ApiResponse({type:UserValidation})
