@@ -52,8 +52,10 @@ export class UserController {
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
     async getUserProfile(@Headers('Authorization') auth: any): Promise<any> {
          const user = await this.userService.findUser(auth);
-         const image = await this.storageService.getLinks(user.avatar)
-         user.avatar = image;
+         if(user.avatar){
+             const image = await this.storageService.getLinks(user.avatar)
+             user.avatar = image;
+         }
          return user;
     }
 
