@@ -90,9 +90,9 @@ export class UserService {
     async updateUser(user: any, path, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);
-            if(path){
-                user.avatar = `http://apiegregor.proefexperu.com/${path}`;
-            }
+            //if(path){
+            user.avatar = `test`;
+            //}
             await this.userRp.update(current.id, user);
             const response = await this.userRp.findOne({
                 select: {
@@ -101,6 +101,7 @@ export class UserService {
             });
             return response;
         } catch (error) {
+            console.log(error)
             ExceptionErrorMessage(error);
         }
     }

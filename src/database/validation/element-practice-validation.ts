@@ -16,10 +16,7 @@ export class ElementPracticeValidation {
     @IsNumber({}, { message: "El tiempo debe ser un numero" })
     time: number;
 
-    @ApiProperty()
-    @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('El Nivel') })
-    @IsNumber({}, { message: "El nivel debe ser un numero" })
-    levelId: number;
+
 
     @ApiProperty()
     @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('La seccion') })
@@ -44,10 +41,6 @@ export class ElementPracticeUpdateValidation {
     @IsNumber({}, { message: "El tiempo debe ser un numero" })
     time: number;
 
-    @ApiProperty()
-    @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('El Nivel') })
-    @IsNumber({}, { message: "El nivel debe ser un numero" })
-    levelId: number;
 
     @ApiProperty()
     @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('La seccion') })

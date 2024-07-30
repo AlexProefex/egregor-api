@@ -45,9 +45,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Crea un nuevo elemento tipo texto'})
   async saveElementText(@Body() modeElement:ElementTextValidation):Promise<any>{
     modeElement.type = TypeText;
-    const {levelId, ...model} = modeElement;
+    const {...model} = modeElement;
     await this.elementService.saveElement(model);
-    return this.levelService.findLevel(levelId)
+    //return this.levelService.findLevel(levelId)
   }
 
   @Public()
@@ -64,9 +64,9 @@ export class ElementController {
       const url = `http://apiegregor.proefexperu.com/${name}.${mimeType2}`            
       if(url){
         modeElement.url = url;
-        const {levelId,document, ...model} = modeElement;
+        const {document, ...model} = modeElement;
         await this.elementService.saveElement(model);
-        return this.levelService.findLevel(levelId)
+        //return this.levelService.findLevel(levelId)
         }
       }
       catch (err) {
@@ -80,9 +80,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Crea un nuevo elemento tipo video'})
   async saveElementVideo(@Body() modeElement:ElementVideoAudioValidation):Promise<any>{
     modeElement.type = TypeVideo;
-    const {levelId, ...model} = modeElement;
+    const model = modeElement;
     await this.elementService.saveElement(model);
-    return this.levelService.findLevel(levelId)
+    //return this.levelService.findLevel(levelId)
   }
 
   @Public()
@@ -100,8 +100,8 @@ export class ElementController {
       const url = `public/${name}.${mimeType2}`            
       if(url){
         modeElement.url = url;
-        const {levelId,image, ...model} = modeElement;
-        level = levelId
+        const {image, ...model} = modeElement;
+        //level = levelId
         await this.elementService.saveElement(model);
       }
       return this.levelService.findLevel(level)
@@ -120,9 +120,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Crea un nuevo elemento tipo practica'})
   async saveElementPractice(@Body() modeElement:ElementPracticeValidation):Promise<any>{
     modeElement.type = TypePractice;
-    const {levelId, ...model} = modeElement;
+    const { ...model} = modeElement;
     await this.elementService.savePractice(model);
-    return await this.levelService.findLevel(levelId)
+    //return await this.levelService.findLevel(levelId)
 
     
   }
@@ -137,10 +137,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Actualiza un elemento tipo texto por su identificador'})
   async updateElementText(@Body() modeElement:ElementTextValidation, @Param() params):Promise<any>{
     modeElement.type = TypeText;
-    const {levelId, ...model} = modeElement;
+    const { ...model} = modeElement;
     await this.elementService.updateElement(params.id,model);
-    return this.levelService.findLevel(levelId)
-
+    //return this.levelService.findLevel(levelId)
   }
 
   @Public()
@@ -165,9 +164,9 @@ export class ElementController {
           modeElement.url = url;
         }
       }
-      const {levelId,document, ...model} = modeElement;
+      const {document, ...model} = modeElement;
       await this.elementService.updateElement(params.id,model);
-      return this.levelService.findLevel(levelId)
+      //return this.levelService.findLevel(levelId)
     } catch (error) {
       console.log(error)
       ExceptionErrorMessage(error); 
@@ -180,9 +179,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Actualiza un elemento tipo video por su identificador'})
   async updateElementVideo(@Body() modeElement:ElementVideoAudioValidation, @Param() params:ParameterValidation):Promise<any>{
     modeElement.type = TypeVideo;
-    const {levelId, ...model} = modeElement;
+    const model = modeElement;
     await this.elementService.updateElement(params.id,model);
-    return this.levelService.findLevel(levelId)
+    //return this.levelService.findLevel(levelId)
 
   }
 
@@ -207,9 +206,9 @@ export class ElementController {
           modeElement.url = url;
         }
       }
-      const {levelId,image, ...model} = modeElement;
+      const {image, ...model} = modeElement;
       await this.elementService.updateElement(params.id,model);
-      return this.levelService.findLevel(levelId)
+      //return this.levelService.findLevel(levelId)
     } catch (error) {
       
       ExceptionErrorMessage(error); 
@@ -223,9 +222,9 @@ export class ElementController {
   @ApiOperation({ summary: 'Actualiza un elemento tipo practica por su identificador'})
   async updateElementPractice(@Body() modeElement:ElementPracticeUpdateValidation,@Param() params:ParameterValidation):Promise<any>{
     modeElement.type = TypePractice;
-    const {levelId, ...model} = modeElement;
+    const { ...model} = modeElement;
     await this.elementService.updatePractice(params.id,model);
-    return await this.levelService.findLevel(levelId)
+    //return await this.levelService.findLevel(levelId)
   }
 
 

@@ -25,6 +25,9 @@ export const TypesGroupOpen = 'Open School'
 export const TypesGroupClose = 'Grupo Cerrado'
 export const StatusGroupActive = 'active'
 export const StatusGroupInactive = 'inactive'
+export const EgregorName = "proyecto-egregor-test"
+export const Credentials = "key_project.json"
+
 
 
 export type StatesGroups = 'active' | 'inactive';

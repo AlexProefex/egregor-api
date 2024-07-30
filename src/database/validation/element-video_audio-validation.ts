@@ -13,12 +13,14 @@ export class ElementVideoAudioValidation {
     type_icon:string;
 
     @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El titulo')})
+    title:string;
+
+    @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El embed')})
     embed:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
+  
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
@@ -39,12 +41,13 @@ export class ElementVideoAudioUpdateValidation {
     type_icon:string;
 
     @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El titulo')})
+    title:string;
+
+    @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El embed')})
     embed:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})

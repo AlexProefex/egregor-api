@@ -20,9 +20,7 @@ export class ElementMaterialValidation {
     @ApiProperty()
     url:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
+
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
@@ -53,9 +51,6 @@ export class ElementMaterialUpdateValidation {
     @ApiProperty()
     url:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})

@@ -19,9 +19,6 @@ export class ElementImageValidation {
     @ApiProperty()
     url:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
@@ -47,9 +44,7 @@ export class ElementImageUpdateValidation {
     @ApiProperty()
     url:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
+ 
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})

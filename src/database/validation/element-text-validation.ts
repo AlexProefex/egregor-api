@@ -16,9 +16,7 @@ export class ElementTextValidation {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El contenido')})
     content:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
+ 
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
@@ -40,9 +38,7 @@ export class ElementTextUpdateValidation {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El contenido')})
     content:string;
 
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El Nivel')})
-    levelId:number;
+
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})

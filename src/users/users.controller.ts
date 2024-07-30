@@ -14,6 +14,7 @@ import { Roles } from 'src/util/roles.decorator';
 import { Role } from 'src/util/rol.enum';
 import { PermissionsGuard } from 'src/middleware/permissions.guard';
 import { TypeCompany, TypeTeacher } from 'src/util/constants';
+import { StorageService } from 'src/storage/storage.service';
 
 /*Roles
 editor de contenido
@@ -31,6 +32,7 @@ qqqqqqq
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService,
+        private storageService:StorageService
     ) { }
 
     @Public()
@@ -136,12 +138,15 @@ export class UserController {
                 const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
                 let mimeType2 = modelUser.image.match(/[^:/]\w+(?=;|,)/)[0];
                 writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-                path = `${name}.${mimeType2}`            
-                if(path){
+                path = `public/${name}.${mimeType2}`    
+                this.storageService.uploadFileGroup(path);
+                //unlinkSync(path)
+
+                /*if(path){
                     if(user.avatar){
                         unlinkSync(`${user.avatar}`);
                     }
-                }
+                }*/
             }
             const {image, ... updateUser} = modelUser
             const result = await this.userService.updateUser(updateUser,path, auth)
@@ -152,6 +157,7 @@ export class UserController {
             }
         }
         catch (err) {
+            console.log(err)
             return {
                 statusCode: 500,
                 "data": "",
