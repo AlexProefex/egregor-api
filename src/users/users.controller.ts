@@ -133,7 +133,7 @@ export class UserController {
         let path = null 
         try {
             if(modelUser.image != "undefined"){
-                const user =  await this.getUserProfile(auth);
+              //  const user =  await this.getUserProfile(auth);
                 const base64Data = Buffer.from(modelUser.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                 const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
                 let mimeType2 = modelUser.image.match(/[^:/]\w+(?=;|,)/)[0];
@@ -149,10 +149,10 @@ export class UserController {
                 }*/
             }
             const {image, ... updateUser} = modelUser
-            const result = await this.userService.updateUser(updateUser,path, auth)
+            //const result = await this.userService.updateUser(updateUser,path, auth)
             return {
                 statusCode: 200,
-                "data":{...result},
+            //    "data":{...result},
                 "error": ""
             }
         }

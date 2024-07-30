@@ -135,7 +135,7 @@ export class ElementController {
   @UseInterceptors(FileInterceptor(''))
   @Put('text/:id')
   @ApiOperation({ summary: 'Actualiza un elemento tipo texto por su identificador'})
-  async updateElementText(@Body() modeElement:ElementTextValidation, @Param() params):Promise<any>{
+  async updateElementText(@Body() modeElement:ElementTextValidation, @Param() params:ParameterValidation):Promise<any>{
     modeElement.type = TypeText;
     const { ...model} = modeElement;
     await this.elementService.updateElement(params.id,model);
