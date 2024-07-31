@@ -144,32 +144,18 @@ export class UserController {
     @Public()
     @ApiOperation({ summary: 'Permite la actualizacion de un perfil de un usuario' })
     @Post('update-perfil')
-    async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string): Promise<any> {
+    async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string, @Res() res: Response): Promise<any> {
         let success = null
         try {
             if (modelUser.image != "undefined") {
                 success = this.storageService.upload(modelUser.image)
-                const { image, ...updateUser } = modelUser
-                const result = await this.userService.updateUser(updateUser, success, auth)
-                return {
-                    statusCode: 200,
-                    "data": { ...result },
-                    "error": ""
-                }
             }
-
-            return {
-                statusCode: 403,
-                "data": "",
-                "error": ""
-            };
+            const { image, ...updateUser } = modelUser
+            await this.userService.updateUser(updateUser, success, auth)
+            return res.status(HttpStatus.OK).json()
         } catch (err) {
             console.log(err)
-            return {
-                statusCode: 500,
-                "data": "",
-                "error": err
-            };
+            return res.status(HttpStatus.BAD_REQUEST).json()
         }
     }
 
