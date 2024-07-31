@@ -19,6 +19,7 @@ export class IsUniqueConstraints implements ValidatorConstraintInterface{
             .createQueryBuilder(tableName)
             .where({[column]:value}) 
             .getOne();
+            console.log(currentRow)
             
             if(currentRow){
                 exist = currentRow.id == validationProperty['id'] ? false : true; 

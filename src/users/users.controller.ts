@@ -145,10 +145,12 @@ export class UserController {
     @ApiOperation({ summary: 'Permite la actualizacion de un perfil de un usuario' })
     @Post('update-perfil')
     async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string, @Res() res: Response): Promise<any> {
+        console.log(modelUser)
         let success = null
         try {
             if (modelUser.image != "undefined") {
-                success = this.storageService.upload(modelUser.image)
+                success = await this.storageService.upload(modelUser.image)
+                console.log(success)
             }
             const { image, ...updateUser } = modelUser
             await this.userService.updateUser(updateUser, success, auth)
