@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LevelService } from 'src/level/level.service';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { QuizEntity } from 'src/database/entity/quiz/quiz-entity';
+import { StorageService } from 'src/storage/storage.service';
 
 @Module({
   imports:[TypeOrmModule.forFeature([ElementEntity, LevelEntity,QuizEntity])],
   controllers: [ElementController],
-  providers: [ElementService,LevelService],
+  providers: [ElementService,LevelService,StorageService],
 })
 export class ElementModule {}

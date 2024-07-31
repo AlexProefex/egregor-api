@@ -32,18 +32,23 @@ qqqqqqq
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService,
-        private storageService:StorageService
+        private storageService: StorageService
     ) { }
 
     @Public()
     @Get('profile-all')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario con mas campos' })
-    getUserProfileAll(@Headers('Authorization') auth: any): any {
-        return this.userService.newCamps(auth);
+    async getUserProfileAll(@Headers('Authorization') auth: any): Promise<any> {
+
+        const user = await this.userService.newCamps(auth);
+        if (user.avatar || user.avatar == "undefined") {
+            const image = await this.storageService.getLinks(user.avatar)
+            user.avatar = image;
+        }
+        return user;
+
+
     }
-
-
-
 
 
     //@ApiResponse({type:UserValidation})
@@ -51,24 +56,29 @@ export class UserController {
     @Get('profile')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un usuario' })
     async getUserProfile(@Headers('Authorization') auth: any): Promise<any> {
-         const user = await this.userService.findUser(auth);
-         if(user.avatar){
-             const image = await this.storageService.getLinks(user.avatar)
-             user.avatar = image;
-         }
-         return user;
+        const user = await this.userService.findUser(auth);
+        if (user.avatar || user.avatar == "undefined") {
+            const image = await this.storageService.getLinks(user.avatar)
+            user.avatar = image;
+        }
+        return user;
     }
 
     //@ApiResponse({type:UserValidation})
-  
-    
 
     //@ApiResponse({type:UserValidation})
     @Public()
     @Get('detail/:id')
     @ApiOperation({ summary: 'Obtiene los datos del perfil de un profesor' })
-    getUserTeacher(@Param() param:ParameterValidation): any {
-        return this.userService.findUserById(param.id);
+    async getUserTeacher(@Param() param: ParameterValidation, @Res() res: Response): Promise<any> {
+        const user =  await this.userService.findUserById(param.id);
+        if (user) {
+            if(user.avatar) {
+                user.avatar = await this.storageService.getLinks(user.avatar)
+            }
+            return res.status(HttpStatus.OK).json({ ...user })
+        }
+        return res.status(HttpStatus.NOT_FOUND).json({});
     }
 
 
@@ -76,7 +86,7 @@ export class UserController {
     @Public()
     @Post('register/teacher')
     @ApiOperation({ summary: 'Permite el registro de un usuario con rol profesor' })
-    registerTeacher(@Body() modelUser:TeacherValidation):any{
+    registerTeacher(@Body() modelUser: TeacherValidation): any {
         modelUser.rol = TypeTeacher;
         return this.userService.saveUserGeneral(modelUser);
     }
@@ -84,7 +94,7 @@ export class UserController {
     @Public()
     @Put('register/teacher/:id')
     @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol profesor' })
-    updateTeacher(@Body() modelUser:TeacherValidation, @Param() params):any{
+    updateTeacher(@Body() modelUser: TeacherValidation, @Param() params): any {
         modelUser.rol = TypeTeacher;
         return this.userService.updateUserGeneral(modelUser, params.id);
     }
@@ -92,24 +102,24 @@ export class UserController {
     //@Roles(Role.Admin,Role.User)
     @Public()
     @Post('register/company')
-    @ApiOperation({ summary: 'Permite el registro de un usuario con rol empresa'})
+    @ApiOperation({ summary: 'Permite el registro de un usuario con rol empresa' })
     //@UseGuards(PermissionsGuard)
-   // @SetMetadata('permissions',['read:cats'])
-    registerCompany(@Body() modelUser:CompanyValidation):any{
+    // @SetMetadata('permissions',['read:cats'])
+    registerCompany(@Body() modelUser: CompanyValidation): any {
         modelUser.rol = TypeCompany;
         return this.userService.saveUserGeneral(modelUser);
-        
+
     }
 
     @Public()
     @Put('register/company/:id')
-    @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol empresa'})
-    updateCompany(@Body() modelUser:CompanyValidation, @Param() params):any{
+    @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol empresa' })
+    updateCompany(@Body() modelUser: CompanyValidation, @Param() params): any {
         modelUser.rol = TypeCompany;
         return this.userService.updateUserGeneral(modelUser, params.id);
     }
 
-    
+
 
 
     //Exponer punto para el listado de todas los usuarios 
@@ -132,35 +142,28 @@ export class UserController {
         return this.userService.saveUser(modelUser);
     }*/
     @Public()
-    @ApiOperation({ summary: 'Permite la actualizacion de un perfil de un usuario'})
+    @ApiOperation({ summary: 'Permite la actualizacion de un perfil de un usuario' })
     @Post('update-perfil')
     async EditarPerfil(@Body() modelUser: UserValidation, @Headers('Authorization') auth: string): Promise<any> {
-        let path = null 
         let success = null
         try {
-            if(modelUser.image != "undefined"){
-                const user =  await this.getUserProfile(auth);
-                const base64Data = Buffer.from(modelUser.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-                const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
-                let mimeType2 = modelUser.image.match(/[^:/]\w+(?=;|,)/)[0];
-                writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-                path = `public/${name}.${mimeType2}`    
-                success = await this.storageService.uploadFileGroup(path);
-                console.log(success)
-                if(success){
-                    unlinkSync(path)
+            if (modelUser.image != "undefined") {
+                success = this.storageService.upload(modelUser.image)
+                const { image, ...updateUser } = modelUser
+                const result = await this.userService.updateUser(updateUser, success, auth)
+                return {
+                    statusCode: 200,
+                    "data": { ...result },
+                    "error": ""
                 }
+            }
 
-            }
-            const {image, ... updateUser} = modelUser
-            const result = await this.userService.updateUser(updateUser,success, auth)
             return {
-                statusCode: 200,
-                "data":{...result},
+                statusCode: 403,
+                "data": "",
                 "error": ""
-            }
-        }
-        catch (err) {
+            };
+        } catch (err) {
             console.log(err)
             return {
                 statusCode: 500,
@@ -171,72 +174,72 @@ export class UserController {
     }
 
 
-//    @Public()
- //   @Post('update-perfil2')
- //   EditarPerfil2(@Body() modelUser: any): any {
+    //    @Public()
+    //   @Post('update-perfil2')
+    //   EditarPerfil2(@Body() modelUser: any): any {
 
-        /*var file = new File([modelUser.file], `my_image${new Date()}.jpeg`, {
-            type: "image/jpeg"
-          });
-     */
+    /*var file = new File([modelUser.file], `my_image${new Date()}.jpeg`, {
+        type: "image/jpeg"
+      });
+ */
 
-        //const file = new File([modelUser.file],'image.jpg')
+    //const file = new File([modelUser.file],'image.jpg')
 
-        //const buffer = Buffer.alloc(modelUser.file.length, modelUser.file);
-        /*writeFile('public/sample.jpg', modelUser.file, (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
-        });*/
+    //const buffer = Buffer.alloc(modelUser.file.length, modelUser.file);
+    /*writeFile('public/sample.jpg', modelUser.file, (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+    });*/
 
-        
-      /*  modelUser.data.forEach(datos => {
-            const base64Data = Buffer.from(datos.file.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-            const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
-            let mimeType2 = datos.file.match(/[^:/]\w+(?=;|,)/)[0];
-            writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-            datos.path = `public/${name}.${mimeType2}`
 
-        });
+    /*  modelUser.data.forEach(datos => {
+          const base64Data = Buffer.from(datos.file.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+          const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
+          let mimeType2 = datos.file.match(/[^:/]\w+(?=;|,)/)[0];
+          writeFileSync(`public/${name}.${mimeType2}`, base64Data)
+          datos.path = `public/${name}.${mimeType2}`
 
-        console.log(modelUser)
+      });
+
+      console.log(modelUser)
 */
 
 
-        /*var file = new File([modelUser.file], "image.png", {lastModified: 1534584790000});
+    /*var file = new File([modelUser.file], "image.png", {lastModified: 1534584790000});
 
-        //const myFile = this.blobToFile(modelUser.file, "my-image.png");
-        //console.log(file)
-        writeFile('public/image.png',modelUser.file, err => {
-            if (err) {
-              console.error(err);
-            } else {
-              // file written successfully
-            }
-          })
-          */
-   // }
-/*
-
-    @UseInterceptors(
-        FilesInterceptor('file', 20, {
-            storage: diskStorage({
-                destination: './public',
-                filename: function (req, file, cb) {
-                    return cb(null, `${Date.now()}${extname(file.originalname)}`);
-                }
+    //const myFile = this.blobToFile(modelUser.file, "my-image.png");
+    //console.log(file)
+    writeFile('public/image.png',modelUser.file, err => {
+        if (err) {
+          console.error(err);
+        } else {
+          // file written successfully
+        }
+      })
+      */
+    // }
+    /*
+    
+        @UseInterceptors(
+            FilesInterceptor('file', 20, {
+                storage: diskStorage({
+                    destination: './public',
+                    filename: function (req, file, cb) {
+                        return cb(null, `${Date.now()}${extname(file.originalname)}`);
+                    }
+                }),
+                //   fileFilter: imageFileFilter,
             }),
-            //   fileFilter: imageFileFilter,
-        }),
-    )
-    uploadFile(@UploadedFiles() file: Express.Multer.File): any {
-        try {
-            return file[0].path;
+        )
+        uploadFile(@UploadedFiles() file: Express.Multer.File): any {
+            try {
+                return file[0].path;
+            }
+            catch (err) {
+                return "error";
+            }
         }
-        catch (err) {
-            return "error";
-        }
-    }
-*/
+    */
 
 
     //return HttpServiceInterceptor[0];
@@ -280,13 +283,13 @@ export class UserController {
     @Public()
     @UseInterceptors(FileInterceptor(''))
     @Post('change-password')
-    @ApiOperation({ summary: 'Permite el cambio de contraseña de un usuario'})
-    async updatePassword(@Body() model:ChangePasswordValidation, @Headers('Authorization') auth: string, @Res() res: Response):Promise<any>{
-       const response = await this.userService.validatePassword(model,auth) 
-        if(!response)
+    @ApiOperation({ summary: 'Permite el cambio de contraseña de un usuario' })
+    async updatePassword(@Body() model: ChangePasswordValidation, @Headers('Authorization') auth: string, @Res() res: Response): Promise<any> {
+        const response = await this.userService.validatePassword(model, auth)
+        if (!response)
             return res.status(HttpStatus.BAD_REQUEST).json({});
-        const user = await this.userService.updatePassword(model,auth );
-        return res.status(HttpStatus.OK).json({...user})
+        const user = await this.userService.updatePassword(model, auth);
+        return res.status(HttpStatus.OK).json({ ...user })
     }
 }
 

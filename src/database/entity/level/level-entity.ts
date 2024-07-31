@@ -7,8 +7,10 @@ export class LevelEntity {
 
     @PrimaryGeneratedColumn()
     id:number;
+
     @Column()
     name:string;
+    
     @Column()
     color:string;
     

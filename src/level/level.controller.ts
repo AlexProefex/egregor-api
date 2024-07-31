@@ -5,18 +5,38 @@ import { Public } from 'src/auth/auth.controller';
 import { LevelValidation, LevelValidationUpdate } from 'src/database/validation/level-validation';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { StorageService } from 'src/storage/storage.service';
+import { url } from 'inspector';
 
 @ApiTags('Level')
 @Controller('level')
 export class LevelController {
-  constructor(private readonly levelService: LevelService) {}
+  constructor(
+    private readonly levelService: LevelService,
+    private readonly storageService: StorageService ) 
+    {}
 
+    
     //Exponer punto para obtener 3 registros aleatorios
     @Public()
     @Get('content/:id')
     @ApiOperation({ summary: 'Obtiene el esquema de un nivel'})
-    getLevelAll(@Param() params:ParameterValidation):any{
-        return this.levelService.findLevel(params.id);
+    async getLevelAll(@Param() params:ParameterValidation):Promise<any>{
+        let schema =  await this.levelService.findLevel(params.id);
+        
+        for(const units of schema){
+            for(const sections of units.unit){
+                for(const elements of sections.section){
+                    for(const value of elements.element){
+                        if(value.type == "material"||value.type == "image"){
+                            value.url = await this.storageService.getLinks(value.url);
+                       }
+                    } 
+                } 
+            }
+        }
+    
+        return schema
     }
 
     //Exponer punto para el listado de todas los registro de prensa 

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Put, Res, HttpStatus } from '@nestjs/common';
 import { QuestionService } from './question.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiExcludeEndpoint, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/auth/auth.controller';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { QuestionPracticeValidationCheckBox, QuestionPracticeValidationDropDown, QuestionPracticeValidationImage, QuestionPracticeValidationMovie, QuestionPracticeValidationOMultiple, QuestionPracticeValidationShortAnswer, QuestionPracticeValidationText, QuestionPracticeValidationUpdateCheckBox, QuestionPracticeValidationUpdateDropDown, QuestionPracticeValidationUpdateImage, QuestionPracticeValidationUpdateMovie, QuestionPracticeValidationUpdateOMultiple, QuestionPracticeValidationUpdateShortAnswer, QuestionPracticeValidationUpdateText, QuestionValidateOrder } from 'src/database/validation/question-validation';
@@ -9,16 +9,21 @@ import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Response } from 'express';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
 import { TypeCheckBox, TypeDropDown, TypeImage, TypeMovie, TypeOptionMultiple, TypeShortAnswer, TypeText } from 'src/util/constants';
+import { StorageService } from 'src/storage/storage.service';
 
 
 @ApiTags('Questions')
 @Controller('question')
 export class QuestionController {
-  constructor(private readonly questionService: QuestionService) {}
+  constructor(
+    private readonly questionService: QuestionService,
+    private storageService: StorageService
+  ) {}
 
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene una pregunta'})
+  @ApiExcludeEndpoint()
   getQuestion(@Param() params:ParameterValidation):any{
       return this.questionService.findById(params.id);
   }
@@ -78,21 +83,18 @@ export class QuestionController {
   @Post('image')
   @ApiOperation({ summary: 'Crea una elemento tipo imagen'})
   async saveImage(@Body() modelQuestion:QuestionPracticeValidationImage):Promise<any>{
-      try {
-        modelQuestion.type = TypeImage;
-        const base64Data = Buffer.from(modelQuestion.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-        const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
-        let mimeType2 = modelQuestion.image.match(/[^:/]\w+(?=;|,)/)[0];
-        writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-        const url = `public/${name}.${mimeType2}`            
-        if(url){
-          modelQuestion.url = url;
-          const {image, ...model} = modelQuestion;
-          await this.questionService.saveQuestion(model);
-        }
-    } catch (error) {
-        console.log(error)
-        ExceptionErrorMessage(error); 
+    try {
+      modelQuestion.type = TypeImage;
+      const response = await this.storageService.upload(modelQuestion.image)
+      if (response) {
+        modelQuestion.url = response
+        const { image, ...model } = modelQuestion;
+        await this.questionService.saveQuestion(model);
+      }
+    }
+    catch (error) {
+      console.log(error)
+      ExceptionErrorMessage(error);
     }
   }
 
@@ -164,30 +166,22 @@ export class QuestionController {
   @ApiOperation({ summary: 'Actualiza una elemento tipo imagen por su identificador'})
   async updateImage(@Body() modelQuestion:QuestionPracticeValidationUpdateImage, @Param() params:ParameterValidation):Promise<any>{
     try {
-        modelQuestion.type = TypeImage;
-        if(modelQuestion.image != "undefined"){
-            const question =  await this.questionService.findById(params.id);
-            const base64Data = Buffer.from(modelQuestion.image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-            const name = (new Date()).getTime().toString(36) + Math.random().toString(36).slice(2);
-            let mimeType2 = modelQuestion.image.match(/[^:/]\w+(?=;|,)/)[0];
-            writeFileSync(`public/${name}.${mimeType2}`, base64Data)
-            const url = `public/${name}.${mimeType2}`            
-            if(url){
-
-                if(question.url){
-                    unlinkSync(`${question.url}`);
-                }
-              modelQuestion.url = url;
-            }
+      modelQuestion.type = TypeImage;
+      const material = await this.questionService.findById(params.id)
+      if (modelQuestion.image != "undefinied") {
+        const response = await this.storageService.upload(modelQuestion.image)
+        if (response) {
+          modelQuestion.url = response
+          await this.storageService.remove(material.url)
         }
-
-        const {image, ...model} = modelQuestion;
-        await this.questionService.updateQuestion(params.id, model);
+      }
+      const { image, ...model } = modelQuestion;
+      await this.questionService.updateQuestion(params.id,model);
 
     } catch (error) {
-        console.log(error)
-        ExceptionErrorMessage(error); 
+      ExceptionErrorMessage(error);
     }
+
   }
 
   @Public()

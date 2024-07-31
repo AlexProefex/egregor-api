@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UnitEntity } from 'src/database/entity/unit/unit-entity';
 import { SectionEntity } from 'src/database/entity/section/section-entity';
 import { ElementEntity } from 'src/database/entity/element/element-entity';
+import { StorageService } from 'src/storage/storage.service';
 
 @Module({
   imports:[TypeOrmModule.forFeature([LevelEntity, UnitEntity, SectionEntity, ElementEntity])],
   controllers: [LevelController],
-  providers: [LevelService],
+  providers: [LevelService, StorageService],
 })
 export class LevelModule {}

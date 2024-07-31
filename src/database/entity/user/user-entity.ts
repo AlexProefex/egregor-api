@@ -47,7 +47,7 @@ export class UserEntity {
     @Column({ nullable: true})
     phone:string;
 
-    @Column({ nullable: true})
+    @Column({ nullable: true,type:"text"})
     description:string;
 
     @Column()

@@ -19,35 +19,39 @@ export class UserService {
     ) {
     }
 
-    async newCamps(auth: any){
+    async newCamps(auth: any) {
         const current = await this.jwtUtil.decode(auth);
         const response = await this.userRp.findOne({
             select: {
-                name: true, lastName: true, email: true, rol: true,  phone: true, id:true, avatar:true, status_login:true, company_name:true, description:true
-            }, where: {id: current.id }
+                name: true, lastName: true, email: true, rol: true, phone: true, id: true, avatar: true, status_login: true, company_name: true, description: true
+            }, where: { id: current.id }
         });
         return response
     }
     //Listar Usuarios
-    async findUser(auth: any){
+    async findUser(auth: any) {
         const current = await this.jwtUtil.decode(auth);
         const response = await this.userRp.findOne({
             select: {
                 name: true, email: true, rol: true, lastName: true, phone: true, description: true, avatar: true
             }, where: { id: current.id }
         });
+
         return response
     }
 
-    async findUserById(id:number){
-        const response = await this.userRp.findOne({where: { id: id }});
-        const {password, ...res } = response;
-        return res
+    async findUserById(id: number) {
+        const response = await this.userRp.findOne({ where: { id: id } });
+        if (response) {
+            const { password, ...res } = response;
+            return res
+        }
+        return response
     }
 
-   
 
-    async saveUserGeneral(user:any){
+
+    async saveUserGeneral(user: any) {
         try {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(user.password, salt);
@@ -57,14 +61,14 @@ export class UserService {
             return removeNUllObject(result);
         } catch (error) {
             console.log(error)
-            ExceptionErrorMessage(error);            
+            ExceptionErrorMessage(error);
         }
     }
 
     async updateUserGeneral(user: any, id) {
         try {
             await this.userRp.update(id, user);
-            const response = await this.userRp.findOne({ where: { id: id }});
+            const response = await this.userRp.findOne({ where: { id: id } });
             const { password, ...result } = response;
             return removeNUllObject(result);
         } catch (error) {
@@ -90,7 +94,7 @@ export class UserService {
     async updateUser(user: any, name, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);
-            if(name){
+            if (name) {
                 user.avatar = name;
             }
             await this.userRp.update(current.id, user);
@@ -114,7 +118,7 @@ export class UserService {
             console.log(hashedPassword)
 
             const current = await this.jwtUtil.decode(auth);
-            await this.userRp.update(current.id, {password:hashedPassword});
+            await this.userRp.update(current.id, { password: hashedPassword });
             const response = await this.userRp.findOne({
                 select: {
                     name: true, email: true, rol: true, lastName: true, phone: true, description: true, avatar: true,
@@ -127,14 +131,14 @@ export class UserService {
         }
     }
 
-    async validatePassword(user: any, auth: any){
-        try{
+    async validatePassword(user: any, auth: any) {
+        try {
 
             const current = await this.jwtUtil.decode(auth);
-            const currentUser = await this.userRp.findOneBy({id:current.id})
+            const currentUser = await this.userRp.findOneBy({ id: current.id })
 
-            return await bcrypt.compare(user.currentPassword,currentUser.password )
-    
+            return await bcrypt.compare(user.currentPassword, currentUser.password)
+
         } catch (error) {
             console.log(error)
             ExceptionErrorMessage(error);

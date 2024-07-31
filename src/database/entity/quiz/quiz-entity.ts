@@ -8,10 +8,13 @@ export class QuizEntity {
 
     @PrimaryGeneratedColumn()
     id:number;
+
     @Column({ nullable: true})
     type:string;
+
     @Column({ nullable: true})
     name:string;
+    
     @Column({ nullable: true})
     time:string;
 
