@@ -35,6 +35,23 @@ jobs:
        echo MAIL_USER=kirudentadm@gmail.com
        echo MAIL_PASS=pcysjdjrxfsluwtf
        cat .env
+    - run: |
+       touch key_project.json
+       echo { >> key_project.json
+       echo ${{ secrets.AUTH_PROVIDER_X509_CERT_URL }} >> key_project.json
+       echo ${{ secrets.AUTH_URI }} >> key_project.json
+       echo ${{ secrets.CLIENT_EMAIL }} >> key_project.json
+       echo ${{ secrets.CLIENT_ID }} >> key_project.json
+       echo ${{ secrets.CLIENT_X509_CERT_URL }} >> key_project.json
+       echo ${{ secrets.PRIVATE_KEY }} >> key_project.json
+       echo ${{ secrets.PRIVATE_KEY_ID }} >> key_project.json
+       echo ${{ secrets.PROJECT_ID }} >> key_project.json
+       echo ${{ secrets.TOKEN_URI }} >> key_project.json
+       echo ${{ secrets.TYPE }} >> key_project.json
+       echo ${{ secrets.UNIVERSE_DOMAIN }} >> key_project.json
+       echo } >> key_project.json
+       cat key_project.json
+
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
     - run: ls
