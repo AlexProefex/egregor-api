@@ -12,6 +12,7 @@ on:
 jobs:
   node:
     runs-on: self-hosted
+    environment: egregor
     strategy:
       matrix:
         node-version: [22.x]
