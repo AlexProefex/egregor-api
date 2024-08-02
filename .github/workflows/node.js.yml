@@ -39,7 +39,7 @@ jobs:
     - run: |
        touch key_project.json
        echo { >> key_project.json
-       echo `"auth_provider_x509_cert_url":"${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}"` >> key_project.json
+       echo \"auth_provider_x509_cert_url\":\"${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}\" >> key_project.json
        echo ${{ secrets.AUTH_URI }} >> key_project.json
        echo ${{ secrets.CLIENT_EMAIL }} >> key_project.json
        echo ${{ secrets.CLIENT_ID }} >> key_project.json
