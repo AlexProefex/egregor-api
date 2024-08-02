@@ -35,6 +35,7 @@ export class QuestionController {
   @ApiOperation({ summary: 'Crea una pregunta tipo opcion multiple'})
   saveMultiple(@Body() modelQuestion:QuestionPracticeValidationOMultiple):any{
     modelQuestion.type = TypeOptionMultiple;
+    console.log(modelQuestion)
     return this.questionService.saveQuestion(modelQuestion);
   }
 

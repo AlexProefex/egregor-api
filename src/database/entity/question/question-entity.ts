@@ -23,10 +23,10 @@ export class QuestionEntity {
     @Column({ nullable: true, type:"text"})
     description:string;
 
-    @Column({ nullable: true, type:"text"})
+    @Column({ nullable: true, type:"text", array:true})
     option:string;
 
-    @Column({ nullable: true, type:"text"})
+    @Column({ nullable: true, type:"text", array:true})
     answer:string;
 
     @Column({ nullable: true, type:"text"})

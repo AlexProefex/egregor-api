@@ -20,6 +20,7 @@ export class QuizService {
           relations: {
             qsection: {
               question: {
+                
               }
             }
           },select:{
@@ -57,6 +58,8 @@ export class QuizService {
             }
           }
         });
+      
+      
       return removeNUllValues(result)
 
 

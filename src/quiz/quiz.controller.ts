@@ -3,15 +3,30 @@ import { QuizService } from './quiz.service';
 import { Public } from 'src/auth/auth.controller';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ParameterValidation } from 'src/database/validation/parameter-validation';
+import { StorageService } from 'src/storage/storage.service';
 
 @ApiTags('Quiz')
 @Controller('quiz')
 export class QuizController {
-  constructor(private readonly quizService: QuizService) {}
+  constructor(
+    private readonly quizService: QuizService,
+    private storageService:StorageService
+  ) {}
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene la estructura de examen o practica'})
-  getLevelAll(@Param() params:ParameterValidation):any{
-      return this.quizService.findQuiz(params.id);
+  async getLevelAll(@Param() params:ParameterValidation):Promise<any> {
+    let quizs = await this.quizService.findQuiz(params.id);
+    for(const quiz of quizs){
+      for(const sections of quiz.qsection){
+          for(const element of sections.question) {
+              if(element.type == "image"){
+                  element.url = await this.storageService.getLinks(element.url);
+              }
+             console.log(element)
+          } 
+      }
+  }
+  return quizs;
   }
 }

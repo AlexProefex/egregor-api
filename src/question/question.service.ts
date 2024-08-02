@@ -32,6 +32,7 @@ export class QuestionService {
       question.order = position + 1
       return await this.questionRp.save(question);
     } catch (error) {
+      console.log(error)
       ExceptionErrorMessage(error);
     }
   }
