@@ -57,6 +57,7 @@ jobs:
     - run: npm ci --legacy-peer-dep
     - run: npm run build --verbose
     - run: ls
+    - run: ls
     #- run: npm install pm2@latest -g
     #- run: pm2 -V 
     #- run: pm2 list 
