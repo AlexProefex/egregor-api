@@ -36,9 +36,14 @@ export class ElementController {
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene un elemento por su identificador' })
-  getElementById(@Param() params: ParameterValidation): any {
-    return this.elementService.findByIdElement(params.id);
+  async getElementById(@Param() params: ParameterValidation): Promise<any> {
+    const element  = await this.elementService.findByIdElementV2(params.id);
+    if(element?.[0]?.url){
+      element[0].url = await this.storageService.getLinks(element[0].url);
+    }
+    return element
   }
+
 
   //Exponer punto para almacenamiento de una nuevo registro de prensa
   @Public()
@@ -124,7 +129,7 @@ export class ElementController {
       modelElement.type = TypeMaterial;
       const material = await this.elementService.findByIdElement(params.id)
       if (modelElement.document != "undefinied") {
-        const response = await this.storageService.upload(modelElement.document)
+        const response = await this.storageService.uploadPfd(modelElement.document)
         if (response) {
           modelElement.url = response
           await this.storageService.remove(material.url)
@@ -154,7 +159,7 @@ export class ElementController {
     try {
       const material = await this.elementService.findByIdElement(params.id)
       if (modelElement.image != "undefinied") {
-        const response = await this.storageService.upload(modelElement.image)
+        const response = await this.storageService.uploadPfd(modelElement.image)
         if (response) {
           modelElement.url = response
           await this.storageService.remove(material.url)

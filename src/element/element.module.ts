@@ -7,9 +7,11 @@ import { LevelService } from 'src/level/level.service';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { QuizEntity } from 'src/database/entity/quiz/quiz-entity';
 import { StorageService } from 'src/storage/storage.service';
+import { UnitEntity } from 'src/database/entity/unit/unit-entity';
+import { SectionEntity } from 'src/database/entity/section/section-entity';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([ElementEntity, LevelEntity,QuizEntity])],
+  imports:[TypeOrmModule.forFeature([ElementEntity, LevelEntity,QuizEntity, UnitEntity, SectionEntity])],
   controllers: [ElementController],
   providers: [ElementService,LevelService,StorageService],
 })

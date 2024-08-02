@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ElementEntity } from 'src/database/entity/element/element-entity';
+import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { QuizEntity } from 'src/database/entity/quiz/quiz-entity';
+import { SectionEntity } from 'src/database/entity/section/section-entity';
+import { UnitEntity } from 'src/database/entity/unit/unit-entity';
 import { TypePractice } from 'src/util/constants';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
@@ -11,6 +14,9 @@ export class ElementService {
   constructor(
     @InjectRepository(ElementEntity) private readonly elementRp: Repository<ElementEntity>,
     @InjectRepository(QuizEntity) private readonly quizRp: Repository<QuizEntity>,
+    @InjectRepository(LevelEntity) private readonly levelRp: Repository<QuizEntity>,
+    @InjectRepository(UnitEntity) private readonly unitRp: Repository<UnitEntity>,
+    @InjectRepository(SectionEntity) private readonly sectionRp: Repository<SectionEntity>,
     private datasource: DataSource) {
   }
 
@@ -30,8 +36,11 @@ export class ElementService {
     await queryRunner.startTransaction()
     try {
       const quiz = await queryRunner.manager.withRepository(this.quizRp).save(element)
+      console.log(quiz)
       element.idReference = quiz.id;
-      await queryRunner.manager.withRepository(this.elementRp).save(element)
+      const {id,...model}=element
+      console.log(model)
+      await queryRunner.manager.withRepository(this.elementRp).save(model)
       console.log(element)
       await queryRunner.commitTransaction()
 
@@ -41,6 +50,7 @@ export class ElementService {
       await queryRunner.release()
     }
   }
+
   //Actualizar Element
   async updateElement(id: number, element: any) {
     try {
@@ -75,6 +85,53 @@ export class ElementService {
       ExceptionErrorMessage(error);
     }
   }
+
+  async findByIdElementV2(id: number) {
+    try {
+
+    return await this.datasource.createQueryBuilder()
+    .select('element.id', 'id')
+    .addSelect('element.content','content')
+    .addSelect('element.content_pdf','content_pdf')
+    .addSelect('element.description','description')
+    .addSelect('element.embed','embed')
+    .addSelect('element.idReference','idReference')
+    .addSelect('element.name','name')
+    .addSelect('element.time','time')
+    .addSelect('element.title','title')
+    .addSelect('element.type','type')
+    .addSelect('element.type_icon','type_icon')
+    .addSelect('element.url','url')
+
+    .addSelect('section.id','section_id')
+    .addSelect('section.idReference','section_idReference')
+    .addSelect('section.name','section_name')
+    .addSelect('section.time','section_time')
+    .addSelect('section.type','section_type')
+
+    .addSelect('unit.id','unit_id')
+    .addSelect('unit.name','unit_name')
+
+    .addSelect('level.id','level_id')
+    .addSelect('level.name','level_name')
+    .addSelect('level.color','level_color')
+
+
+
+    .from(LevelEntity, 'level')
+    .innerJoin(UnitEntity,"unit","unit.levelId = level.id")
+    .innerJoin(SectionEntity,"section","section.unitId = unit.id")
+    .innerJoin(ElementEntity,"element","element.sectionId = section.id")
+    .where(`"element"."id" = '${id}'`)
+    .getRawMany()
+
+      
+
+    } catch (error) {
+      ExceptionErrorMessage(error);
+    }
+  }
+
 
 
   //Listar Element
