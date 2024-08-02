@@ -39,17 +39,17 @@ jobs:
     - run: |
        touch key_project.json
        echo { >> key_project.json
-       echo \"auth_provider_x509_cert_url\":\"${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}\" >> key_project.json
-       echo ${{ secrets.AUTH_URI }} >> key_project.json
-       echo ${{ secrets.CLIENT_EMAIL }} >> key_project.json
-       echo ${{ secrets.CLIENT_ID }} >> key_project.json
-       echo ${{ secrets.CLIENT_X509_CERT_URL }} >> key_project.json
-       echo ${{ secrets.PRIVATE_KEY }} >> key_project.json
-       echo ${{ secrets.PRIVATE_KEY_ID }} >> key_project.json
-       echo ${{ secrets.PROJECT_ID }} >> key_project.json
-       echo ${{ secrets.TOKEN_URI }} >> key_project.json
-       echo ${{ secrets.TYPE }} >> key_project.json
-       echo ${{ secrets.UNIVERSE_DOMAIN }} >> key_project.json
+       echo \"auth_provider_x509_cert_url\":\"${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}\", >> key_project.json
+       echo \"auth_uri\":\"${{ secrets.AUTH_URI }}\", >> key_project.json
+       echo \"client_email\":\"${{ secrets.CLIENT_EMAIL }}\", >> key_project.json
+       echo \"client_id\":\"${{ secrets.CLIENT_ID }}\", >> key_project.json
+       echo \"auth_provider_x509_cert_url\":\"${{ secrets.CLIENT_X509_CERT_URL }}\", >> key_project.json
+       echo \"private_key\":\"${{ secrets.PRIVATE_KEY }}\", >> key_project.json
+       echo \"private_key_id\":\"${{ secrets.PRIVATE_KEY_ID }}\", >> key_project.json
+       echo \"project_id\":\"${{ secrets.PROJECT_ID }}\", >> key_project.json
+       echo \"token_uri\":\"${{ secrets.TOKEN_URI }}\", >> key_project.json
+       echo \"type\":\"${{ secrets.TYPE }}\", >> key_project.json
+       echo \"universe_domain\":\"${{ secrets.UNIVERSE_DOMAIN }}\" >> key_project.json
        echo } >> key_project.json
        cat key_project.json
 
