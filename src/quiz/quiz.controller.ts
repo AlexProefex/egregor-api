@@ -12,6 +12,14 @@ export class QuizController {
     private readonly quizService: QuizService,
     private storageService:StorageService
   ) {}
+
+  @Public()
+  @Get('panel/:id')
+  @ApiOperation({ summary: 'Obtiene los datos del panel del examen o practica'})
+  async getPanelInfo(@Param() params:ParameterValidation):Promise<any> {
+    return await this.quizService.findPanel(params.id)
+  }
+
   @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene la estructura de examen o practica'})
@@ -26,7 +34,9 @@ export class QuizController {
              console.log(element)
           } 
       }
+    }
+    return quizs;
   }
-  return quizs;
-  }
+
+  
 }

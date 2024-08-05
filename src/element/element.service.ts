@@ -132,6 +132,72 @@ export class ElementService {
     }
   }
 
+  async findByIdElementByIdReferencePractice(id: number) {
+    try {
+
+    return await this.datasource.createQueryBuilder()
+    .select('element.id', 'id')
+    .addSelect('element.idReference','idReference')
+    .addSelect('element.time','time')
+    .addSelect('element.title','title')
+    .addSelect('element.type','type')
+
+    .addSelect('section.id','section_id')
+    .addSelect('section.idReference','section_idReference')
+    .addSelect('section.name','section_name')
+    .addSelect('section.time','section_time')
+    .addSelect('section.type','section_type')
+
+    .addSelect('unit.id','unit_id')
+    .addSelect('unit.name','unit_name')
+
+    .addSelect('level.id','level_id')
+    .addSelect('level.name','level_name')
+    .addSelect('level.color','level_color')
+
+
+
+    .from(LevelEntity, 'level')
+    .innerJoin(UnitEntity,"unit","unit.levelId = level.id")
+    .innerJoin(SectionEntity,"section","section.unitId = unit.id")
+    .innerJoin(ElementEntity,"element","element.sectionId = section.id")
+    .where(`"element"."idReference" = '${id}'`)
+    .getRawMany()
+
+      
+
+    } catch (error) {
+      ExceptionErrorMessage(error);
+    }
+  }
+
+  async findByIdElementByIdReferenceExamen(id: number) {
+    try {
+
+    return await this.datasource.createQueryBuilder()
+    .select('section.id','section_id')
+    .addSelect('section.idReference','section_idReference')
+    .addSelect('section.name','section_name')
+    .addSelect('section.time','section_time')
+    .addSelect('section.type','section_type')
+    .addSelect('unit.id','unit_id')
+    .addSelect('unit.name','unit_name')
+    .addSelect('level.id','level_id')
+    .addSelect('level.name','level_name')
+    .addSelect('level.color','level_color')
+    .from(LevelEntity, 'level')
+    .innerJoin(UnitEntity,"unit","unit.levelId = level.id")
+    .innerJoin(SectionEntity,"section","section.unitId = unit.id")
+    .where(`"section"."idReference" = '${id}'`)
+    .getRawMany()
+
+      
+
+    } catch (error) {
+      ExceptionErrorMessage(error);
+    }
+  }
+
 
 
   //Listar Element

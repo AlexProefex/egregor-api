@@ -18,7 +18,7 @@ export class QuestionEntity {
     title:string;
 
     @Column({ nullable: true})
-    points:string;
+    points:number;
 
     @Column({ nullable: true, type:"text"})
     description:string;

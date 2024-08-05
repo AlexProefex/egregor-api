@@ -32,6 +32,20 @@ export class ElementController {
     return this.elementService.findAllElement();
   }
 
+  @Public()
+  @Get('/quiz/:id')
+  @ApiOperation({ summary: 'Obtiene un elemento por su identificador' })
+  async getExam(@Param() params: ParameterValidation): Promise<any> {
+    return await this.elementService.findByIdElementByIdReferenceExamen(params.id);
+  }
+
+  @Public()
+  @Get('/practice/:id')
+  @ApiOperation({ summary: 'Obtiene un elemento por su identificador' })
+  async getPractice(@Param() params: ParameterValidation): Promise<any> {
+    return await this.elementService.findByIdElementByIdReferencePractice(params.id);
+  }
+
   //Exponer punto para obtener 3 registros aleatorios
   @Public()
   @Get(':id')

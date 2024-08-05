@@ -1,6 +1,6 @@
 
-import { IsNotEmpty  } from 'class-validator';
-import { MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
+import { IsNotEmpty, IsNumber  } from 'class-validator';
+import { MessaeSendResponseIsNotEmpty, MessaeSendResponseIsNumber } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
 
@@ -30,7 +30,8 @@ export class QuestionPracticeValidationOMultiple {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
-    points:string;
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
+    points:number;
 
     order:string;
 }
@@ -61,7 +62,8 @@ export class QuestionPracticeValidationCheckBox {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
-    points:string;
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
+    points:number;
 
     order:string;
 }
@@ -94,7 +96,8 @@ export class QuestionPracticeValidationDropDown {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
-    points:string;
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
+    points:number;
 
     order:string;
 }
@@ -122,7 +125,8 @@ export class QuestionPracticeValidationShortAnswer {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
-    points:string;
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
+    points:number;
 
     order:string;
 }
@@ -227,6 +231,7 @@ export class QuestionPracticeValidationUpdateOMultiple {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
     points:string;
     
 }
@@ -260,6 +265,7 @@ export class QuestionPracticeValidationUpdateCheckBox {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
     points:string;
 
     
@@ -296,6 +302,7 @@ export class QuestionPracticeValidationUpdateDropDown {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
     points:string;
 }
 
@@ -325,6 +332,7 @@ export class QuestionPracticeValidationUpdateShortAnswer {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('Los puntos')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('Los puntos')})
     points:string;
 }
 

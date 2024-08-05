@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
-import { UnitEntity } from 'src/database/entity/unit/unit-entity';
 import { removeNUllValues } from 'src/util/custom';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { Repository } from 'typeorm';
@@ -12,7 +11,6 @@ export class LevelService {
   constructor(@InjectRepository(LevelEntity)
   private readonly lelvelRp: Repository<LevelEntity>) {
   }
-
 
     //Contar Level
     async getCountLevel() {
@@ -55,14 +53,11 @@ export class LevelService {
   //Obtener Level
   async findLevel(id: number) {
     try {
-       //
-      
       const result = await this.lelvelRp.find({
         relations: {
           unit:{
             section:{
               element:{
-             
               }
             }
           }
@@ -99,20 +94,11 @@ export class LevelService {
         where:{id:id},
         order:{id:'ASC',unit:{id:'ASC',section:{type:'DESC', id:'ASC',element:{id:'ASC'}}}}
       });
-
-
       return removeNUllValues(result)
-      
-
     } catch (error) {
       ExceptionErrorMessage(error);
     }
   }
-
-
-
-
-
 
   //Listar Level
   async findAllLevel() {
