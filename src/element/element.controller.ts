@@ -75,7 +75,7 @@ export class ElementController {
   async saveElementMaterial(@Body() modelElement: ElementMaterialValidation): Promise<any> {
     try {
       modelElement.type = TypeMaterial
-      const response = await this.storageService.upload(modelElement.document)
+      const response = await this.storageService.uploadPfd(modelElement.document)
       if (response) {
         modelElement.url = response
         const { document, ...model } = modelElement;
