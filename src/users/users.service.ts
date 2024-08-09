@@ -1,23 +1,64 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entity/user/user-entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { UserValidation } from 'src/database/validation/user-validation';
 import { token } from './token.service';
 import { error } from 'console';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { removeNUllObject } from 'src/util/custom';
+import { TypeCompany, TypeTeacher } from 'src/util/constants';
+import { DirectionEntity } from 'src/database/entity/direction/direction';
+import { BankEntity } from 'src/database/entity/bank/bank';
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
 export type User = any;
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(UserEntity)
-    private readonly userRp: Repository<UserEntity>,
+    constructor(
+        @InjectRepository(UserEntity) private readonly userRp: Repository<UserEntity>,
+        @InjectRepository(DirectionEntity) private readonly directionRp: Repository<DirectionEntity>,
+        @InjectRepository(BankEntity) private readonly bankRp: Repository<BankEntity>,
+        private datasource: DataSource,
         private readonly jwtUtil: token
     ) {
     }
+
+    async findUserTeachers() {
+        const response = await this.userRp.find({
+            select: {
+                id: true,
+                name: true,
+                lastName: true,
+                email: true,
+                type_contract: true,
+            }, where: { rol: TypeTeacher }, relations: { bank: true, direction: true }
+        });
+        if (response) {
+            return response;
+        }
+        return response
+    }
+
+
+    async findUserCompanys() {
+        const response = await this.userRp.find({
+            select: {
+                id: true,
+                company_name: true,
+                representative: true,
+                email: true,
+         
+            }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }
+        });
+        if (response) {
+            return response;
+        }
+        return response
+    }
+
+
 
     async newCamps(auth: any) {
         const current = await this.jwtUtil.decode(auth);
@@ -41,7 +82,7 @@ export class UserService {
     }
 
     async findUserById(id: number) {
-        const response = await this.userRp.findOne({ where: { id: id } });
+        const response = await this.userRp.findOne({ where: { id: id }, relations: { direction: true, bank: true } });
         if (response) {
             const { password, ...res } = response;
             return res
@@ -63,6 +104,52 @@ export class UserService {
             console.log(error)
             ExceptionErrorMessage(error);
         }
+
+    }
+
+    async saveUserTeacher(user: any) {
+        const queryRunner = this.datasource.createQueryRunner()
+        await queryRunner.startTransaction()
+        try {
+            let currentUser = user
+            let bank
+            let direction 
+           // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(currentUser.password, salt);
+            currentUser.password = hashedPassword;
+
+            if(Object.keys(currentUser.bank).length == 0){
+                delete currentUser.bank
+            } else{
+                bank = await queryRunner.manager.withRepository(this.bankRp).save(currentUser.bank)
+                currentUser.bank = bank.id
+            }
+
+            if(Object.keys(currentUser.direction).length == 0){
+                delete currentUser.direction
+            }else{
+                direction = await queryRunner.manager.withRepository(this.directionRp).save(currentUser.direction)
+                currentUser.direction = direction.id
+
+            }
+
+        
+            const user2 = await queryRunner.manager.withRepository(this.userRp).save(currentUser);
+            console.log(user2)
+
+            await queryRunner.commitTransaction()
+
+        } catch (error) {
+            console.log(error)
+            await queryRunner.rollbackTransaction()
+            ExceptionErrorMessage(error);
+        } finally {
+            await queryRunner.release()
+        }
+
+
+
     }
 
     async updateUserGeneral(user: any, id) {
@@ -77,20 +164,6 @@ export class UserService {
     }
 
 
-    //Guardar Usuario
-    /* async saveUser(user:UserValidation){
- 
-         try {
-             const salt = await bcrypt.genSalt();
-             const hashedPassword = await bcrypt.hash(user.password, salt);
-             user.password = hashedPassword;
-             return await this.userRp.save(user);
-             //return user;
-         } catch (error) {
-            // ExceptionErrorMessage(error); 
-         }
-     }*/
-    //Actualizar Usuario
     async updateUser(user: any, name, auth: any) {
         try {
             const current = await this.jwtUtil.decode(auth);

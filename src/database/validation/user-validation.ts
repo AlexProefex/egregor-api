@@ -1,11 +1,14 @@
-import { IsNotEmpty, IsEmail, IsBoolean, IsEmpty, isString, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsBoolean, IsEmpty, isString, IsString, IsOptional, IsNumber, ValidateNested, IsObject } from 'class-validator';
 //import { IsUnique } from 'src/validation/is-unique';
 ///import { IsNumber } from 'src/validation/is-number';
-import { MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
+import { MessaeSendResponseIsNotEmpty, MessaeSendResponseIsNumber } from 'src/validation/validation.exception';
 import { ApiProperty, ApiResponse,  } from '@nestjs/swagger/dist';
 import { OmitType, PartialType, PickType } from '@nestjs/mapped-types';
 import { IsUnique } from 'src/validation/is-unique';
 import { Role } from 'src/util/rol.enum';
+import { BankValidationCreate } from './bank-validation';
+import { Type } from 'class-transformer';
+import { DirectionValidationCreate } from './direction-validation';
 
 export class UserValidation {
  
@@ -80,15 +83,28 @@ export class TeacherValidation {
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La tarifa')})
-    tariff:string;
-
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El link de paypal')})
-    paypal_link:string;   
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La tarifa')})
+    tariff:number;
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El carnet de identificacion')})
-    carnet_id:string;   
+    carnet_id:string;  
+
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsObject()
+    @Type(()=>BankValidationCreate)
+    bank:BankValidationCreate;
+    
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsObject()
+    @Type(()=>DirectionValidationCreate)
+    direction:DirectionValidationCreate;
+
+
+
+
 }
 
 

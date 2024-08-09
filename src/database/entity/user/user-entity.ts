@@ -3,6 +3,8 @@ import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, Man
 import * as bcrypt from 'bcrypt';
 import { LicenseEntity } from '../license/license-entity';
 import { GroupEntity } from '../group/group-entity';
+import { DirectionEntity } from '../direction/direction';
+import { BankEntity } from '../bank/bank';
 
 
 @Entity('user')
@@ -27,10 +29,10 @@ export class UserEntity {
     type_contract:string;
 
     @Column({ nullable: true})
-    tariff:string;
+    tariff:number;
 
-    @Column({ nullable: true})
-    paypal_link:string;
+    /*@Column({ nullable: true})
+    paypal_link:string;*/
 
     @Column({ nullable: true})
     carnet_id:string;
@@ -91,6 +93,15 @@ export class UserEntity {
 
     @OneToMany(() => GroupEntity, (group)=> group.teacher,{ nullable:true})
     group:LicenseEntity
+
+
+    @OneToOne(() => DirectionEntity, (direction) =>  direction.id, {nullable:true})
+    @JoinColumn()
+    direction:DirectionEntity
+
+    @OneToOne(() => BankEntity, (bank) =>  bank.id, {nullable:true})
+    @JoinColumn()
+    bank:BankEntity
 
 
 /*    @OneToOne(() => LicenseEntity )

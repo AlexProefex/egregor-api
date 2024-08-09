@@ -26,6 +26,7 @@ export class QuestionPracticeValidationOMultiple {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -58,6 +59,7 @@ export class QuestionPracticeValidationCheckBox {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -92,6 +94,7 @@ export class QuestionPracticeValidationDropDown {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -121,6 +124,7 @@ export class QuestionPracticeValidationShortAnswer {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -144,6 +148,7 @@ export class QuestionPracticeValidationText {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     order:string;
@@ -163,6 +168,7 @@ export class QuestionPracticeValidationImage {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     
@@ -195,6 +201,7 @@ export class QuestionPracticeValidationMovie {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     order:string;
@@ -227,6 +234,7 @@ export class QuestionPracticeValidationUpdateOMultiple {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -261,6 +269,7 @@ export class QuestionPracticeValidationUpdateCheckBox {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -298,6 +307,7 @@ export class QuestionPracticeValidationUpdateDropDown {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -328,6 +338,7 @@ export class QuestionPracticeValidationUpdateShortAnswer {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     @ApiProperty()
@@ -352,6 +363,7 @@ export class QuestionPracticeValidationUpdateText {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
 }
@@ -372,6 +384,7 @@ export class QuestionPracticeValidationUpdateImage {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
     
@@ -405,6 +418,7 @@ export class QuestionPracticeValidationUpdateMovie {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
 }
@@ -422,6 +436,7 @@ export class QuestionValidateOrder {
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La seccion')})
     question:number;
 
 }

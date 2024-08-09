@@ -15,6 +15,8 @@ import { IsUniqueConstraints } from 'src/validation/is-unique-constraints';
 import { LicenseEntity } from './entity/license/license-entity';
 import { GroupEntity } from './entity/group/group-entity';
 import { ScheduleEntity } from './entity/schedule/schedule-entity';
+import { BankEntity } from './entity/bank/bank';
+import { DirectionEntity } from './entity/direction/direction';
 
 //
 @Module({
@@ -27,9 +29,9 @@ import { ScheduleEntity } from './entity/schedule/schedule-entity';
         username: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWROD,
         database: process.env.DATABASE_NAME,
-        entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity, LicenseEntity, GroupEntity, ScheduleEntity ],
+        entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity, LicenseEntity, GroupEntity, ScheduleEntity, BankEntity, DirectionEntity ],
         synchronize: true,
-        dropSchema: true,
+        dropSchema: false,
         }),
     ],
     providers:[IsUniqueConstraints]

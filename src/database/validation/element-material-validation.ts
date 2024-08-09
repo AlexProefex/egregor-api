@@ -1,5 +1,5 @@
 
-import { IsBoolean, IsEmpty, IsNotEmpty, isEmpty  } from 'class-validator';
+import { IsBoolean, IsEmpty, IsNotEmpty, IsNumber, isEmpty  } from 'class-validator';
 import { MessaeSendResponseIsBoolean, MessaeSendResponseIsNotEmpty } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 
@@ -24,6 +24,7 @@ export class ElementMaterialValidation {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message: "La seccion debe ser un numero" })
     section:number;
 
     @ApiProperty()
@@ -54,6 +55,7 @@ export class ElementMaterialUpdateValidation {
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La seccion')})
+    @IsNumber({}, { message: "La seccion debe ser un numero" })
     section:number;
 
     @ApiProperty()

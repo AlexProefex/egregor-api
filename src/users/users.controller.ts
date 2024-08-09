@@ -69,7 +69,7 @@ export class UserController {
     //@ApiResponse({type:UserValidation})
     @Public()
     @Get('detail/:id')
-    @ApiOperation({ summary: 'Obtiene los datos del perfil de un profesor' })
+    @ApiOperation({ summary: 'Obtiene los datos de un perfil' })
     async getUserTeacher(@Param() param: ParameterValidation, @Res() res: Response): Promise<any> {
         const user =  await this.userService.findUserById(param.id);
         if (user) {
@@ -81,6 +81,25 @@ export class UserController {
         return res.status(HttpStatus.NOT_FOUND).json({});
     }
 
+    @Public()
+    @Get('teachers')
+    @ApiOperation({ summary: 'Obtiene los registros de los profesores' })
+    async getTeachers(@Res() res: Response): Promise<any> {
+        const user =  await this.userService.findUserTeachers()
+        return res.status(HttpStatus.OK).json([ ...user ])
+    
+    }
+
+
+    @Public()
+    @Get('companys')
+    @ApiOperation({ summary: 'Obtiene los registros de los empresas' })
+    async getCompanys(@Res() res: Response): Promise<any> {
+        const user =  await this.userService.findUserCompanys()
+        return res.status(HttpStatus.OK).json([ ...user ])
+
+    }
+
 
 
     @Public()
@@ -88,7 +107,7 @@ export class UserController {
     @ApiOperation({ summary: 'Permite el registro de un usuario con rol profesor' })
     registerTeacher(@Body() modelUser: TeacherValidation): any {
         modelUser.rol = TypeTeacher;
-        return this.userService.saveUserGeneral(modelUser);
+        return this.userService.saveUserTeacher(modelUser);
     }
 
     @Public()
