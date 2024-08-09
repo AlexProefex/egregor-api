@@ -11,6 +11,7 @@ import { removeNUllObject } from 'src/util/custom';
 import { TypeCompany, TypeTeacher } from 'src/util/constants';
 import { DirectionEntity } from 'src/database/entity/direction/direction';
 import { BankEntity } from 'src/database/entity/bank/bank';
+import { last } from 'rxjs';
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
 export type User = any;
 
@@ -49,7 +50,7 @@ export class UserService {
                 company_name: true,
                 representative: true,
                 email: true,
-         
+
             }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }
         });
         if (response) {
@@ -113,30 +114,29 @@ export class UserService {
         try {
             let currentUser = user
             let bank
-            let direction 
-           // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
+            let direction
+            // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(currentUser.password, salt);
             currentUser.password = hashedPassword;
 
-            if(Object.keys(currentUser.bank).length == 0){
+            if (Object.keys(currentUser.bank).length == 0) {
                 delete currentUser.bank
-            } else{
+            } else {
                 bank = await queryRunner.manager.withRepository(this.bankRp).save(currentUser.bank)
                 currentUser.bank = bank.id
             }
 
-            if(Object.keys(currentUser.direction).length == 0){
+            if (Object.keys(currentUser.direction).length == 0) {
                 delete currentUser.direction
-            }else{
+            } else {
                 direction = await queryRunner.manager.withRepository(this.directionRp).save(currentUser.direction)
                 currentUser.direction = direction.id
 
             }
 
-        
-            const user2 = await queryRunner.manager.withRepository(this.userRp).save(currentUser);
-            console.log(user2)
+
+            await queryRunner.manager.withRepository(this.userRp).save(currentUser);
 
             await queryRunner.commitTransaction()
 
@@ -153,14 +153,55 @@ export class UserService {
     }
 
     async updateUserGeneral(user: any, id) {
+
+        const queryRunner = this.datasource.createQueryRunner()
+        await queryRunner.startTransaction()
         try {
-            await this.userRp.update(id, user);
-            const response = await this.userRp.findOne({ where: { id: id } });
-            const { password, ...result } = response;
-            return removeNUllObject(result);
+            let currentUser = user
+            let bank
+            let direction
+            const salt = await bcrypt.genSalt();
+            const hashedPassword = await bcrypt.hash(currentUser.password, salt);
+            const lastUser = await queryRunner.manager.withRepository(this.userRp).findOne({ where: { id: id }, relations: { bank: true, direction: true } })
+
+            await queryRunner.manager.withRepository(this.userRp).update({id:id},{direction:null,bank:null })
+
+
+            if (lastUser.bank?.id) {
+                await queryRunner.manager.withRepository(this.bankRp).delete({ id: lastUser.bank.id })
+            }
+
+            if (lastUser.direction?.id) {
+                await queryRunner.manager.withRepository(this.directionRp).delete({ id: lastUser.direction.id })
+            }
+            currentUser.password = hashedPassword;
+
+            if (Object.keys(currentUser.bank).length == 0) {
+                delete currentUser.bank
+            } else {
+                bank = await queryRunner.manager.withRepository(this.bankRp).save(currentUser.bank)
+                currentUser.bank = bank.id
+            }
+
+            if (Object.keys(currentUser.direction).length == 0) {
+                delete currentUser.direction
+            } else {
+                direction = await queryRunner.manager.withRepository(this.directionRp).save(currentUser.direction)
+                currentUser.direction = direction.id
+            }
+
+            await queryRunner.manager.withRepository(this.userRp).update(id, currentUser);
+
+            await queryRunner.commitTransaction()
+
         } catch (error) {
+            console.log(error)
+            await queryRunner.rollbackTransaction()
             ExceptionErrorMessage(error);
+        } finally {
+            await queryRunner.release()
         }
+
     }
 
 

@@ -113,7 +113,7 @@ export class UserController {
     @Public()
     @Put('register/teacher/:id')
     @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol profesor' })
-    updateTeacher(@Body() modelUser: TeacherValidation, @Param() params): any {
+    updateTeacher(@Body() modelUser: TeacherValidation, @Param() params:ParameterValidation): any {
         modelUser.rol = TypeTeacher;
         return this.userService.updateUserGeneral(modelUser, params.id);
     }
@@ -133,7 +133,7 @@ export class UserController {
     @Public()
     @Put('register/company/:id')
     @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol empresa' })
-    updateCompany(@Body() modelUser: CompanyValidation, @Param() params): any {
+    updateCompany(@Body() modelUser: CompanyValidation, @Param() params:ParameterValidation): any {
         modelUser.rol = TypeCompany;
         return this.userService.updateUserGeneral(modelUser, params.id);
     }
