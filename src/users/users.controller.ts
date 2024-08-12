@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseInterceptors, Headers, Res, HttpStatus,
 import { UserService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 //import { IsParameterWithIdOfTable } from 'src/database/validation/parameter-validation';
-import { ChangePasswordValidation, CompanyValidation, StudentValidation, StudentValidationUpdate, TeacherValidation, UserValidation } from 'src/database/validation/user-validation';
+import { ChangePasswordValidation, CompanyValidation, CompanyValidationUpdate, StudentValidation, StudentValidationUpdate, TeacherValidation, UserValidation } from 'src/database/validation/user-validation';
 import { Public } from 'src/auth/auth.controller';
 import { SkipThrottle } from '@nestjs/throttler';
 import path, { extname } from 'path';
@@ -159,7 +159,7 @@ export class UserController {
     @Public()
     @Put('register/company-update/:id')
     @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol empresa' })
-    updateCompany(@Body() modelUser: CompanyValidation, @Param() params: ParameterValidation): any {
+    updateCompany(@Body() modelUser: CompanyValidationUpdate, @Param() params: ParameterValidation): any {
         modelUser.rol = TypeCompany;
         return this.userService.updateUserGeneral(modelUser, params.id);
     }

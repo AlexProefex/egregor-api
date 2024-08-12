@@ -156,6 +156,51 @@ export class CompanyValidation {
 
 }
 
+export class CompanyValidationUpdate {
+   
+    @ApiProperty()
+    @IsOptional()
+    id:number;
+
+    rol:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
+    company_name:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El representante')})
+    representative:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La marca comercial')})
+    comercial_brand:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La razon social')})
+    business_name:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El pais')})
+    country:string;
+
+    @ApiProperty()
+    @IsOptional()
+    fiscal_rcf:string;
+
+    @ApiProperty()
+    @IsUnique({tableName:'user',column:'email'})
+    @IsEmail({},{message:"El correo debe tener formato email@email.com"})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    email:string;
+
+    
+    @ApiProperty()
+    @IsOptional()
+    password:string;
+
+
+}
 
 export class StudentValidation {
    
