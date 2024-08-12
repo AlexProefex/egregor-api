@@ -28,7 +28,12 @@ export const StatusGroupInactive = 'inactive'
 export const EgregorName = "proyecto-egregor-test"
 export const Credentials = "key_project.json"
 
-
+export type TypesStudents = 'b2b' | 'b2c'| 'b2b2c';
+export const TypeStudents: TypesStudents[] = [
+    'b2b',
+    'b2c',
+    'b2b2c',
+]
 
 export type StatesGroups = 'active' | 'inactive';
 export const StatesGroup: StatesGroups[] = [

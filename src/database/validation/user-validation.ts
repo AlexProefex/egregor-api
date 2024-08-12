@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail, IsBoolean, IsEmpty, isString, IsString, IsOptional, IsNumber, ValidateNested, IsObject } from 'class-validator';
+import { IsNotEmpty, IsEmail, IsBoolean, IsEmpty, isString, IsString, IsOptional, IsNumber, ValidateNested, IsObject, IsEnum } from 'class-validator';
 //import { IsUnique } from 'src/validation/is-unique';
 ///import { IsNumber } from 'src/validation/is-number';
 import { MessaeSendResponseIsNotEmpty, MessaeSendResponseIsNumber } from 'src/validation/validation.exception';
@@ -9,6 +9,7 @@ import { Role } from 'src/util/rol.enum';
 import { BankValidationCreate } from './bank-validation';
 import { Type } from 'class-transformer';
 import { DirectionValidationCreate } from './direction-validation';
+import { StatesGroup, TypeStudents } from 'src/util/constants';
 
 export class UserValidation {
  
@@ -154,6 +155,97 @@ export class CompanyValidation {
 
 
 }
+
+
+export class StudentValidation {
+   
+    @ApiProperty()
+    @IsOptional()
+    id:number;
+
+    rol:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
+    name:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El apellido')})
+    lastName:string;
+    
+
+    @ApiProperty()
+    @IsUnique({tableName:'user',column:'email'})
+    @IsEmail({},{message:"El correo debe tener formato email@email.com"})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    email:string;
+
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El password')})
+    password:string;
+
+    @ApiProperty()
+    @IsNotEmpty({ message: MessaeSendResponseIsNotEmpty('El tipo de estudiante')})
+    @IsEnum(TypeStudents,{each:true,message:"Solo se aceptan los siguientes valores b2b b2c b2b2c"})
+    type_student:string;
+
+    @ApiProperty()
+    @IsOptional()
+    company:number;
+
+    @ApiProperty()
+    @IsOptional()
+    country:string;
+
+    @ApiProperty()
+    @IsOptional()
+    curp:string;
+}
+
+
+export class StudentValidationUpdate {
+   
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El usuario')})
+    id:number;
+
+    rol:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
+    name:string;
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El apellido')})
+    lastName:string;
+    
+
+    @ApiProperty()
+    @IsUnique({tableName:'user',column:'email'})
+    @IsEmail({},{message:"El correo debe tener formato email@email.com"})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    email:string;
+
+    
+    @ApiProperty()
+    @IsOptional()
+    password:string;
+
+
+    @ApiProperty()
+    @IsOptional()
+    company:number;
+
+    @ApiProperty()
+    @IsOptional()
+    country:string;
+
+    @ApiProperty()
+    @IsOptional()
+    curp:string;
+}
+
 
 
 export class ChangePasswordValidation {

@@ -8,10 +8,9 @@ import { token } from './token.service';
 import { error } from 'console';
 import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { removeNUllObject } from 'src/util/custom';
-import { TypeCompany, TypeTeacher } from 'src/util/constants';
+import { TypeCompany, TypeStudent, TypeTeacher } from 'src/util/constants';
 import { DirectionEntity } from 'src/database/entity/direction/direction';
 import { BankEntity } from 'src/database/entity/bank/bank';
-import { last } from 'rxjs';
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
 export type User = any;
 
@@ -42,6 +41,34 @@ export class UserService {
         return response
     }
 
+    async findStudent(id) {
+        const response = await this.userRp.findOne({
+            select: {
+                id: true,
+                name: true,
+                lastName: true,
+                email: true,
+                company:true,
+                direction:{id:true},
+                curp:true
+            }, where: { id:id, rol:TypeStudent }, relations:{direction:true}
+        });
+        if(response){
+            if (response.direction) {
+                // @ts-ignore: Unreachable code error
+                response.direction = (await this.directionRp.findOne({select:{country:true}, where:{id:response.direction.id}}))?.country
+              
+            }
+            
+            if(response.company){
+                console.log(response.company)
+                // @ts-ignore: Unreachable code error
+                response.company = (await this.userRp.findOne({select:{company_name:true}, where:{id:response.company}}))?.company_name
+            }
+        }
+        return response
+    }
+
 
     async findUserCompanys() {
         const response = await this.userRp.find({
@@ -50,8 +77,22 @@ export class UserService {
                 company_name: true,
                 representative: true,
                 email: true,
-
+         
             }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }
+        });
+        if (response) {
+            return response;
+        }
+        return response
+    }
+
+
+    async findUserCompanysFiltered() {
+        const response = await this.userRp.find({
+            select: {
+                id: true,
+                company_name: true
+            }, where: { rol: TypeCompany }
         });
         if (response) {
             return response;
@@ -114,29 +155,30 @@ export class UserService {
         try {
             let currentUser = user
             let bank
-            let direction
-            // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
+            let direction 
+           // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(currentUser.password, salt);
             currentUser.password = hashedPassword;
 
-            if (Object.keys(currentUser.bank).length == 0) {
+            if(Object.keys(currentUser.bank).length == 0){
                 delete currentUser.bank
-            } else {
+            } else{
                 bank = await queryRunner.manager.withRepository(this.bankRp).save(currentUser.bank)
                 currentUser.bank = bank.id
             }
 
-            if (Object.keys(currentUser.direction).length == 0) {
+            if(Object.keys(currentUser.direction).length == 0){
                 delete currentUser.direction
-            } else {
+            }else{
                 direction = await queryRunner.manager.withRepository(this.directionRp).save(currentUser.direction)
                 currentUser.direction = direction.id
 
             }
 
-
-            await queryRunner.manager.withRepository(this.userRp).save(currentUser);
+        
+            const user2 = await queryRunner.manager.withRepository(this.userRp).save(currentUser);
+            console.log(user2)
 
             await queryRunner.commitTransaction()
 
@@ -152,7 +194,7 @@ export class UserService {
 
     }
 
-    async updateUserGeneral(user: any, id) {
+    async updateTeacher(user: any, id) {
 
         const queryRunner = this.datasource.createQueryRunner()
         await queryRunner.startTransaction()
@@ -202,6 +244,24 @@ export class UserService {
             await queryRunner.release()
         }
 
+    }
+
+    async updateUserGeneral(user: any, id) {
+
+        try {
+            if(user.password){
+                const salt = await bcrypt.genSalt();
+                const hashedPassword = await bcrypt.hash(user.password, salt);
+                user.password = hashedPassword;
+            }
+            await this.userRp.update(id, user);
+            const response = await this.userRp.findOne({ where: { id: id } });
+
+            const { password, ...result } = response;
+            return removeNUllObject(result);
+        } catch (error) {
+            ExceptionErrorMessage(error);
+        }
     }
 
 
