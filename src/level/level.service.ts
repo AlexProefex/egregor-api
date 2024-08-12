@@ -103,7 +103,7 @@ export class LevelService {
   //Listar Level
   async findAllLevel() {
     try {
-      return await this.lelvelRp.find();
+      return await this.lelvelRp.find({order:{id:'DESC'}});
     } catch (error) {
       ExceptionErrorMessage(error);
     }

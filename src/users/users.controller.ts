@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseInterceptors, Headers, Res, HttpStatus,
 import { UserService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 //import { IsParameterWithIdOfTable } from 'src/database/validation/parameter-validation';
-import { ChangePasswordValidation, CompanyValidation, CompanyValidationUpdate, StudentValidation, StudentValidationUpdate, TeacherValidation, UserValidation } from 'src/database/validation/user-validation';
+import { ChangePasswordValidation, CompanyValidation, CompanyValidationUpdate, StudentValidation, StudentValidationUpdate, TeacherValidation, TeacherValidationUpdate, UserValidation } from 'src/database/validation/user-validation';
 import { Public } from 'src/auth/auth.controller';
 import { SkipThrottle } from '@nestjs/throttler';
 import path, { extname } from 'path';
@@ -139,7 +139,7 @@ export class UserController {
     @Public()
     @Put('register/teacher/:id')
     @ApiOperation({ summary: 'Permite la actualizacion de un usuario con rol profesor' })
-    updateTeacher(@Body() modelUser: TeacherValidation, @Param() params: ParameterValidation): any {
+    updateTeacher(@Body() modelUser: TeacherValidationUpdate, @Param() params: ParameterValidation): any {
         modelUser.rol = TypeTeacher;
         return this.userService.updateTeacher(modelUser, params.id);
     }

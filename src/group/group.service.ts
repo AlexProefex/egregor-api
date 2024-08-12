@@ -21,7 +21,7 @@ export class GroupService {
 
 
   async getGroups(){
-    return await this.groupRp.find({select:{id:true,start_time:true,end_time:true,type:true,name:true,level:{name:true},teacher:{name:true,lastName:true}},relations:{teacher:true, level:true}});
+    return await this.groupRp.find({select:{id:true,start_time:true,end_time:true,type:true,name:true,level:{name:true},teacher:{name:true,lastName:true}},relations:{teacher:true, level:true},order:{id:"DESC"}});
   }
 
 

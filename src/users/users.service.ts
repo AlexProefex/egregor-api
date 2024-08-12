@@ -33,7 +33,7 @@ export class UserService {
                 lastName: true,
                 email: true,
                 type_contract: true,
-            }, where: { rol: TypeTeacher }, relations: { bank: true, direction: true }
+            }, where: { rol: TypeTeacher }, relations: { bank: true, direction: true }, order: { id:"DESC"}
         });
         if (response) {
             return response;
@@ -51,7 +51,7 @@ export class UserService {
                 company:true,
                 direction:{id:true},
                 curp:true
-            }, where: { id:id, rol:TypeStudent }, relations:{direction:true}
+            }, where: { id:id, rol:TypeStudent }, relations:{direction:true}, order:{id:"DESC"}
         });
         if(response){
             if (response.direction) {
@@ -78,7 +78,7 @@ export class UserService {
                 representative: true,
                 email: true,
          
-            }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }
+            }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }, order: { id:"DESC"}
         });
         if (response) {
             return response;
@@ -202,8 +202,11 @@ export class UserService {
             let currentUser = user
             let bank
             let direction
-            const salt = await bcrypt.genSalt();
-            const hashedPassword = await bcrypt.hash(currentUser.password, salt);
+            if(currentUser.password){
+                const salt = await bcrypt.genSalt();
+                const hashedPassword = await bcrypt.hash(currentUser.password, salt);
+                currentUser.password = hashedPassword;
+            }
             const lastUser = await queryRunner.manager.withRepository(this.userRp).findOne({ where: { id: id }, relations: { bank: true, direction: true } })
 
             await queryRunner.manager.withRepository(this.userRp).update({id:id},{direction:null,bank:null })
@@ -216,7 +219,7 @@ export class UserService {
             if (lastUser.direction?.id) {
                 await queryRunner.manager.withRepository(this.directionRp).delete({ id: lastUser.direction.id })
             }
-            currentUser.password = hashedPassword;
+            //currentUser.password = hashedPassword;
 
             if (Object.keys(currentUser.bank).length == 0) {
                 delete currentUser.bank

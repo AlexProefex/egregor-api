@@ -108,6 +108,62 @@ export class TeacherValidation {
 
 }
 
+export class TeacherValidationUpdate {
+
+    @ApiProperty()
+    @IsOptional()
+    id:number;
+
+    rol:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nombre')})
+    name:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('Los apellidos')})
+    lastName:string;
+
+    @ApiProperty()
+    @IsUnique({tableName:'user',column:'email'})
+    @IsEmail({},{message:"El correo debe tener formato email@email.com"})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El correo')})
+    email:string;
+
+    @ApiProperty()
+    @IsOptional()
+    password:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El tipo de contrato')})
+    type_contract:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La tarifa')})
+    @IsNumber({}, { message:MessaeSendResponseIsNumber('La tarifa')})
+    tariff:number;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El carnet de identificacion')})
+    carnet_id:string;  
+
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsObject()
+    @Type(()=>BankValidationCreate)
+    bank:BankValidationCreate;
+    
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsObject()
+    @Type(()=>DirectionValidationCreate)
+    direction:DirectionValidationCreate;
+
+
+
+
+}
+
 
 
 export class CompanyValidation {
