@@ -39,6 +39,13 @@ export class GroupController {
       return this.groupService.updateGroup(model,params.id);
     }
 
+    @Public()
+    @Post()
+    @ApiOperation({ summary: 'Agrega un estudiante al grupo'})
+    addStundetToGroup(@Body() model:GroupValidation, @Param() params:ParameterValidation):any{
+      return this.groupService.updateGroup(model,params.id);
+    }
+
 }
 
 

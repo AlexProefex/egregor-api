@@ -70,7 +70,7 @@ export class UserService {
     }
 
     async findStudents() {
-        const response = await this.userRp.findOne({
+        const response = await this.userRp.find({
             select: {
                 id: true,
                 name: true,
@@ -80,19 +80,6 @@ export class UserService {
                 type_student:true,
             }, where: { rol:TypeStudent }
         });
-        if(response){
-            if (response.direction) {
-                // @ts-ignore: Unreachable code error
-                response.direction = (await this.directionRp.findOne({select:{country:true}, where:{id:response.direction.id}}))?.country
-              
-            }
-            
-            if(response.company) {
-                console.log(response.company)
-                // @ts-ignore: Unreachable code error
-                response.company = (await this.userRp.findOne({select:{company_name:true}, where:{id:response.company}}))?.company_name
-            }
-        }
         return response
     }
 

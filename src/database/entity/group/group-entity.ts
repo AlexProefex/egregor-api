@@ -3,7 +3,7 @@ import { ScheduleEntity } from '../schedule/schedule-entity';
 import { UserEntity } from '../user/user-entity';
 import { LevelEntity } from '../level/level-entity';
 import { IsEnum } from 'class-validator';
-import { TypesGroup } from 'src/util/constants';
+import { TypeInactive, TypesGroup } from 'src/util/constants';
 
 @Entity('group')
 export class GroupEntity {
@@ -26,7 +26,7 @@ export class GroupEntity {
     @Column({ nullable: true})
     type:string;
 
-    @Column({ nullable: true,default:"inactive"})
+    @Column({ nullable: true,default:TypeInactive})
     status:string;
 
     @Column({ nullable: true})

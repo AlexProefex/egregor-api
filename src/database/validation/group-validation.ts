@@ -62,5 +62,16 @@ export class GroupValidation {
 }
 
 
+export class GroupValidationAddStudent {
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El grupo')})
+    group_number:number;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El estudiante')})
+    student:number;
+}
+
 
 

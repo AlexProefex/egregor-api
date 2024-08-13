@@ -5,7 +5,7 @@ import { GroupEntity } from 'src/database/entity/group/group-entity';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { ScheduleEntity } from 'src/database/entity/schedule/schedule-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
-import { Days, StatusGroupInactive } from 'src/util/constants';
+import { Days, StatusGroupInactive, TypeB2B, TypeB2B2C, TypeB2C } from 'src/util/constants';
 import { ExceptionErrorMessage, NotFoundErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
 
@@ -103,7 +103,28 @@ export class GroupService {
     }
   }
 
-
+  async addUstudentToGroup(model) {
+    const queryRunner = this.datasource.createQueryRunner()
+    await queryRunner.startTransaction()
+    try {
+      
+      const user = await queryRunner.manager.withRepository(this.userRp).findOne({where:{id:model.student}})
+      await queryRunner.manager.withRepository(this.userRp).update({ id: model.student }, {id_group:model.group_number})
+      if(user.type_student == TypeB2C || user.type_student == TypeB2B2C){
+      }
+      else if (user.type_student == TypeB2B){
+        
+      }
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction()
+      ExceptionErrorMessage(err)
+    } finally {
+      // you need to release query runner which is manually created:
+      await queryRunner.release()
+    }
+  }
 
 
 }
