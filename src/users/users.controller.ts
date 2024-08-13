@@ -93,12 +93,21 @@ export class UserController {
     @Public()
     @Get('student/:id')
     @ApiOperation({ summary: 'Obtiene el detalle de un alumno' })
-    async getStudents(@Param() params: ParameterValidation, @Res() res: Response): Promise<any> {
+    async getStudent(@Param() params: ParameterValidation, @Res() res: Response): Promise<any> {
         const user = await this.userService.findStudent(params.id)
         if (user) {
             return res.status(HttpStatus.OK).json({ ...user })
         }
         return res.status(HttpStatus.NOT_FOUND).json({})
+
+    }
+
+    @Public()
+    @Get('students')
+    @ApiOperation({ summary: 'Obtiene los registros de los profesores' })
+    async getStudents(@Res() res: Response): Promise<any> {
+        const user = await this.userService.findStudents()
+        return res.status(HttpStatus.OK).json(user)
 
     }
 

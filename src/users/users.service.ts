@@ -69,6 +69,33 @@ export class UserService {
         return response
     }
 
+    async findStudents() {
+        const response = await this.userRp.findOne({
+            select: {
+                id: true,
+                name: true,
+                lastName: true,
+                email: true,
+                curp:true,
+                type_student:true,
+            }, where: { rol:TypeStudent }
+        });
+        if(response){
+            if (response.direction) {
+                // @ts-ignore: Unreachable code error
+                response.direction = (await this.directionRp.findOne({select:{country:true}, where:{id:response.direction.id}}))?.country
+              
+            }
+            
+            if(response.company) {
+                console.log(response.company)
+                // @ts-ignore: Unreachable code error
+                response.company = (await this.userRp.findOne({select:{company_name:true}, where:{id:response.company}}))?.company_name
+            }
+        }
+        return response
+    }
+
 
     async findUserCompanys() {
         const response = await this.userRp.find({
