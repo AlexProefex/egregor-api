@@ -104,7 +104,7 @@ export class UserController {
 
     @Public()
     @Get('students')
-    @ApiOperation({ summary: 'Obtiene los registros de los profesores' })
+    @ApiOperation({ summary: 'Obtiene los registros de los estudiantes' })
     async getStudents(@Res() res: Response): Promise<any> {
         const user = await this.userService.findStudents()
         return res.status(HttpStatus.OK).json(user)
@@ -131,7 +131,7 @@ export class UserController {
 
     @Public()
     @Post('register/student')
-    @ApiOperation({ summary: 'Permite el registro de un usuario con rol profesor' })
+    @ApiOperation({ summary: 'Permite el registro de un usuario con rol estudiante' })
     registerStudent(@Body() modelUser: StudentValidation): any {
         modelUser.rol = TypeStudent;
         return this.userService.saveUserGeneral(modelUser);

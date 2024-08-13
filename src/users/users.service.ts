@@ -33,7 +33,7 @@ export class UserService {
                 lastName: true,
                 email: true,
                 type_contract: true,
-            }, where: { rol: TypeTeacher }, relations: { bank: true, direction: true }, order: { id:"DESC"}
+            }, where: { rol: TypeTeacher }, relations: { bank: true, direction: true }, order: { id: "DESC" }
         });
         if (response) {
             return response;
@@ -48,22 +48,22 @@ export class UserService {
                 name: true,
                 lastName: true,
                 email: true,
-                company:true,
-                direction:{id:true},
-                curp:true
-            }, where: { id:id, rol:TypeStudent }, relations:{direction:true}, order:{id:"DESC"}
+                company: true,
+                direction: { id: true },
+                curp: true
+            }, where: { id: id, rol: TypeStudent }, relations: { direction: true }, order: { id: "DESC" }
         });
-        if(response){
+        if (response) {
             if (response.direction) {
                 // @ts-ignore: Unreachable code error
-                response.direction = (await this.directionRp.findOne({select:{country:true}, where:{id:response.direction.id}}))?.country
-              
+                response.direction = (await this.directionRp.findOne({ select: { country: true }, where: { id: response.direction.id } }))?.country
+
             }
-            
-            if(response.company){
+
+            if (response.company) {
                 console.log(response.company)
                 // @ts-ignore: Unreachable code error
-                response.company = (await this.userRp.findOne({select:{company_name:true}, where:{id:response.company}}))?.company_name
+                response.company = (await this.userRp.findOne({ select: { company_name: true }, where: { id: response.company } }))?.company_name
             }
         }
         return response
@@ -76,9 +76,9 @@ export class UserService {
                 name: true,
                 lastName: true,
                 email: true,
-                curp:true,
-                type_student:true,
-            }, where: { rol:TypeStudent }
+                curp: true,
+                type_student: true,
+            }, where: { rol: TypeStudent }
         });
         return response
     }
@@ -91,8 +91,8 @@ export class UserService {
                 company_name: true,
                 representative: true,
                 email: true,
-         
-            }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }, order: { id:"DESC"}
+
+            }, where: { rol: TypeCompany }, relations: { bank: true, direction: true }, order: { id: "DESC" }
         });
         if (response) {
             return response;
@@ -102,12 +102,13 @@ export class UserService {
 
 
     async findUserCompanysFiltered() {
-        const response = await this.userRp.find({
-            select: {
-                id: true,
-                company_name: true
-            }, where: { rol: TypeCompany }
-        });
+
+        const response = this.datasource.createQueryBuilder()
+        .select('id', 'id')
+        .addSelect('company_name', 'name')
+        .from(UserEntity, 'user')
+        .where(`"user"."rol"='${TypeCompany}'`)
+        .getRawMany()
         if (response) {
             return response;
         }
@@ -169,28 +170,28 @@ export class UserService {
         try {
             let currentUser = user
             let bank
-            let direction 
-           // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
+            let direction
+            // const { street, ext_number, int_number, neighborhood, country, state, postal_code, bank_name, swift_code, bank_account, bank_address, ...currentUser } = user
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(currentUser.password, salt);
             currentUser.password = hashedPassword;
 
-            if(Object.keys(currentUser.bank).length == 0){
+            if (Object.keys(currentUser.bank).length == 0) {
                 delete currentUser.bank
-            } else{
+            } else {
                 bank = await queryRunner.manager.withRepository(this.bankRp).save(currentUser.bank)
                 currentUser.bank = bank.id
             }
 
-            if(Object.keys(currentUser.direction).length == 0){
+            if (Object.keys(currentUser.direction).length == 0) {
                 delete currentUser.direction
-            }else{
+            } else {
                 direction = await queryRunner.manager.withRepository(this.directionRp).save(currentUser.direction)
                 currentUser.direction = direction.id
 
             }
 
-        
+
             const user2 = await queryRunner.manager.withRepository(this.userRp).save(currentUser);
             console.log(user2)
 
@@ -216,14 +217,14 @@ export class UserService {
             let currentUser = user
             let bank
             let direction
-            if(currentUser.password){
+            if (currentUser.password) {
                 const salt = await bcrypt.genSalt();
                 const hashedPassword = await bcrypt.hash(currentUser.password, salt);
                 currentUser.password = hashedPassword;
             }
             const lastUser = await queryRunner.manager.withRepository(this.userRp).findOne({ where: { id: id }, relations: { bank: true, direction: true } })
 
-            await queryRunner.manager.withRepository(this.userRp).update({id:id},{direction:null,bank:null })
+            await queryRunner.manager.withRepository(this.userRp).update({ id: id }, { direction: null, bank: null })
 
 
             if (lastUser.bank?.id) {
@@ -266,7 +267,7 @@ export class UserService {
     async updateUserGeneral(user: any, id) {
 
         try {
-            if(user.password){
+            if (user.password) {
                 const salt = await bcrypt.genSalt();
                 const hashedPassword = await bcrypt.hash(user.password, salt);
                 user.password = hashedPassword;

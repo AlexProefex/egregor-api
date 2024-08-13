@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { group } from 'console';
 import { GroupEntity } from 'src/database/entity/group/group-entity';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
+import { LicenseEntity } from 'src/database/entity/license/license-entity';
 import { ScheduleEntity } from 'src/database/entity/schedule/schedule-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
 import { Days, StatusGroupInactive, TypeB2B, TypeB2B2C, TypeB2C } from 'src/util/constants';
@@ -17,6 +18,8 @@ export class GroupService {
     @InjectRepository(ScheduleEntity) private readonly scheduleRp: Repository<ScheduleEntity>,
     @InjectRepository(UserEntity) private readonly userRp: Repository<UserEntity>,
     @InjectRepository(LevelEntity) private readonly levelRp: Repository<LevelEntity>,
+    @InjectRepository(LicenseEntity) private readonly licenseRp: Repository<LicenseEntity>,
+
     private datasource: DataSource) { }
 
 
@@ -107,14 +110,14 @@ export class GroupService {
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
-      
+      const group = await queryRunner.manager.withRepository(this.groupRp).findOneBy({id:model.group_number})
       const user = await queryRunner.manager.withRepository(this.userRp).findOne({where:{id:model.student}})
       await queryRunner.manager.withRepository(this.userRp).update({ id: model.student }, {id_group:model.group_number})
-      if(user.type_student == TypeB2C || user.type_student == TypeB2B2C){
+      if(user.type_student == TypeB2B ) {
+
       }
-      else if (user.type_student == TypeB2B){
         
-      }
+    
       await queryRunner.commitTransaction()
     } catch (err) {
       // since we have errors let's rollback changes we made
