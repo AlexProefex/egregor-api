@@ -17,6 +17,11 @@ import { GroupEntity } from './entity/group/group-entity';
 import { ScheduleEntity } from './entity/schedule/schedule-entity';
 import { BankEntity } from './entity/bank/bank';
 import { DirectionEntity } from './entity/direction/direction';
+import { AssistanceEntity } from './entity/assistance/assistance';
+import { ClassesEntity } from './entity/classes/classes';
+import { GradesEntity } from './entity/grades/grades';
+import { GraduationsEntity } from './entity/graduations/graduations';
+import { ScoresEntity } from './entity/scores/scores';
 
 //
 @Module({
@@ -29,7 +34,26 @@ import { DirectionEntity } from './entity/direction/direction';
         username: process.env.DATABASE_USER,
         password: process.env.DATABASE_PASSWROD,
         database: process.env.DATABASE_NAME,
-        entities: [UserEntity,UnitEntity, SectionEntity, QuestionEntity, LevelEntity, ElementEntity, QuizEntity,QsectionEntity, CodeEntity, LicenseEntity, GroupEntity, ScheduleEntity, BankEntity, DirectionEntity ],
+        entities: [UserEntity,
+            UnitEntity,
+            SectionEntity, 
+            QuestionEntity, 
+            LevelEntity, 
+            ElementEntity, 
+            QuizEntity,
+            QsectionEntity, 
+            CodeEntity, 
+            LicenseEntity, 
+            GroupEntity, 
+            ScheduleEntity, 
+            BankEntity, 
+            DirectionEntity,
+            AssistanceEntity,
+            ClassesEntity,
+            GradesEntity,
+            GraduationsEntity,
+            ScoresEntity
+         ],
         synchronize: true,
         dropSchema: false,
         }),

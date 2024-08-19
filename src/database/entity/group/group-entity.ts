@@ -32,6 +32,12 @@ export class GroupEntity {
     @Column({ nullable: true})
     name:string;
 
+    @Column({ nullable: true})
+    microsoft_team_url:string;
+
+    @Column({ nullable: true})
+    duration:number;
+
     @ManyToOne(() => LevelEntity, (level) =>  level.group, {nullable:true})
     @JoinColumn()
     level:UserEntity

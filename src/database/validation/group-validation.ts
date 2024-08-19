@@ -9,30 +9,16 @@ import { Type } from 'class-transformer';
 import { ArrayContains } from 'typeorm';
 import { StatesGroup, TypesGroup } from 'src/util/constants';
 
-export class GroupValidation {
+export class  OpenGroupValidation {
     
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La compañia')})
-    @IsNumber({},{message:"El codigo de la compañia es un numero"})
-    company:number;
 
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de inicio')})
-    @IsDateString({},{message:"La fecha de inicio es invalida"})
-    start_time:Date;
 
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de fin')})
-    @IsDateString({},{message:"La fecha de fin es invalida"})
-    end_time:Date;
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El grupo')})
     group_number:string;
 
-    @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El tipo de grupo')})
-    @IsEnum(TypesGroup,{each:true})
+
     type:string;
 
     @ApiProperty()
@@ -58,11 +44,79 @@ export class GroupValidation {
     @Type(()=>ScheduleValidation)
     schedule:ScheduleValidation[];
 
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La duracion')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('La duracion')})
+    duration:number;
+    
+
 
 }
 
 
+export class CloseGroupValidation {
+    
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La compañia')})
+    @IsNumber({},{message:"El codigo de la compañia es un numero"})
+    company:number;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de inicio')})
+    @IsDateString({},{message:"La fecha de inicio es invalida"})
+    start_time:Date;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de fin')})
+    @IsDateString({},{message:"La fecha de fin es invalida"})
+    end_time:Date;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El grupo')})
+    group_number:string;
+
+
+    type:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El estado')})
+    @IsEnum(StatesGroup,{each:true})
+    status:string;
+
+    name:string;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El nivel')})
+    @IsNumber({},{message: MessaeSendResponseIsNumber('El nivel')})
+    level:number;
+
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El proefesor')})
+    @IsNumber({},{message:MessaeSendResponseIsNumber('El profesor')})
+    teacher:number;
+
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsArray()
+    @Type(()=>ScheduleValidation)
+    schedule:ScheduleValidation[];
+
+}
+
 export class GroupValidationAddStudent {
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El grupo')})
+    group_number:number;
+
+    @ApiProperty()
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El estudiante')})
+    student:number;
+}
+
+
+export class GroupValidationChangeStudent {
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El grupo')})

@@ -1,6 +1,7 @@
 export const StatusCreateLicense = "created"
 export const StatusActiveLicense = "active"
 export const StatusStopLicense = "stop"
+export const StatusInactiveLicense = "inactive"
 export const TypeCompany = "company"
 export const TypeText = "text"
 export const TypeMaterial = "material"

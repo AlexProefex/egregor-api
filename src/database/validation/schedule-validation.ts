@@ -13,11 +13,11 @@ export class ScheduleValidation {
     day:number;
 
     @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de inicio')})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La hora de inicio')})
     start_time:string;
 
     @ApiProperty()
-    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La fecha de fin')})
+    @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La hora de fin')})
     end_time:string;
 
 

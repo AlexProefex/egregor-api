@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
 import { LicenseEntity } from 'src/database/entity/license/license-entity';
+import moment from 'moment';
 
 @Module({
   imports:[TypeOrmModule.forFeature([GroupEntity, ScheduleEntity,LevelEntity,UserEntity, LicenseEntity])],

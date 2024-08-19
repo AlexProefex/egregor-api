@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { group } from 'console';
 import { GroupEntity } from 'src/database/entity/group/group-entity';
 import { LevelEntity } from 'src/database/entity/level/level-entity';
 import { LicenseEntity } from 'src/database/entity/license/license-entity';
 import { ScheduleEntity } from 'src/database/entity/schedule/schedule-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
-import { Days, StatusGroupInactive, TypeB2B, TypeB2B2C, TypeB2C } from 'src/util/constants';
+import { Days, StatusActiveLicense, StatusGroupInactive, StatusInactiveLicense, StatusStopLicense, TypeActive, TypeB2B, TypeB2B2C, TypeB2C } from 'src/util/constants';
 import { ExceptionErrorMessage, NotFoundErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
+import { DateTime } from "luxon";
+import { STATUS_CODES } from 'http';
+
 
 @Injectable()
 export class GroupService {
@@ -23,12 +25,17 @@ export class GroupService {
     private datasource: DataSource) { }
 
 
-  async getGroups(){
-    return await this.groupRp.find({select:{id:true,start_time:true,end_time:true,type:true,name:true,level:{name:true},teacher:{name:true,lastName:true}},relations:{teacher:true, level:true},order:{id:"DESC"}});
+  async getGroups() {
+    return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
+  }
+
+  async getStudentsOnGroup(id:number) {
+    return await this.userRp.find({select:{id:true, name:true, lastName:true}, where:{id_group:id}})
+    //return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
   }
 
 
-  async saveGroup(model) {
+  async saveGroupClose(model) {
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
@@ -61,7 +68,39 @@ export class GroupService {
   }
 
 
-  async updateGroup(model, id) {
+  async saveGroupOpen(model) {
+    const queryRunner = this.datasource.createQueryRunner()
+    await queryRunner.startTransaction()
+    try {
+      const { schedule, ...group } = model
+
+      const level = await queryRunner.manager.withRepository(this.levelRp).findOneBy({ id: group.level })
+      let days = ""
+      schedule.forEach(element => {
+        days = `${days}${Days[element.day]}`
+      });
+      model.name = `Egregor-${group.group_number}-${level.name}-${days}`
+
+      const grp = await queryRunner.manager.withRepository(this.groupRp).save(model)
+
+      schedule.forEach(async (element) => {
+        element.group = grp.id
+        await queryRunner.manager.withRepository(this.scheduleRp).save(element)
+      });
+
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction()
+      ExceptionErrorMessage(err)
+    } finally {
+      // you need to release query runner which is manually created:
+      await queryRunner.release()
+    }
+  }
+
+
+  async updateGroupClose(model, id) {
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
@@ -74,8 +113,44 @@ export class GroupService {
       schedule.forEach(element => {
         days = `${days}${Days[element.day]}`
       });
-      
+
       model.name = `${company.company_name}-${group.group_number}-${level.name}-${days}`
+
+      await queryRunner.manager.withRepository(this.groupRp).update({ id: id }, group)
+
+      await queryRunner.manager.withRepository(this.scheduleRp).delete({ group: id })
+
+      schedule.forEach(async (element) => {
+        element.group = id
+        await queryRunner.manager.withRepository(this.scheduleRp).save(element)
+      });
+
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      // since we have errors let's rollback changes we made
+      await queryRunner.rollbackTransaction()
+      ExceptionErrorMessage(err)
+    } finally {
+      // you need to release query runner which is manually created:
+      await queryRunner.release()
+    }
+  }
+
+
+  async updateGroupOpen(model, id) {
+    const queryRunner = this.datasource.createQueryRunner()
+    await queryRunner.startTransaction()
+    try {
+      const { schedule, ...group } = model
+
+      //const currentGroup = await queryRunner.manager.withRepository(this.groupRp).findOneBy({id:id})
+      const level = await queryRunner.manager.withRepository(this.levelRp).findOneBy({ id: group.level })
+      let days = ""
+      schedule.forEach(element => {
+        days = `${days}${Days[element.day]}`
+      });
+
+      model.name = `Egregor-${group.group_number}-${level.name}-${days}`
 
       await queryRunner.manager.withRepository(this.groupRp).update({ id: id }, group)
 
@@ -99,25 +174,81 @@ export class GroupService {
 
   async disableGroup(id) {
     try {
-       await this.groupRp.findOneByOrFail({id:id})
-       await this.groupRp.update({id:id},{status:StatusGroupInactive})
+      await this.groupRp.findOneByOrFail({ id: id })
+      await this.groupRp.update({ id: id }, { status: StatusGroupInactive })
+      await this
     } catch (err) {
       NotFoundErrorMessage(err)
     }
+
   }
 
   async addUstudentToGroup(model) {
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
-      const group = await queryRunner.manager.withRepository(this.groupRp).findOneBy({id:model.group_number})
-      const user = await queryRunner.manager.withRepository(this.userRp).findOne({where:{id:model.student}})
-      await queryRunner.manager.withRepository(this.userRp).update({ id: model.student }, {id_group:model.group_number})
-      if(user.type_student == TypeB2B ) {
+      const group = await queryRunner.manager.withRepository(this.groupRp).findOneBy({ id: model.group_number })
+      const user = await queryRunner.manager.withRepository(this.userRp).findOne({ where: { id: model.student } })
+      const license = await queryRunner.manager.withRepository(this.licenseRp).findOne({ where: { student: { id: model.student } } })
+
+      if (user.type_student == TypeB2B && (user.status_license == StatusStopLicense || user.status_license == StatusInactiveLicense) && user.id_group == 0) {
+
+        const startTime = DateTime.fromISO(group.start_time.toISOString().split("T")[0]);
+        const endTime = DateTime.fromISO(group.end_time.toISOString().split("T")[0]);
+
+        const diffInMonths = endTime.diff(startTime, 'months');
+        diffInMonths.toObject();
+        const rest_time_group = Math.ceil(diffInMonths?.values?.months)
+        let updateLicence = Object.assign({}, license)
+
+        if (license.duration_rest > rest_time_group && rest_time_group > 0) {
+          updateLicence.duration_rest = license.duration_rest - rest_time_group;
+          const newEndDate = startTime.plus({ months: rest_time_group });
+          updateLicence.time_start = new Date(startTime.toUTC().toISO())
+          updateLicence.time_left = new Date(newEndDate.toUTC().toISO())
+          updateLicence.status = TypeActive
+          user.status_license = StatusActiveLicense
+
+        } else {
+          updateLicence.duration_rest = 0;
+          const newEndDate = startTime.plus({ months: license.duration_rest });
+          updateLicence.time_start = new Date(startTime.toUTC().toISO())
+          updateLicence.time_left = new Date(newEndDate.toUTC().toISO())
+          updateLicence.status = TypeActive
+          user.status_license = StatusActiveLicense
+        }
+
+        await queryRunner.manager.withRepository(this.licenseRp).update({ id: license.id }, {
+          time_start: updateLicence.time_start,
+          time_left: updateLicence.time_left,
+          duration_rest: updateLicence.duration_rest,
+          status: updateLicence.status
+        })
+
+        await queryRunner.manager.withRepository(this.userRp).update({ id: user.id }, {
+          id_group: group.id,
+          status_license: user.status_license
+        })
+      }
+
+      else if((user.type_student == TypeB2B2C || user.type_student == TypeB2C) &&(user.status_license==StatusStopLicense||user.status_license==StatusInactiveLicense)) {
+        const current = license.time_start.toISOString().split("T")[0]+'T00:00:00';
+        const startTime = DateTime.fromISO(current);
+        const newEndDate = startTime.plus({ months: 1 });
+       
+        console.log(startTime.toUTC().toISO())
+        await queryRunner.manager.withRepository(this.licenseRp).update({ id: license.id }, {
+          time_start:new Date (startTime.toUTC().toISO()),
+          time_left: new Date(newEndDate.toUTC().toISO()),
+          status: StatusActiveLicense
+        })
+     
+        await queryRunner.manager.withRepository(this.userRp).update({ id: user.id }, {
+          id_group: group.id,
+          status_license: StatusActiveLicense
+        })
 
       }
-        
-    
       await queryRunner.commitTransaction()
     } catch (err) {
       // since we have errors let's rollback changes we made
@@ -129,5 +260,20 @@ export class GroupService {
     }
   }
 
+
+  async changeGroupStudent(model:any) {
+    await this.userRp.update({id:model.student},{id_group:model.group_number})
+  }
+
+  async detailGroupById(id:number) {
+   return this.datasource.createQueryBuilder()
+   .select('group.id','id')
+   .addSelect('group.name','name')
+   .addSelect('group.status','status')
+   .addSelect('group.microsoft_team_url','microsoft_team_url')
+   .addSelect('group.type','type')
+   .from(GroupEntity,'group')
+   .where(`"group"."id" = ${id}`)
+  }
 
 }

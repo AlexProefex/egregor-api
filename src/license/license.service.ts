@@ -22,7 +22,7 @@ export class LicenseService {
       const company = await queryRunner.manager.withRepository(this.userRp).findOneBy({ id: model.company })
       for (let i = 1; i < model.count; i++) {
         const name = `${company.company_name} - Licencia ${i}`
-        await queryRunner.manager.withRepository(this.licenseRp).save({ company: model.company, name: name, duration: model.duration, type: model.type })
+        await queryRunner.manager.withRepository(this.licenseRp).save({ company: model.company, name: name, duration_full: model.duration, duration_rest: model.duration, type: model.type })
       }
       await queryRunner.commitTransaction()
 
@@ -135,8 +135,12 @@ export class LicenseService {
     try {
       const license = await queryRunner.manager.withRepository(this.licenseRp).findOneBy({id:model.id})
       const duration_rest = license.duration_full - model.duration
-      await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
-      await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:TypeActive})
+      if(duration_rest>=0){
+        await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
+        await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:TypeActive})
+      }else{
+        return new Error("Failed")
+      }
       await queryRunner.commitTransaction()
    
     } catch (err) {
