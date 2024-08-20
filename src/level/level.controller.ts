@@ -19,7 +19,7 @@ export class LevelController {
     @Public()
     @Get('short')
     @ApiOperation({ summary: 'Obtiene el id y nombre de los niveles'})
-    async getLevelShort():any{
+    async getLevelShort():Promise<any>{
         return await this.levelService.findAllLevelShort();
     }
   
