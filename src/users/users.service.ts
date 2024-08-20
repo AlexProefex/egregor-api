@@ -43,7 +43,7 @@ export class UserService {
     async findUserTeachersShort() {
          const response = await this.datasource.createQueryBuilder()
         .select('user.id','id')
-        .addSelect('CONCAT("user"."name"," ","user"."lastName") AS name')
+        .addSelect('CONCAT("user"."name", ,"user"."lastName") AS name')
         .from(UserEntity,'user')
         .where(`"user"."rol"="${TypeTeacher}"`)
         .getRawMany()
