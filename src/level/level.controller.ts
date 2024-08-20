@@ -16,7 +16,13 @@ export class LevelController {
     private readonly storageService: StorageService ) 
     {}
 
-    
+    @Public()
+    @Get()
+    @ApiOperation({ summary: 'Obtiene el id y nombre de los niveles'})
+    getLevelShort():any{
+        return this.levelService.findAllLevelShort();
+    }
+  
     //Exponer punto para obtener 3 registros aleatorios
     @Public()
     @Get('content/:id')
