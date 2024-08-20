@@ -17,10 +17,10 @@ export class LevelController {
     {}
 
     @Public()
-    @Get()
+    @Get('short')
     @ApiOperation({ summary: 'Obtiene el id y nombre de los niveles'})
-    getLevelShort():any{
-        return this.levelService.findAllLevelShort();
+    async getLevelShort():any{
+        return await this.levelService.findAllLevelShort();
     }
   
     //Exponer punto para obtener 3 registros aleatorios
