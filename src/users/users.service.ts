@@ -40,6 +40,14 @@ export class UserService {
         }
         return response
     }
+    async findUserTeachersShort() {
+        const response = await this.datasource.createQueryBuilder()
+        .select('user.id','id')
+        .addSelect('CONCAT(user.name, " ",user.lastName)','name')
+        .from(UserEntity,'user')
+        .where(`"user"."rol"="${TypeTeacher}"`)
+        return response
+    }
 
     async findStudent(id) {
         const response = await this.userRp.findOne({
