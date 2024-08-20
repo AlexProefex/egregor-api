@@ -82,6 +82,15 @@ export class UserController {
     }
 
     @Public()
+    @Get('teachers-short')
+    @ApiOperation({ summary: 'Obtiene el nombre e id de los profesores' })
+    async getTeachers(@Res() res: Response): Promise<any> {
+        const user = await this.userService.findUserTeachersShort()
+        return res.status(HttpStatus.OK).json([...user])
+
+    }
+    
+    @Public()
     @Get('teachers')
     @ApiOperation({ summary: 'Obtiene los registros de los profesores' })
     async getTeachers(@Res() res: Response): Promise<any> {
@@ -89,6 +98,8 @@ export class UserController {
         return res.status(HttpStatus.OK).json([...user])
 
     }
+
+    
 
     @Public()
     @Get('student/:id')
