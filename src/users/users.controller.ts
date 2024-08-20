@@ -86,7 +86,7 @@ export class UserController {
     @Get('teachers-short')
     @ApiOperation({ summary: 'Obtiene el nombre e id de los profesores' })
     async getTeachersShort(): Promise<any> {
-        return await this.userService.findUserTeachers()
+        return await this.userService.findUserTeachersShort()
 
     }
     
