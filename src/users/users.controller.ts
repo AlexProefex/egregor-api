@@ -81,12 +81,12 @@ export class UserController {
         return res.status(HttpStatus.NOT_FOUND).json({});
     }
 
+
     @Public()
     @Get('teachers-short')
     @ApiOperation({ summary: 'Obtiene el nombre e id de los profesores' })
-    async getTeachersShort(@Res() res: Response): Promise<any> {
-        const user = await this.userService.findUserTeachersShort()
-        return res.status(HttpStatus.OK).json([...user])
+    async getTeachersShort(): Promise<any> {
+        return await this.userService.findUserTeachers()
 
     }
     
