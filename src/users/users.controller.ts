@@ -84,7 +84,7 @@ export class UserController {
     @Public()
     @Get('teachers-short')
     @ApiOperation({ summary: 'Obtiene el nombre e id de los profesores' })
-    async getTeachers(@Res() res: Response): Promise<any> {
+    async getTeachersShort(@Res() res: Response): Promise<any> {
         const user = await this.userService.findUserTeachersShort()
         return res.status(HttpStatus.OK).json([...user])
 
