@@ -108,6 +108,13 @@ export class LevelService {
       ExceptionErrorMessage(error);
     }
   }
-
+  
+async findAllLevelShort() {
+    try {
+      return await this.lelvelRp.find({select:{id:true, name:true}, order:{id:'DESC'}});
+    } catch (error) {
+      ExceptionErrorMessage(error);
+    }
+  }
 
 }
