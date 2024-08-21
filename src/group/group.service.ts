@@ -266,7 +266,7 @@ export class GroupService {
   }
 
   async detailGroupById(id:number) {
-   return this.datasource.createQueryBuilder()
+   return await this.datasource.createQueryBuilder()
    .select('group.id','id')
    .addSelect('group.name','name')
    .addSelect('group.status','status')
@@ -274,6 +274,16 @@ export class GroupService {
    .addSelect('group.type','type')
    .from(GroupEntity,'group')
    .where(`"group"."id" = ${id}`)
+   .getRawMany()
   }
+
+
+  async deleteStudentGroup(model:any) {
+    return await this.userRp.update({id:model.student},{id_group:0})
+   }
+
+   async deleteGroup(id:number) {
+    return await this.groupRp.delete({id:id})
+   }
 
 }

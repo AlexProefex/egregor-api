@@ -100,8 +100,7 @@ export class LicenseService {
     return await this.datasource
     .createQueryBuilder()
     .select('user.id','id')
-    .addSelect('user.name','name')
-    .addSelect('user.lastName','lastName')
+    .addSelect(`CONCAT("user"."name",' ',"user"."lastName") AS name`)
     .from(UserEntity, 'user')
     .leftJoin(LicenseEntity, 'license', 'license.companyId = user.id')
     .where(`"user"."rol" = '${TypeStudent}'`)
@@ -114,12 +113,10 @@ export class LicenseService {
   }
 
   async getListStundets() {
-
     return await this.datasource
       .createQueryBuilder()
       .select('user.id','id')
-      .addSelect('user.name','name')
-      .addSelect('user.lastName','lastName')
+      .addSelect(`CONCAT("user"."name",' ',"user"."lastName") AS name`)
       .from(UserEntity, 'user')
       .leftJoin(LicenseEntity, 'license', 'license.studentId = user.id')
       .where(`"user"."rol" = '${TypeStudent}'`)

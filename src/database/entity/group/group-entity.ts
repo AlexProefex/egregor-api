@@ -4,6 +4,11 @@ import { UserEntity } from '../user/user-entity';
 import { LevelEntity } from '../level/level-entity';
 import { IsEnum } from 'class-validator';
 import { TypeInactive, TypesGroup } from 'src/util/constants';
+import { AssistanceEntity } from '../assistance/assistance';
+import { GraduationsEntity } from '../graduations/graduations';
+import { ScoresEntity } from '../scores/scores';
+import { GradesEntity } from '../grades/grades';
+import { ClassesEntity } from '../classes/classes';
 
 @Entity('group')
 export class GroupEntity {
@@ -48,5 +53,17 @@ export class GroupEntity {
 
     @OneToMany(()=>ScheduleEntity, (schedule)=> schedule.group)
     schedule:ScheduleEntity
+    
+    @OneToMany(()=>GradesEntity, (grades)=> grades.group )
+    grades:GradesEntity
+
+    @OneToMany(()=>GraduationsEntity, (graduations)=> graduations.group )
+    graduations:GraduationsEntity
+
+    @OneToMany(()=>ScoresEntity, (scores)=> scores.group )
+    scores:ScoresEntity
+
+    @OneToMany(()=>ClassesEntity, (classes)=> classes.group )
+    classes:ScoresEntity
 
 }

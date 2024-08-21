@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseInterceptors, Headers, Res, HttpStatus, Param, Put, UseGuards, SetMetadata } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors, Headers, Res, HttpStatus, Param, Put, UseGuards, SetMetadata, Delete } from '@nestjs/common';
 import { UserService } from './users.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 //import { IsParameterWithIdOfTable } from 'src/database/validation/parameter-validation';
@@ -214,7 +214,6 @@ export class UserController {
 
 
     @Public()
-    @UseInterceptors(FileInterceptor(''))
     @Post('change-password')
     @ApiOperation({ summary: 'Permite el cambio de contraseña de un usuario' })
     async updatePassword(@Body() model: ChangePasswordValidation, @Headers('Authorization') auth: string, @Res() res: Response): Promise<any> {
@@ -223,6 +222,38 @@ export class UserController {
             return res.status(HttpStatus.BAD_REQUEST).json({});
         const user = await this.userService.updatePassword(model, auth);
         return res.status(HttpStatus.OK).json({ ...user })
+    }
+
+
+    @Public()
+    @Delete('remove/student/:id')
+    @ApiOperation({ summary: 'Elimina un estudiante' })
+    async deleteStudent(@Param() params: ParameterValidation, @Res() res: Response): Promise<any> {
+        const response = await this.userService.deleteStudent(params.id)
+        if (response)
+            return res.status(HttpStatus.BAD_REQUEST).json({error:response});
+        return res.status(HttpStatus.OK).json({})
+    }
+
+
+    @Public()
+    @Delete('remove/teacher/:id')
+    @ApiOperation({ summary: 'Elimina un estudiante' })
+    async deleteTeacher(@Param() params: ParameterValidation, @Res() res: Response): Promise<any> {
+        const response = await this.userService.deleteTeacher(params.id)
+        if (response)
+            return res.status(HttpStatus.BAD_REQUEST).json({error:response});
+        return res.status(HttpStatus.OK).json({})
+    }
+
+    @Public()
+    @Delete('remove/companu/:id')
+    @ApiOperation({ summary: 'Elimina un estudiante' })
+    async deleteCompany(@Param() params: ParameterValidation, @Res() res: Response): Promise<any> {
+        const response = await this.userService.deleteCompany(params.id)
+        if (response)
+            return res.status(HttpStatus.BAD_REQUEST).json({error:response});
+        return res.status(HttpStatus.OK).json({})
     }
 }
 

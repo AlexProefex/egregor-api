@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Put, Get} from '@nestjs/common';
+import { Controller, Post, Body, Param, Put, Get,Delete} from '@nestjs/common';
 import { GroupService } from './group.service';
 import { Public } from 'src/auth/auth.controller';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -82,6 +82,21 @@ export class GroupController {
     @ApiOperation({ summary: 'Obtiene los detalles de un grupo'})
     detailGroup(@Param() params:ParameterValidation):any{
         return this.groupService.detailGroupById(params.id);
+    }
+
+    @Public()
+    @Delete('remove/student/:id')
+    @ApiOperation({ summary: 'Elimina al estudiante de un grupo'})
+    deleteStudentGroup(@Body() model:GroupValidationChangeStudent):any{
+        return this.groupService.deleteStudentGroup(model);
+    }
+
+
+    @Public()
+    @Delete('remove/:id')
+    @ApiOperation({ summary: 'Elimina al estudiante de un grupo'})
+    deleteGroup(@Body() param:ParameterValidation):any{
+        return this.groupService.deleteGroup(param.id);
     }
 }
 

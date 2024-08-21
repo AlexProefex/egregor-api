@@ -17,7 +17,7 @@ export class ScheduleEntity {
     @Column({ nullable: true})
     end_time:string;
 
-    @ManyToOne(()=>GroupEntity, (group)=> group.schedule)
+    @ManyToOne(()=>GroupEntity, (group)=> group.schedule, { onDelete: "CASCADE" })
     @JoinTable()
     group:GroupEntity
 }
