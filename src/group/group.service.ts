@@ -21,12 +21,42 @@ export class GroupService {
     @InjectRepository(UserEntity) private readonly userRp: Repository<UserEntity>,
     @InjectRepository(LevelEntity) private readonly levelRp: Repository<LevelEntity>,
     @InjectRepository(LicenseEntity) private readonly licenseRp: Repository<LicenseEntity>,
-
     private datasource: DataSource) { }
 
 
   async getGroups() {
     return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true,status:true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
+  }
+
+  async getGroupsByID(id:number) {
+    const group = await this.datasource.createQueryBuilder()
+    .select('group.id','id')
+    .addSelect('group.group_number','group_number')
+    .addSelect('group.start_time','start_time')
+    .addSelect('group.end_time','end_time')
+    .addSelect('group.type','type')
+    .addSelect('group.status','status')
+    .addSelect('group.level','level')
+    .addSelect('group.teacher','teacher')
+    .addSelect('group.duration','duration')
+    .addSelect('group.company','company')
+    .from(GroupEntity,'group')
+    .where(`"group"."id" = ${id}`)
+    .getRawOne()
+
+    const schedule = await this.datasource.createQueryBuilder()
+    .select('schedule.id','id')
+    .addSelect('schedule.day','day')
+    .addSelect('schedule.start_time','start_time')
+    .addSelect('schedule.end_time','end_time')
+    .from(ScheduleEntity,'schedule')
+    .where(`"schedule"."groupId" = ${id}`)
+    .getRawMany()
+
+    group.schedule = schedule
+
+    return group;
+    
   }
 
   async getStudentsOnGroup(id:number) {

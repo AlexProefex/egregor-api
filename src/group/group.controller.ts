@@ -18,6 +18,14 @@ export class GroupController {
         return this.groupService.getGroups();
     }
 
+    @Public()
+    @Get('camps/:id')
+    @ApiOperation({ summary: 'Obtiene los campos para actualizar un grupo'})
+    getGroupUpdate(@Param() param:ParameterValidation):any{
+        return this.groupService.getGroupsByID(param.id);
+    }
+
+
 
     @Public()
     @Post('open')

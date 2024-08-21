@@ -39,17 +39,18 @@ export class  OpenGroupValidation {
     @IsNumber({},{message:MessaeSendResponseIsNumber('El profesor')})
     teacher:number;
 
-    @ValidateNested({each:true})
-    @IsArray()
-    @Type(()=>ScheduleValidation)
-    schedule:ScheduleValidation[];
+
 
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La duracion')})
     @IsNumber({},{message: MessaeSendResponseIsNumber('La duracion')})
     duration:number;
     
-
+    @ApiProperty()
+    @ValidateNested({each:true})
+    @IsArray()
+    @Type(()=>ScheduleValidation)
+    schedule:ScheduleValidation[];
 
 }
 
