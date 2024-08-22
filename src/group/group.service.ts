@@ -9,7 +9,6 @@ import { Days, StatusActiveLicense, StatusGroupInactive, StatusInactiveLicense, 
 import { ExceptionErrorMessage, NotFoundErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
 import { DateTime } from "luxon";
-import { STATUS_CODES } from 'http';
 import { ClassesEntity } from 'src/database/entity/classes/classes';
 
 
@@ -81,6 +80,14 @@ export class GroupService {
       });
       model.name = `${company.company_name}-${group.group_number}-${level.name}-${days}`
 
+      
+      const startTime = DateTime.fromISO(model.start_time.toISOString());
+      const endTime = DateTime.fromISO(model.end_time.toISOString());
+      const diffInDays = endTime.diff(startTime, 'days');
+      diffInDays.toObject();
+      console.log(diffInDays)
+
+
       const grp = await queryRunner.manager.withRepository(this.groupRp).save(model)
 
       schedule.forEach(async (element) => {
@@ -88,8 +95,9 @@ export class GroupService {
         await queryRunner.manager.withRepository(this.scheduleRp).save(element)
       });
 
-      await queryRunner.commitTransaction()
+     // await queryRunner.commitTransaction()
     } catch (err) {
+      console.log(err)
       // since we have errors let's rollback changes we made
       await queryRunner.rollbackTransaction()
       ExceptionErrorMessage(err)

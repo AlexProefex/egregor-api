@@ -201,6 +201,7 @@ export class LicenseService {
       .select('license.id','id')
       .addSelect('license.name','name')
       .addSelect('license.duration_full','duration_full')
+      .addSelect('license.duration_rest','duration_rest')
       .addSelect('license.time_start','time_start')
       .addSelect('license.time_left','time_left')
       .addSelect('license.studentId', 'student_id')
