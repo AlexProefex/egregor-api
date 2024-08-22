@@ -80,12 +80,14 @@ export class GroupService {
       });
       model.name = `${company.company_name}-${group.group_number}-${level.name}-${days}`
 
+      const start_time = new Date(model.start_time);
+      const end_time = new Date(model.end_time);
       
-      const startTime = DateTime.fromISO(model.start_time.toISOString());
-      const endTime = DateTime.fromISO(model.end_time.toISOString());
+      const startTime = DateTime.fromISO(start_time.toISOString());
+      const endTime = DateTime.fromISO(end_time.toISOString());
       const diffInDays = endTime.diff(startTime, 'days');
-      diffInDays.toObject();
-      console.log(diffInDays)
+
+      console.log(diffInDays.toObject().days)
 
 
       const grp = await queryRunner.manager.withRepository(this.groupRp).save(model)
@@ -99,11 +101,11 @@ export class GroupService {
     } catch (err) {
       console.log(err)
       // since we have errors let's rollback changes we made
-      await queryRunner.rollbackTransaction()
+      //await queryRunner.rollbackTransaction()
       ExceptionErrorMessage(err)
     } finally {
       // you need to release query runner which is manually created:
-      await queryRunner.release()
+     // await queryRunner.release()
     }
   }
 

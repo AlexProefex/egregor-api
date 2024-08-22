@@ -20,7 +20,7 @@ export class LicenseService {
     await queryRunner.startTransaction()
     try {
       const company = await queryRunner.manager.withRepository(this.userRp).findOneBy({ id: model.company })
-      for (let i = 1; i < model.count; i++) {
+      for (let i = 1; i <= model.count; i++) {
         const name = `${company.company_name} - Licencia ${i}`
         await queryRunner.manager.withRepository(this.licenseRp).save({ company: model.company, name: name, duration_full: model.duration, duration_rest: model.duration, type: model.type })
       }
