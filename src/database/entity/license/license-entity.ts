@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { UserEntity } from "../user/user-entity";
+import { StatusInactiveLicense, TypeInactive } from "src/util/constants";
 
 
 
@@ -31,7 +32,7 @@ export class LicenseEntity {
     @Column({ nullable: true})
     time_left:Date;
     
-    @Column({ nullable: true})
+    @Column({ default: StatusInactiveLicense})
     status:string;
 
     @ManyToOne(() => UserEntity, (company) => company.license, {nullable:true})

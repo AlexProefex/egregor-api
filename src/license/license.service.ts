@@ -117,11 +117,13 @@ export class LicenseService {
       .createQueryBuilder()
       .select('user.id','id')
       .addSelect(`CONCAT("user"."name",' ',"user"."lastName") AS name`)
+      .addSelect('license.status','status')
+      .addSelect('license.time_start','time_start')
       .from(UserEntity, 'user')
       .leftJoin(LicenseEntity, 'license', 'license.studentId = user.id')
       .where(`"user"."rol" = '${TypeStudent}'`)
-      .andWhere(`"user"."status_license" = '${TypeInactive}'`)
-      .andWhere(`"user"."id" NOT IN (SELECT "license"."studentId" FROM "license" WHERE "license"."studentId" IS NOT NULL)`)
+     // .andWhere(`"user"."status_license" = '${TypeInactive}'`)
+      //.andWhere(`"user"."id" NOT IN (SELECT "license"."studentId" FROM "license" WHERE "license"."studentId" IS NOT NULL)`)
       .andWhere(`"user"."type_student" = '${TypeB2C}' OR "user"."type_student" = '${TypeB2B2C}' `)
       .getRawMany()
   }
@@ -180,9 +182,9 @@ export class LicenseService {
   async getListCompany() {
     const res = await this.datasource
       .createQueryBuilder()
-      .select('user.id')
+      .select('user.id','id')
       .addSelect('COUNT(license.companyId)', 'cantidad')
-      .addSelect('user.company_name')
+      .addSelect('user.company_name','company_name')
       .from(UserEntity, 'user')
       .leftJoin(LicenseEntity, 'license', 'license.companyId = user.id')
       .groupBy('license.companyId')
