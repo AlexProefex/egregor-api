@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Type } from 'class-transformer';
 import { LicenseEntity } from 'src/database/entity/license/license-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
-import { StatusActiveLicense, StatusStopLicense, TypeActive, TypeB2B, TypeB2B2C, TypeB2C, TypeCompany, TypeInactive, TypeStudent } from 'src/util/constants';
+import { StatusActiveLicense, StatusInactiveLicense, StatusStopLicense, TypeActive, TypeB2B, TypeB2B2C, TypeB2C, TypeCompany, TypeInactive, TypeStudent } from 'src/util/constants';
 import { ExceptionErrorAmountinsufficient, ExceptionErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
 
@@ -136,7 +136,7 @@ export class LicenseService {
       const duration_rest = license.duration_full - model.duration
       if(duration_rest>=0){
         await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
-        await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:TypeActive})
+        await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:StatusActiveLicense})
       }else{
         return new Error("Failed")
       }
@@ -159,9 +159,9 @@ export class LicenseService {
       const license = await queryRunner.manager.createQueryBuilder().select('license.id','id').addSelect('license.duration_rest','duration_rest').addSelect('license.studentId','studentId').from(LicenseEntity,"license").where(`"license"."id"=${model.id}`).getRawOne()
       const duration_rest = license.duration_rest - model.duration
       if(duration_rest>0){
-        await queryRunner.manager.withRepository(this.userRp).update({id:license.studentId},{status_license:TypeInactive, status_login:TypeInactive})
+        await queryRunner.manager.withRepository(this.userRp).update({id:license.studentId},{status_license:StatusInactiveLicense, status_login:TypeInactive})
         await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
-        await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:TypeActive})
+        await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:StatusActiveLicense})
         await queryRunner.commitTransaction()
       }else{
         error = true;
@@ -205,6 +205,7 @@ export class LicenseService {
       .addSelect('license.time_start','time_start')
       .addSelect('license.time_left','time_left')
       .addSelect('license.studentId', 'student_id')
+      .addSelect('license.status', 'status')
       .addSelect('user.name', 'student_name')
       .addSelect('user.lastName', 'student_last_name')
       .from(LicenseEntity, 'license')

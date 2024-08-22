@@ -87,6 +87,18 @@ export class GroupService {
       const endTime = DateTime.fromISO(end_time.toISOString());
       const diffInDays = endTime.diff(startTime, 'days');
 
+      for(let i=0; i<=diffInDays.toObject().days; i++ ) {
+        const fullDay = startTime.plus({ days: i}).toFormat('E')
+    
+        const isDay = schedule.find((element) => parseInt(element.day) == parseInt(fullDay));
+        console.log(isDay)
+     
+
+        const full_date = startTime.plus({ days: i}).toISODate();
+        console.log(fullDay)
+        console.log(full_date)
+      }
+
       console.log(diffInDays.toObject().days)
 
 
