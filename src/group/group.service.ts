@@ -10,6 +10,7 @@ import { ExceptionErrorMessage, NotFoundErrorMessage } from 'src/validation/exce
 import { DataSource, Repository } from 'typeorm';
 import { DateTime } from "luxon";
 import { STATUS_CODES } from 'http';
+import { ClassesEntity } from 'src/database/entity/classes/classes';
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export class GroupService {
     @InjectRepository(UserEntity) private readonly userRp: Repository<UserEntity>,
     @InjectRepository(LevelEntity) private readonly levelRp: Repository<LevelEntity>,
     @InjectRepository(LicenseEntity) private readonly licenseRp: Repository<LicenseEntity>,
+    @InjectRepository(ClassesEntity) private readonly classesRp: Repository<ClassesEntity>,
     private datasource: DataSource) { }
 
 
@@ -29,6 +31,7 @@ export class GroupService {
   }
 
   async getGroupsByID(id:number) {
+    const countGroup = await this.userRp.find({where:{id_group:id}})
     const group = await this.datasource.createQueryBuilder()
     .select('group.id','id')
     .addSelect('group.group_number','group_number')
@@ -52,11 +55,10 @@ export class GroupService {
     .from(ScheduleEntity,'schedule')
     .where(`"schedule"."groupId" = ${id}`)
     .getRawMany()
-
-    group.schedule = schedule
-
+    if(countGroup.length == 0){
+      group.schedule = schedule
+    }
     return group;
-    
   }
 
   async getStudentsOnGroup(id:number) {

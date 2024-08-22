@@ -198,11 +198,11 @@ export class LicenseService {
   async getListLicenseByCompany(id: any) {
     const res = await this.datasource
       .createQueryBuilder()
-      .select('license.id')
-      .addSelect('license.name')
-      .addSelect('license.duration_full')
-      .addSelect('license.time_start')
-      .addSelect('license.time_left')
+      .select('license.id','id')
+      .addSelect('license.name','name')
+      .addSelect('license.duration_full','duration_full')
+      .addSelect('license.time_start','time_start')
+      .addSelect('license.time_left','time_left')
       .addSelect('license.studentId', 'student_id')
       .addSelect('user.name', 'student_name')
       .addSelect('user.lastName', 'student_last_name')
