@@ -11,6 +11,9 @@ export class ClassesEntity {
     date:string;
 
     @Column()
+    date_iso:string;
+
+    @Column()
     start_time:string;
 
     @Column()

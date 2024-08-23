@@ -25,6 +25,13 @@ export class GroupController {
         return this.groupService.getGroupsByID(param.id);
     }
 
+    @Public()
+    @Get('teacher/list/:id')
+    @ApiOperation({ summary: 'Obtiene los grupos del profesor'})
+    getTeacherGroups(@Param() param:ParameterValidation):any{
+        return this.groupService.getTeacherGroups(param.id);
+    }
+
 
 
     @Public()

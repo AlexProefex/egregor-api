@@ -119,6 +119,7 @@ export class LicenseService {
       .addSelect(`CONCAT("user"."name",' ',"user"."lastName") AS name`)
       .addSelect('license.status','status')
       .addSelect('license.time_start','time_start')
+      .addSelect('license.id','license_id')
       .from(UserEntity, 'user')
       .leftJoin(LicenseEntity, 'license', 'license.studentId = user.id')
       .where(`"user"."rol" = '${TypeStudent}'`)

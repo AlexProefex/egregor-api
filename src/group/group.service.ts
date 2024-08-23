@@ -26,42 +26,45 @@ export class GroupService {
 
 
   async getGroups() {
-    return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true,status:true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
+    return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true, status: true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
   }
 
-  async getGroupsByID(id:number) {
-    const countGroup = await this.userRp.find({where:{id_group:id}})
+  async getGroupsByID(id: number) {
+    const countGroup = await this.userRp.find({ where: { id_group: id } })
     const group = await this.datasource.createQueryBuilder()
-    .select('group.id','id')
-    .addSelect('group.group_number','group_number')
-    .addSelect('group.start_time','start_time')
-    .addSelect('group.end_time','end_time')
-    .addSelect('group.type','type')
-    .addSelect('group.status','status')
-    .addSelect('group.level','level')
-    .addSelect('group.teacher','teacher')
-    .addSelect('group.duration','duration')
-    .addSelect('group.company','company')
-    .from(GroupEntity,'group')
-    .where(`"group"."id" = ${id}`)
-    .getRawOne()
+      .select('group.id', 'id')
+      .addSelect('group.group_number', 'group_number')
+      .addSelect('group.start_time', 'start_time')
+      .addSelect('group.end_time', 'end_time')
+      .addSelect('group.type', 'type')
+      .addSelect('group.status', 'status')
+      .addSelect('group.level', 'level')
+      .addSelect('group.teacher', 'teacher')
+      .addSelect('group.duration', 'duration')
+      .addSelect('group.company', 'company')
+      .from(GroupEntity, 'group')
+      .where(`"group"."id" = ${id}`)
+      .getRawOne()
 
     const schedule = await this.datasource.createQueryBuilder()
-    .select('schedule.id','id')
-    .addSelect('schedule.day','day')
-    .addSelect('schedule.start_time','start_time')
-    .addSelect('schedule.end_time','end_time')
-    .from(ScheduleEntity,'schedule')
-    .where(`"schedule"."groupId" = ${id}`)
-    .getRawMany()
-    if(countGroup.length == 0){
+      .select('schedule.id', 'id')
+      .addSelect('schedule.day', 'day')
+      .addSelect('schedule.start_time', 'start_time')
+      .addSelect('schedule.end_time', 'end_time')
+      .from(ScheduleEntity, 'schedule')
+      .where(`"schedule"."groupId" = ${id}`)
+      .getRawMany()
+    if (countGroup.length == 0) {
       group.schedule = schedule
     }
     return group;
   }
+  async getTeacherGroups(id:number){
+    return await this.groupRp.find({where:{teacher:{id:id}}})
+  }
 
-  async getStudentsOnGroup(id:number) {
-    return await this.userRp.find({select:{id:true, name:true, lastName:true}, where:{id_group:id}})
+  async getStudentsOnGroup(id: number) {
+    return await this.userRp.find({ select: { id: true, name: true, lastName: true }, where: { id_group: id } })
     //return await this.groupRp.find({ select: { id: true, start_time: true, end_time: true, type: true, name: true, level: { name: true }, teacher: { name: true, lastName: true } }, relations: { teacher: true, level: true }, order: { id: "DESC" } });
   }
 
@@ -82,42 +85,49 @@ export class GroupService {
 
       const start_time = new Date(model.start_time);
       const end_time = new Date(model.end_time);
-      
+
       const startTime = DateTime.fromISO(start_time.toISOString());
       const endTime = DateTime.fromISO(end_time.toISOString());
       const diffInDays = endTime.diff(startTime, 'days');
 
-      for(let i=0; i<=diffInDays.toObject().days; i++ ) {
-        const fullDay = startTime.plus({ days: i}).toFormat('E')
-    
-        const isDay = schedule.find((element) => parseInt(element.day) == parseInt(fullDay));
-        console.log(isDay)
+      const grp = await queryRunner.manager.withRepository(this.groupRp).save(model)
+
+      for (let i = 0; i <= diffInDays.toObject().days; i++) {
+        const fullDay = startTime.plus({ days: i }).toFormat('E')
+        const isDay = !!schedule.find((element) => parseInt(element.day) == parseInt(fullDay));
+        if (isDay) {
      
 
-        const full_date = startTime.plus({ days: i}).toISODate();
-        console.log(fullDay)
-        console.log(full_date)
+          const full_date = startTime.plus({ days: i }).toFormat('DDDD');
+          const full_date_iso = startTime.plus({ days: i }).toISOString();
+
+          const objectSelected = schedule.find(el=> parseInt(el.day) ==parseInt(fullDay));
+          console.log(objectSelected)
+
+          await queryRunner.manager.withRepository(this.classesRp).save({
+            date: full_date,
+            start_time: objectSelected.start_time,
+            end_time: objectSelected.end_time,
+            date_iso:full_date_iso,
+            group: grp.id
+          })
+        }
       }
-
-      console.log(diffInDays.toObject().days)
-
-
-      const grp = await queryRunner.manager.withRepository(this.groupRp).save(model)
 
       schedule.forEach(async (element) => {
         element.group = grp.id
         await queryRunner.manager.withRepository(this.scheduleRp).save(element)
       });
 
-     // await queryRunner.commitTransaction()
+      await queryRunner.commitTransaction()
     } catch (err) {
       console.log(err)
       // since we have errors let's rollback changes we made
-      //await queryRunner.rollbackTransaction()
+      await queryRunner.rollbackTransaction()
       ExceptionErrorMessage(err)
     } finally {
       // you need to release query runner which is manually created:
-     // await queryRunner.release()
+       await queryRunner.release()
     }
   }
 
@@ -285,18 +295,18 @@ export class GroupService {
         })
       }
 
-      else if((user.type_student == TypeB2B2C || user.type_student == TypeB2C) &&(user.status_license==StatusStopLicense||user.status_license==StatusInactiveLicense)) {
-        const current = license.time_start.toISOString().split("T")[0]+'T00:00:00';
+      else if ((user.type_student == TypeB2B2C || user.type_student == TypeB2C) && (user.status_license == StatusStopLicense || user.status_license == StatusInactiveLicense)) {
+        const current = license.time_start.toISOString().split("T")[0] + 'T00:00:00';
         const startTime = DateTime.fromISO(current);
         const newEndDate = startTime.plus({ months: 1 });
-       
+
         console.log(startTime.toUTC().toISO())
         await queryRunner.manager.withRepository(this.licenseRp).update({ id: license.id }, {
-          time_start:new Date (startTime.toUTC().toISO()),
+          time_start: new Date(startTime.toUTC().toISO()),
           time_left: new Date(newEndDate.toUTC().toISO()),
           status: StatusActiveLicense
         })
-     
+
         await queryRunner.manager.withRepository(this.userRp).update({ id: user.id }, {
           id_group: group.id,
           status_license: StatusActiveLicense
@@ -315,29 +325,29 @@ export class GroupService {
   }
 
 
-  async changeGroupStudent(model:any) {
-    await this.userRp.update({id:model.student},{id_group:model.group_number})
+  async changeGroupStudent(model: any) {
+    await this.userRp.update({ id: model.student }, { id_group: model.group_number })
   }
 
-  async detailGroupById(id:number) {
-   return await this.datasource.createQueryBuilder()
-   .select('group.id','id')
-   .addSelect('group.name','name')
-   .addSelect('group.status','status')
-   .addSelect('group.microsoft_team_url','microsoft_team_url')
-   .addSelect('group.type','type')
-   .from(GroupEntity,'group')
-   .where(`"group"."id" = ${id}`)
-   .getRawMany()
+  async detailGroupById(id: number) {
+    return await this.datasource.createQueryBuilder()
+      .select('group.id', 'id')
+      .addSelect('group.name', 'name')
+      .addSelect('group.status', 'status')
+      .addSelect('group.microsoft_team_url', 'microsoft_team_url')
+      .addSelect('group.type', 'type')
+      .from(GroupEntity, 'group')
+      .where(`"group"."id" = ${id}`)
+      .getRawMany()
   }
 
 
-  async deleteStudentGroup(model:any) {
-    return await this.userRp.update({id:model.student},{id_group:0})
-   }
+  async deleteStudentGroup(model: any) {
+    return await this.userRp.update({ id: model.student }, { id_group: 0 })
+  }
 
-   async deleteGroup(id:number) {
-    return await this.groupRp.delete({id:id})
-   }
+  async deleteGroup(id: number) {
+    return await this.groupRp.delete({ id: id })
+  }
 
 }
