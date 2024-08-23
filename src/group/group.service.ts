@@ -10,6 +10,7 @@ import { ExceptionErrorMessage, NotFoundErrorMessage } from 'src/validation/exce
 import { DataSource, Repository } from 'typeorm';
 import { DateTime } from "luxon";
 import { ClassesEntity } from 'src/database/entity/classes/classes';
+import { GraduationsEntity } from 'src/database/entity/graduations/graduations';
 
 
 @Injectable()
@@ -22,6 +23,8 @@ export class GroupService {
     @InjectRepository(LevelEntity) private readonly levelRp: Repository<LevelEntity>,
     @InjectRepository(LicenseEntity) private readonly licenseRp: Repository<LicenseEntity>,
     @InjectRepository(ClassesEntity) private readonly classesRp: Repository<ClassesEntity>,
+    @InjectRepository(GraduationsEntity) private readonly graduationRp: Repository<GraduationsEntity>,
+
     private datasource: DataSource) { }
 
 
@@ -99,10 +102,9 @@ export class GroupService {
      
 
           const full_date = startTime.plus({ days: i }).toFormat('DDDD');
-          const full_date_iso = startTime.plus({ days: i }).toISOString();
+          const full_date_iso = startTime.plus({ days: i }).toISODate();
 
-          const objectSelected = schedule.find(el=> parseInt(el.day) ==parseInt(fullDay));
-          console.log(objectSelected)
+          const objectSelected = schedule.find(obj=> parseInt(obj.day) == parseInt(fullDay));
 
           await queryRunner.manager.withRepository(this.classesRp).save({
             date: full_date,
@@ -244,16 +246,17 @@ export class GroupService {
     } catch (err) {
       NotFoundErrorMessage(err)
     }
-
   }
 
   async addUstudentToGroup(model) {
+
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
       const group = await queryRunner.manager.withRepository(this.groupRp).findOneBy({ id: model.group_number })
       const user = await queryRunner.manager.withRepository(this.userRp).findOne({ where: { id: model.student } })
       const license = await queryRunner.manager.withRepository(this.licenseRp).findOne({ where: { student: { id: model.student } } })
+      console.log(user)
 
       if (user.type_student == TypeB2B && (user.status_license == StatusStopLicense || user.status_license == StatusInactiveLicense) && user.id_group == 0) {
 
@@ -289,6 +292,15 @@ export class GroupService {
           status: updateLicence.status
         })
 
+        const graduations = await queryRunner.manager.withRepository(this.graduationRp).findOne({where:{student:{id:model.student}, group:{id:model.group_number}}})
+        if(!!graduations){
+          await queryRunner.manager.withRepository(this.graduationRp).update({id:graduations.id},{student:model.student,group:model.group_number})
+        } else{
+          await queryRunner.manager.withRepository(this.graduationRp).save({student:model.student,group:model.group_number})
+        }
+
+        console.log(graduations)
+
         await queryRunner.manager.withRepository(this.userRp).update({ id: user.id }, {
           id_group: group.id,
           status_license: user.status_license
@@ -307,14 +319,26 @@ export class GroupService {
           status: StatusActiveLicense
         })
 
+        const graduations = await queryRunner.manager.withRepository(this.graduationRp).findOne({where:{student:{id:model.student}, group:{id:model.group_number}}})
+        if(!!graduations){
+          await queryRunner.manager.withRepository(this.graduationRp).update({id:graduations.id},{student:model.student,group:model.group_number})
+        } else{
+          await queryRunner.manager.withRepository(this.graduationRp).save({student:model.student,group:model.group_number})
+        }
+
+        console.log(graduations)
+
+
         await queryRunner.manager.withRepository(this.userRp).update({ id: user.id }, {
           id_group: group.id,
           status_license: StatusActiveLicense
         })
 
       }
+
       await queryRunner.commitTransaction()
     } catch (err) {
+      console.log(err)
       // since we have errors let's rollback changes we made
       await queryRunner.rollbackTransaction()
       ExceptionErrorMessage(err)

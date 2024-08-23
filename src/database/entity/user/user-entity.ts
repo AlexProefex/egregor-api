@@ -1,10 +1,11 @@
 
-import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne, JoinTable, OneToOne, JoinColumn} from 'typeorm';
+import {Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, ManyToOne, JoinTable, OneToOne, JoinColumn, ManyToMany} from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LicenseEntity } from '../license/license-entity';
 import { GroupEntity } from '../group/group-entity';
 import { DirectionEntity } from '../direction/direction';
 import { BankEntity } from '../bank/bank';
+import { GraduationsEntity } from '../graduations/graduations';
 
 
 @Entity('user')
@@ -103,6 +104,9 @@ export class UserEntity {
     @JoinColumn()
     bank:BankEntity
 
+    @OneToMany(() => GraduationsEntity, (graduations) =>  graduations.student)
+    @JoinTable()
+    graduations:GraduationsEntity
 
 /*    @OneToOne(() => LicenseEntity )
     @JoinColumn()
