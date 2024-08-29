@@ -12,5 +12,6 @@ import { StorageService } from 'src/storage/storage.service';
   imports:[TypeOrmModule.forFeature([LevelEntity, UnitEntity, SectionEntity, ElementEntity])],
   controllers: [LevelController],
   providers: [LevelService, StorageService],
+  exports:[LevelService]
 })
 export class LevelModule {}

@@ -15,6 +15,6 @@ import { GroupEntity } from 'src/database/entity/group/group-entity';
   imports:[TypeOrmModule.forFeature([UserEntity,DirectionEntity, BankEntity, LicenseEntity, GroupEntity])],
   controllers: [UserController],
   providers: [UserService, token, JwtService, StorageService],
-  exports: [UserService],
+  exports: [UserService, token]
 })
 export class UsersModule {}

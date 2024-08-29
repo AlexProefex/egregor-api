@@ -16,7 +16,7 @@ import { DateTime } from "luxon";
 import { GroupEntity } from 'src/database/entity/group/group-entity';
 
 //import { ExceptionErrorMessage } from 'src/validation/exception-error';
-export type User = any;
+//export type User = any;
 
 @Injectable()
 export class UserService {
@@ -26,7 +26,6 @@ export class UserService {
         @InjectRepository(BankEntity) private readonly bankRp: Repository<BankEntity>,
         @InjectRepository(LicenseEntity) private readonly lincenseRp: Repository<LicenseEntity>,
         @InjectRepository(GroupEntity) private readonly groupRp: Repository<GroupEntity>,
-
         private datasource: DataSource,
         private readonly jwtUtil: token
     ) {
@@ -362,20 +361,22 @@ export class UserService {
             
             const student = await  queryRunner.manager.withRepository(this.userRp).findOne({where:{id:id}});
             const license = await  queryRunner.manager.withRepository(this.lincenseRp).findOne({where:{student:{id:id}}});
-            const endTime = license.time_left.toISOString().split("T")[0]+'T00:00:00';
-            const end_time = DateTime.fromISO(endTime);
-            const current = DateTime.now(new Date().toISOString().split("T")[0]+'T00:00:00')
-            const current_time = DateTime.fromISO(current);
-            if(end_time>current_time){
-                message =  "No se puede borrar un estudiante con licencia activa"
-                new Error("")
-            }
-            else {
-                await queryRunner.manager.withRepository(this.lincenseRp).delete({student:{id:id}});
-            }
-            if(student.id_group !=0){
-                message =  "No se puede borrar un estudiante afiliado a un grupo"
-                new Error()
+            if(license) {
+                const endTime = license.time_left.toISOString().split("T")[0]+'T00:00:00';
+                const end_time = DateTime.fromISO(endTime);
+                const current = DateTime.now(new Date().toISOString().split("T")[0]+'T00:00:00')
+                const current_time = DateTime.fromISO(current);
+                if(end_time>current_time){
+                    message =  "No se puede borrar un estudiante con licencia activa"
+                    new Error("")
+                }
+                else {
+                    await queryRunner.manager.withRepository(this.lincenseRp).delete({student:{id:id}});
+                }
+                if(student.id_group !=0){
+                    message =  "No se puede borrar un estudiante afiliado a un grupo"
+                    new Error()
+                }
             }
             await  queryRunner.manager.withRepository(this.userRp).delete({id:id})
             await queryRunner.commitTransaction()

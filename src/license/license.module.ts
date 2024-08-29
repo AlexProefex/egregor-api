@@ -9,5 +9,6 @@ import { UserEntity } from 'src/database/entity/user/user-entity';
   imports:[TypeOrmModule.forFeature([LicenseEntity,UserEntity])],
   controllers: [LicenseController],
   providers: [LicenseService],
+  exports:[LicenseService]
 })
 export class LicenseModule {}

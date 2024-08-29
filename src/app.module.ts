@@ -23,6 +23,8 @@ import { StorageModule } from './storage/storage.module';
 import { GroupModule } from './group/group.module';
 import { ScheduleModule } from './schedule/schedule.module';
 import { ClassesModule } from './classes/classes.module';
+import { GraduationsModule } from './graduations/graduations.module';
+import { SetdataModule } from './setdata/setdata.module';
 
 @Module({
   imports: [
@@ -32,7 +34,7 @@ import { ClassesModule } from './classes/classes.module';
   }]),
   ServeStaticModule.forRoot({
     rootPath: join(__dirname, '..', 'public'),
-  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule, EstadisticModule, LicenseModule, StorageModule, GroupModule, ScheduleModule, ClassesModule],
+  }),AuthModule, UsersModule, DatabaseModule, LevelModule, UnitModule, SectionModule, ElementModule, QuestionModule, CodeModule, QuizModule, QsectionModule, EstadisticModule, LicenseModule, StorageModule, GroupModule, ScheduleModule, ClassesModule, GraduationsModule, SetdataModule],
   controllers: [AppController],
   providers: [AppService, {
     provide:APP_GUARD,

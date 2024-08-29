@@ -15,5 +15,6 @@ import { GraduationsEntity } from 'src/database/entity/graduations/graduations';
   imports:[TypeOrmModule.forFeature([GroupEntity, ScheduleEntity, LevelEntity, UserEntity, LicenseEntity, GroupEntity, ClassesEntity, GraduationsEntity])],
   controllers: [GroupController],
   providers: [GroupService],
+  exports:[GroupService]
 })
 export class GroupModule {}
