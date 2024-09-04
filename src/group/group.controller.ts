@@ -67,7 +67,7 @@ export class GroupController {
     @Public()
     @Put("close/:id")
     @ApiOperation({ summary: 'Actualiza un grupo cerrado y sus horarios'})
-    updateCloseGroup(@Body() model:OpenGroupValidation, @Param() params:ParameterValidation):any{
+    updateCloseGroup(@Body() model:CloseGroupValidation, @Param() params:ParameterValidation):any{
       return this.groupService.updateGroupClose(model,params.id);
     }
 

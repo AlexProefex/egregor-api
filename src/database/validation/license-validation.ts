@@ -32,11 +32,6 @@ export class LicenseValidationAssing {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El id')})
     @IsNumber({},{message:"El id de la empresa debe ser numerico"})
     id:number;
-    
-    @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
-    @IsNumber({},{message:"La duracion debe ser numerica"})
-    duration:number;
 
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El estudiante')})
@@ -46,16 +41,21 @@ export class LicenseValidationAssing {
 }
 
 export class LicenseValidationStudent {
-    
+
     @ApiProperty()
-    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El estudiante')})
-    @IsNumber({},{message:"La codigo del estudiante es un numero"})
-    student:number;
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
+    @IsNumber({},{message:"La duracion debe ser numerica"})
+    duration:number;
     
     @ApiProperty()
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
     @IsDateString({},{message:"La fecha es invalida"})
     time_start:Date;
+
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('El estudiante')})
+    @IsNumber({},{message:"La codigo del estudiante es un numero"})
+    student:number;
 
     type:string;
 }
@@ -67,6 +67,11 @@ export class LicenseValidationStudentReactive {
     @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
     @IsDateString({},{message:"La fecha es invalida"})
     time_start:Date;
+
+    @ApiProperty()
+    @IsNotEmpty({message: MessaeSendResponseIsNotEmpty('La duracion')})
+    @IsNumber({},{message:"La duracion debe ser numerica"})
+    duration:number;
 
 }
 

@@ -9,6 +9,15 @@ export const ExceptionErrorMessage = (err) => {
     });
 }
 
+export const ExceptionErrorMessageDynamic = (err) => {
+    throw new HttpException({
+        status: HttpStatus.FORBIDDEN,
+        error: err,
+    }, HttpStatus.BAD_REQUEST, {
+        cause: err
+    });
+}
+
 export const NotFoundErrorMessage = (err) => {
     throw new HttpException({
         status: HttpStatus.NOT_FOUND,

@@ -55,7 +55,7 @@ import { ScoresEntity } from './entity/scores/scores';
             ScoresEntity
          ],
         synchronize: true,
-        dropSchema: true,
+        dropSchema: false,
         }),
     ],
     providers:[IsUniqueConstraints]

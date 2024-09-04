@@ -1,7 +1,7 @@
 {
     
 }
-import { IsArray, IsDateString, IsEnum, IsIn, IsNotEmpty, IsNumber, ValidateNested  } from 'class-validator';
+import { IsArray, IsDateString, IsEnum, IsIn, IsNotEmpty, IsNumber, IsOptional, ValidateNested  } from 'class-validator';
 import { MessaeSendResponseIsNotEmpty, MessaeSendResponseIsNumber } from 'src/validation/validation.exception';
 import { ApiProperty } from '@nestjs/swagger/dist';
 import { ScheduleValidation } from './schedule-validation';
@@ -39,14 +39,12 @@ export class  OpenGroupValidation {
     @IsNumber({},{message:MessaeSendResponseIsNumber('El profesor')})
     teacher:number;
 
-
-
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('La duracion')})
     @IsNumber({},{message: MessaeSendResponseIsNumber('La duracion')})
     duration:number;
     
-    @ApiProperty()
+    @ApiProperty({isArray:true, type:ScheduleValidation})
     @ValidateNested({each:true})
     @IsArray()
     @Type(()=>ScheduleValidation)
@@ -97,12 +95,12 @@ export class CloseGroupValidation {
     @IsNumber({},{message:MessaeSendResponseIsNumber('El profesor')})
     teacher:number;
 
-    @ApiProperty()
+    @ApiProperty({isArray:true, type:ScheduleValidation})
     @ValidateNested({each:true})
     @IsArray()
     @Type(()=>ScheduleValidation)
     schedule:ScheduleValidation[];
-
+    
 }
 
 export class GroupValidationAddStudent {
@@ -114,6 +112,17 @@ export class GroupValidationAddStudent {
     @ApiProperty()
     @IsNotEmpty({  message: MessaeSendResponseIsNotEmpty('El estudiante')})
     student:number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsDateString({},{message:"La fecha de inicio es invalida"})
+    time_start:Date;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsDateString({},{message:"La fecha de finalizacion es invalida"})
+    time_end:Date;
+
 }
 
 

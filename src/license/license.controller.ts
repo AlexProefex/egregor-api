@@ -22,7 +22,7 @@ export class LicenseController {
 
   @Public()
   @Post('student')
-  @ApiOperation({ summary: 'Genera licencias para los alumnos' })
+  @ApiOperation({ summary: 'Crea y activa una licencia para el alumno b2c' })
   saveSingleStudent(@Body() modelLicense:LicenseValidationStudent):any{
     modelLicense.type = TypeStudent;
     return this.licenseService.saveLicenseStudent(modelLicense);

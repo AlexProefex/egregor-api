@@ -12,10 +12,18 @@ export class GraduationsEntity {
     @ManyToOne(() => UserEntity, (user) =>  user.graduations)
     @JoinColumn()
     student:UserEntity
+    
+    @Column({ nullable: true})
+    time_start:Date;
 
+    @Column({ nullable: true})
+    time_end:Date;
     
     @ManyToOne(() => GroupEntity, (group) =>  group.graduations, { onDelete: "CASCADE" })
     @JoinColumn()
     group:GroupEntity
+
+
+
  
 }

@@ -43,15 +43,17 @@ async setDataAll(){
     "business_name": "laive",
     "country": "peru",
     "fiscal_rcf": "4565421212",
-    "email": "laive@gmail.com",
+    "email": "empresa@gmail.com",
     "password": "123456789",
     "rol":TypeCompany
   })
+
+  
 //2
   const est1 = await this.userService.saveUserGeneral({
     "name": "nicol",
     "lastName": "pinto",
-    "email": "npinto@gmail.com",
+    "email": "alumno@gmail.com",
     "password": "123456789",
     "type_student": TypeB2B,
     "company": 1,
@@ -88,7 +90,7 @@ async setDataAll(){
   const teacher = await this.userService.saveUserTeacher({
     "name": "profesor",
     "lastName": "egregor",
-    "email": "proefesfor@gmail.com",
+    "email": "profesor@gmail.com",
     "password": "123465789",
     "type_contract": "",
     "tariff": 54656545,
@@ -110,6 +112,87 @@ async setDataAll(){
     },
     "rol":TypeTeacher
   })
+
+  const head = await this.userService.saveUserGeneral({
+    "name":"nombre",
+    "lastName":"apellido",
+    "email":"headteacher@gmail.com",
+    "password":"123456789",
+    "type_contract":"tipocontrato",
+    "tariff":100,
+    "carnet":"carnet",
+    "type_student":"b2c",
+    "curp":"curp",
+    "phone":"phone",
+    "description":"description",
+    "rol":"head teacher",
+    "image":"undefined"
+})
+
+const editor = await this.userService.saveUserGeneral({
+  "name":"nombre",
+  "lastName":"apellido",
+  "email":"editor@gmail.com",
+  "password":"123456789",
+  "type_contract":"tipocontrato",
+  "tariff":100,
+  "carnet":"carnet",
+  "type_student":"b2c",
+  "curp":"curp",
+  "phone":"phone",
+  "description":"description",
+  "rol":"editor de contenido",
+  "image":"undefined"
+})
+
+const rh = await this.userService.saveUserGeneral({
+  "name":"nombre",
+  "lastName":"apellido",
+  "email":"recursoshumanos@gmail.com",
+  "password":"123456789",
+  "type_contract":"tipocontrato",
+  "tariff":100,
+  "carnet":"carnet",
+  "type_student":"b2c",
+  "curp":"curp",
+  "phone":"phone",
+  "description":"description",
+  "rol":"recursos humanos",
+  "image":"undefined"
+})
+
+const qa = await this.userService.saveUserGeneral({
+  "name":"nombre",
+  "lastName":"apellido",
+  "email":"qa@gmail.com",
+  "password":"123456789",
+  "type_contract":"tipocontrato",
+  "tariff":100,
+  "carnet":"carnet",
+  "type_student":"b2c",
+  "curp":"curp",
+  "phone":"phone",
+  "description":"description",
+  "rol":"qa",
+  "image":"undefined"
+})
+
+const admin = await this.userService.saveUserGeneral({
+  "name":"nombre",
+  "lastName":"apellido",
+  "email":"admin@gmail.com",
+  "password":"123456789",
+  "type_contract":"tipocontrato",
+  "tariff":100,
+  "carnet":"carnet",
+  "type_student":"b2c",
+  "curp":"curp",
+  "phone":"phone",
+  "description":"description",
+  "rol":"qa",
+  "image":"undefined"
+})
+
 
   const groupOpen = await this.groupService.saveGroupOpen({
     "group_number": "01",
@@ -150,7 +233,7 @@ async setDataAll(){
   })
 
 
-  const asing = await this.licenseService.assingLicenseToStudent({
+/*  const asing = await this.licenseService.assingLicenseToStudent({
       "id": 1,
       "duration": 6,
       "student": 2
@@ -163,7 +246,7 @@ async setDataAll(){
     "student": 3
   })
 
-
+*/
 
 
 

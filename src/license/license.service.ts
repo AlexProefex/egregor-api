@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Type } from 'class-transformer';
 import { LicenseEntity } from 'src/database/entity/license/license-entity';
 import { UserEntity } from 'src/database/entity/user/user-entity';
 import { StatusActiveLicense, StatusInactiveLicense, StatusStopLicense, TypeActive, TypeB2B, TypeB2B2C, TypeB2C, TypeCompany, TypeInactive, TypeStudent } from 'src/util/constants';
-import { ExceptionErrorAmountinsufficient, ExceptionErrorMessage } from 'src/validation/exception-error';
+import { ExceptionErrorMessage } from 'src/validation/exception-error';
 import { DataSource, Repository } from 'typeorm';
+import { DateTime } from "luxon";
 
 @Injectable()
 export class LicenseService {
@@ -22,7 +22,7 @@ export class LicenseService {
       const company = await queryRunner.manager.withRepository(this.userRp).findOneBy({ id: model.company })
       for (let i = 1; i <= model.count; i++) {
         const name = `${company.company_name} - Licencia ${i}`
-        await queryRunner.manager.withRepository(this.licenseRp).save({ company: model.company, name: name, duration_full: model.duration, duration_rest: model.duration, type: model.type })
+        await queryRunner.manager.withRepository(this.licenseRp).save({ company: model.company, name: name, duration_full: model.duration, duration_rest: model.duration, duration_use:0, type: model.type })
       }
       await queryRunner.commitTransaction()
 
@@ -60,8 +60,13 @@ export class LicenseService {
     try {
       const license = await queryRunner.manager.createQueryBuilder().select('license.id','id').addSelect('license.studentId','studentId').from(LicenseEntity,"license").where(`"license"."id"=${id}`).getRawOne()
     
+      const date = new Date(model.time_start)
+     
+      const startTime = DateTime.fromISO(date.toISOString());
+      const endTime = startTime.plus({ months: model.duration });
+      
       await queryRunner.manager.withRepository(this.userRp).update({id:license.studentId},{ status_license: TypeActive })
-      await queryRunner.manager.withRepository(this.licenseRp).update({id:id},{  time_start: model.time_start,status:StatusActiveLicense })
+      await queryRunner.manager.withRepository(this.licenseRp).update({id:id},{  time_start: startTime.toISO(),time_left:endTime.toISO() ,status:StatusActiveLicense, duration_full:model.duration })
       await queryRunner.commitTransaction()
 
     } catch (err) {
@@ -78,10 +83,17 @@ export class LicenseService {
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
-      //const date = new Date(model.time_start)
-      //let endTime = new Date(date.setMonth(date.getMonth()+1))
+
+      const start_time = new Date(model.time_start);
+    
+
+      const startTime = DateTime.fromISO(start_time.toISOString());
+      console.log(startTime.toISO())
+      const endTime = startTime.plus({ months: model.duration });
+
+
       await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{ status_license: TypeActive })
-      await queryRunner.manager.withRepository(this.licenseRp).save({ type: model.type, student:model.student, time_start:model.time_start, status:StatusActiveLicense })
+      await queryRunner.manager.withRepository(this.licenseRp).save({ type: model.type, student:model.student, time_start:startTime.toISO(),time_left:endTime.toISO() , status:StatusActiveLicense, duration_full:model.duration })
       await queryRunner.commitTransaction()
 
     } catch (err) {
@@ -92,8 +104,6 @@ export class LicenseService {
       await queryRunner.release()
     }
   }
-
-
 
   async getListStundetByCompany(id: any) {
     //return await this.userRp.find({ select: { id: true, name: true, lastName: true }, where: { company: id, rol: TypeStudent, status_license: TypeInactive } })
@@ -134,13 +144,19 @@ export class LicenseService {
     await queryRunner.startTransaction()
     try {
       const license = await queryRunner.manager.withRepository(this.licenseRp).findOneBy({id:model.id})
-      const duration_rest = license.duration_full - model.duration
-      if(duration_rest>=0){
-        await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
+     // const duration_rest = license.duration_full - model.duration
+      //if(duration_rest>=0){
+        //const current = license.time_start.toISOString().split("T")[0] + 'T00:00:00';
+        console.log(license)
+        const startTime = DateTime.now();
+        const endTime = startTime.plus({ months: license.duration_full });
+        console.log(startTime)
+
+        await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student,time_start:startTime.toISO(), time_left:endTime.toISO()})
         await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:StatusActiveLicense})
-      }else{
-        return new Error("Failed")
-      }
+      ///}else{
+        //return new Error("Failed")
+     /// }
       await queryRunner.commitTransaction()
    
     } catch (err) {
@@ -153,28 +169,28 @@ export class LicenseService {
   }
 
   async re_assingLicenseToStudent(model: any) {
-    let error = false;
+    //let error = false;
     const queryRunner = this.datasource.createQueryRunner()
     await queryRunner.startTransaction()
     try {
       const license = await queryRunner.manager.createQueryBuilder().select('license.id','id').addSelect('license.duration_rest','duration_rest').addSelect('license.studentId','studentId').from(LicenseEntity,"license").where(`"license"."id"=${model.id}`).getRawOne()
-      const duration_rest = license.duration_rest - model.duration
-      if(duration_rest>0){
+    //  const duration_rest = license.duration_rest - model.duration
+      //if(duration_rest>0){
         await queryRunner.manager.withRepository(this.userRp).update({id:license.studentId},{status_license:StatusInactiveLicense, status_login:TypeInactive})
-        await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student, duration_use:model.duration, duration_rest:duration_rest})
+        await queryRunner.manager.withRepository(this.licenseRp).update({id:model.id},{student:model.student })
         await queryRunner.manager.withRepository(this.userRp).update({id:model.student},{status_license:StatusActiveLicense})
         await queryRunner.commitTransaction()
-      }else{
-        error = true;
-        ExceptionErrorAmountinsufficient(new Error("El tiempo de duracion no puede ser mayor que el restante"));
-      }
+      //}else{
+       // error = true;
+       // ExceptionErrorAmountinsufficient(new Error("El tiempo de duracion no puede ser mayor que el restante"));
+      //}
     } catch (err) {
       await queryRunner.rollbackTransaction()
-      if(error){
-        ExceptionErrorAmountinsufficient(new Error("El tiempo de duracion no puede ser mayor que el restante"));
-      }else{
+      //if(error){
+      //  ExceptionErrorAmountinsufficient(new Error("El tiempo de duracion no puede ser mayor que el restante"));
+      //}else{
         ExceptionErrorMessage(err);
-      }
+      //}
     } finally {
       await queryRunner.release()
     }

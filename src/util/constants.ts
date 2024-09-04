@@ -1,6 +1,8 @@
 export const StatusCreateLicense = "created"
 export const StatusActiveLicense = "active"
 export const StatusStopLicense = "stop"
+export const StatusFinalizedLicense = "finalized"
+
 export const StatusInactiveLicense = "inactive"
 export const TypeCompany = "company"
 export const TypeText = "text"
@@ -17,8 +19,8 @@ export const TypeSection = "section"
 export const TypeExam = "exam"
 export const TypeTeacher = "profesor"
 export const TypeStudent = 'alumno'
-export const TypeInactive = 'inactivo'
-export const TypeActive = 'activo'
+export const TypeInactive = 'inactive'
+export const TypeActive = 'active'
 export const TypeB2B2C = 'b2b2c'
 export const TypeB2C = 'b2c'
 export const TypeB2B = 'b2b'
